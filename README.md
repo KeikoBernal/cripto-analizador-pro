@@ -443,16 +443,6 @@ de este software y de los archivos de documentación asociados...
 
 <div align="center">
 
-## 🤝 Contribuir
-
-¡Las contribuciones son bienvenidas! Por favor, lee nuestra [guía de contribución](CONTRIBUTING.md) antes de enviar un pull request.
-
-## 📞 Soporte
-
-- 📖 [Documentación completa](docs/)
-- 🐛 [Reportar un problema](https://github.com/tu-usuario/cripto-analizador-pro/issues)
-- 💬 [Discusiones](https://github.com/tu-usuario/cripto-analizador-pro/discussions)
-
 ## ⭐ ¡Dale una estrella al proyecto!
 
 [![Star History Chart](https://api.star-history.com/svg?repos=tu-usuario/cripto-analizador-pro&type=Date)](https://star-history.com/#tu-usuario/cripto-analizador-pro&Date)
@@ -461,16 +451,3 @@ de este software y de los archivos de documentación asociados...
 
 </div>
 ```
-
-## 🎯 Principales Mejoras Realizadas:
-
-1. **Tabla de contenidos** para navegación más fácil
-2. **Sección de troubleshooting** para problemas comunes
-3. **Múltiples métodos de instalación** (Docker incluido)
-4. **Estructura de archivos más clara**
-5. **Sección de contribución y soporte**
-6. **Mejor organización de la configuración**
-7. **Eliminación de placeholders** redundantes
-8. **Formato más limpio y profesional**
-9. **Instrucciones más detalladas** para cada sección
-10. **Enlaces a documentación adicional**

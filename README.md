@@ -1,9 +1,11 @@
+Aquí tienes el README mejorado con mejor organización y claridad:
+
+```markdown
 # 🚀 Cripto Analizador Pro
 
 [![Python Version](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-2.0%2B-lightgrey?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?logo=opensourceinitiative&logoColor=white)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.0-orange?logo=github&logoColor=white)](https://github.com/tu-usuario/cripto-analizador-pro/releases)
 [![Code Style](https://img.shields.io/badge/Code%20Style-PEP8-brightgreen?logo=python&logoColor=white)](https://pep8.org/)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-success?logo=check-circle&logoColor=white)](https://github.com/tu-usuario/cripto-analizador-pro)
 
@@ -11,7 +13,18 @@
 
 ![Dashboard Preview](https://via.placeholder.com/800x400/2d3748/ffffff?text=Cripto+Analizador+Pro+Dashboard)
 
-## ✨ Características Principales
+## 📋 Tabla de Contenidos
+- [✨ Características](#-características)
+- [🚀 Instalación Rápida](#-instalación-rápida)
+- [📁 Estructura del Proyecto](#-estructura-del-proyecto)
+- [🎮 Guía de Uso](#-guía-de-uso-paso-a-paso)
+- [📊 API Endpoints](#-api-endpoints)
+- [🎓 Sandbox Educativo](#-sandbox-educativo)
+- [⚙️ Configuración Avanzada](#️-configuración-avanzada)
+- [📄 Licencia](#-licencia)
+- [⚠️ Descargo de Responsabilidad](#️-descargo-de-responsabilidad)
+
+## ✨ Características
 
 ### 📈 **Análisis Técnico Avanzado**
 ![Criptos](https://img.shields.io/badge/9-Criptomonedas%20Soportadas-blueviolet?logo=bitcoin&logoColor=white)
@@ -71,19 +84,48 @@
 ![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
 ![pip](https://img.shields.io/badge/pip-Instalado-3776AB?logo=pypi&logoColor=white)
 
+### Método 1: Instalación Estándar
 ```bash
-# Clonar repositorio
+# 1. Clonar repositorio
 git clone https://github.com/tu-usuario/cripto-analizador-pro.git
 cd cripto-analizador-pro
 
-# Instalar dependencias
+# 2. Crear entorno virtual (recomendado)
+python -m venv venv
+
+# 3. Activar entorno virtual
+# Linux/macOS:
+source venv/bin/activate
+# Windows:
+# venv\Scripts\activate
+
+# 4. Instalar dependencias
 pip install -r requirements.txt
 
-# Ejecutar aplicación
+# 5. Ejecutar aplicación
 python main.py
 ```
 
-### 📋 Lista de Dependencias Principales
+### Método 2: Script de Instalación Automática
+```bash
+# Linux/macOS
+chmod +x install.sh
+./install.sh
+
+# Windows (ejecutar como administrador)
+install.bat
+```
+
+### Método 3: Usando Docker
+```bash
+# Construir imagen Docker
+docker build -t cripto-analizador .
+
+# Ejecutar contenedor
+docker run -p 5000:5000 cripto-analizador
+```
+
+### 📋 Dependencias Principales
 ```txt
 flask==2.3.3
 pandas==2.0.3
@@ -95,22 +137,9 @@ reportlab==4.0.4
 pywebview==4.2.2
 ```
 
-### ⚡ Instalación en 30 Segundos
-```bash
-# Script de instalación automática (Linux/macOS)
-chmod +x install.sh
-./install.sh
-
-# O manualmente
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python main.py
-```
-
 ## 📁 Estructura del Proyecto
 
-```tree
+```
 cripto-analizador-pro/
 ├── 📄 main.py                 # Punto de entrada principal
 ├── 📄 funciones.py           # Funciones de análisis y lógica de negocio
@@ -118,11 +147,12 @@ cripto-analizador-pro/
 ├── 📄 script.js              # Frontend JavaScript completo
 ├── 📄 requirements.txt       # Dependencias de Python
 ├── 📄 index.html            # Interfaz web principal
+├── 📄 config.json           # Configuración de la aplicación
 │
 ├── 📂 data/                 # Datos históricos (CSV)
 │   ├── 📊 btc_data.csv
 │   ├── 📊 eth_data.csv
-│   └── 📊 ...
+│   └── ...
 │
 ├── 📂 alertas/              # Alertas guardadas (JSON)
 ├── 📂 exportaciones/        # Reportes exportados
@@ -131,7 +161,15 @@ cripto-analizador-pro/
 │   ├── 📝 json/
 │   └── 🌐 html/
 │
+├── 📂 static/               # Recursos estáticos
+│   ├── 📂 css/
+│   ├── 📂 js/
+│   └── 📂 images/
+│
 └── 📂 docs/                 # Documentación adicional
+    ├── 📄 api.md           # Documentación API
+    ├── 📄 user_guide.md    # Guía de usuario
+    └── 📄 examples/        # Ejemplos de uso
 ```
 
 ## 🎮 Guía de Uso Paso a Paso
@@ -153,8 +191,6 @@ print(f"Recomendación: {resultados['recomendacion']}")
 ```
 
 ### 2. **Modo Online (Tiempo Real)**
-![Online Demo](https://via.placeholder.com/600x200/2d3748/ffffff?text=Modo+Online+-+Datos+en+Tiempo+Real)
-
 1. **Seleccionar** "Modo Online" en el dashboard
 2. **Elegir** criptomoneda de la lista desplegable
 3. **Configurar** parámetros de análisis personalizados
@@ -175,8 +211,6 @@ analisis = analizador.analizar_periodo(
 ```
 
 ### 4. **Simulación Monte Carlo**
-![Monte Carlo](https://via.placeholder.com/600x200/4a5568/ffffff?text=Simulación+Monte+Carlo+-+1000+Trayectorias)
-
 ```python
 # Generar simulación avanzada
 simulacion = analizador.simular_monte_carlo(
@@ -234,6 +268,8 @@ print(f"Sharpe Ratio: {resultados['sharpe_ratio']:.2f}")
 ```bash
 curl -X GET "http://localhost:5000/api/analizar/BTC"
 ```
+
+**Respuesta:**
 ```json
 {
   "status": "success",
@@ -269,48 +305,54 @@ curl -X POST "http://localhost:5000/api/alertas" \
 
 ### 📚 **Categorías Disponibles**
 
-#### 📊 **Análisis Técnico** ![Technical](https://img.shields.io/badge/5-Temas-blue?logo=chart-line)
-- **RSI (Relative Strength Index)**: Indicador de sobrecompra/sobreventa (30-70)
-- **Bandas de Bollinger**: Volatilidad y niveles clave (±2 desviaciones)
+#### 📊 **Análisis Técnico** (5 Temas)
+- **RSI (Relative Strength Index)**: Indicador de sobrecompra/sobreventa
+- **Bandas de Bollinger**: Volatilidad y niveles clave
 - **MACD**: Convergencia/divergencia de medias móviles
-- **Soporte/Resistencia**: Identificación de niveles psicológicos
-- **Volumen**: Confirmación de tendencias con interés del mercado
+- **Soporte/Resistencia**: Niveles psicológicos del mercado
+- **Volumen**: Confirmación de tendencias
 
-#### 🛡️ **Gestión de Riesgo** ![Risk](https://img.shields.io/badge/5-Temas-red?logo=shield-alt)
-- **Stop Loss**: Protección automática (1-2% del capital)
-- **Take Profit**: Objetivos realistas (riesgo:beneficio 1:3)
-- **Riesgo por Trade**: Control de exposición máximo
-- **Drawdown**: Medición de pérdidas (máximo 20% recomendado)
-- **Apalancamiento**: Uso responsable (máximo 5x para principiantes)
+#### 🛡️ **Gestión de Riesgo** (5 Temas)
+- **Stop Loss**: Protección automática del capital
+- **Take Profit**: Objetivos realistas de ganancia
+- **Riesgo por Trade**: Control de exposición máxima
+- **Drawdown**: Medición y control de pérdidas
+- **Apalancamiento**: Uso responsable
 
-#### 🧠 **Psicología del Trading** ![Psychology](https://img.shields.io/badge/5-Temas-purple?logo=brain)
-- **FOMO (Fear Of Missing Out)**: Evitar compras impulsivas
-- **FUD (Fear, Uncertainty, Doubt)**: Manejo de noticias negativas
+#### 🧠 **Psicología del Trading** (5 Temas)
+- **FOMO (Fear Of Missing Out)**: Evitar decisiones impulsivas
+- **FUD (Fear, Uncertainty, Doubt)**: Manejo de noticias
 - **Overtrading**: Control de frecuencia de operaciones
-- **Sesgo de Confirmación**: Búsqueda objetiva de información
-- **Disciplina**: Seguimiento estricto del plan de trading
+- **Sesgo de Confirmación**: Análisis objetivo
+- **Disciplina**: Seguimiento del plan de trading
 
-#### 📈 **Términos del Mercado** ![Market](https://img.shields.io/badge/5-Temas-green?logo=globe)
-- **Volatilidad**: Medición con desviación estándar
+#### 📈 **Términos del Mercado** (5 Temas)
+- **Volatilidad**: Medición de variaciones de precio
 - **Liquidez**: Capacidad de ejecución rápida
-- **Pump and Dump**: Esquemas fraudulentos identificables
-- **Correlación**: Relación entre activos (coeficiente -1 a +1)
-- **Tendencia**: Dirección del mercado (alcista/bajista/lateral)
+- **Pump and Dump**: Esquemas fraudulentos
+- **Correlación**: Relación entre diferentes activos
+- **Tendencia**: Dirección del mercado
 
 ## ⚙️ Configuración Avanzada
 
 ### 🔧 **Variables de Entorno**
+Crea un archivo `.env` en la raíz del proyecto:
+
 ```bash
 # .env file
 CRYPTO_ANALYZER_MODE="online"
 YAHOO_FINANCE_TIMEOUT=30
 MAX_SIMULATIONS=5000
 DEFAULT_LANGUAGE="es"
-THEME="auto"  # auto, light, dark
+THEME="auto"
 ENABLE_EMAIL_ALERTS=false
+API_PORT=5000
+DEBUG_MODE=false
 ```
 
 ### 🎛️ **Archivo de Configuración**
+`config.json` permite personalizar el comportamiento:
+
 ```json
 {
   "api": {
@@ -318,27 +360,60 @@ ENABLE_EMAIL_ALERTS=false
       "timeout": 30,
       "retries": 3,
       "cache_duration": 300
-    }
+    },
+    "port": 5000,
+    "debug": false
   },
   "analisis": {
     "rsi_periodo": 14,
     "macd_rapida": 12,
     "macd_lenta": 26,
     "bollinger_periodo": 20,
-    "bollinger_desviaciones": 2
+    "bollinger_desviaciones": 2,
+    "ema_periodo_corta": 9,
+    "ema_periodo_larga": 21
   },
   "alertas": {
     "email_notifications": false,
     "sound_alerts": true,
     "price_change_threshold": 5.0,
-    "volume_spike_multiplier": 3.0
+    "volume_spike_multiplier": 3.0,
+    "check_interval_seconds": 60
   },
   "exportacion": {
     "pdf_quality": "high",
     "csv_delimiter": ",",
-    "html_template": "modern"
+    "html_template": "modern",
+    "default_format": "pdf"
+  },
+  "interfaz": {
+    "theme": "auto",
+    "language": "es",
+    "refresh_interval": 60000,
+    "chart_animation": true
   }
 }
+```
+
+### 🔍 **Solución de Problemas Comunes**
+
+1. **Error: "Módulo no encontrado"**
+```bash
+# Asegúrate de tener todas las dependencias
+pip install -r requirements.txt --upgrade
+```
+
+2. **Error de conexión con Yahoo Finance**
+```bash
+# Verifica tu conexión a internet
+# O cambia a modo offline temporalmente
+```
+
+3. **La aplicación no inicia**
+```bash
+# Verifica que el puerto 5000 esté libre
+netstat -ano | findstr :5000  # Windows
+lsof -i :5000                 # Linux/macOS
 ```
 
 ## 📄 Licencia
@@ -348,15 +423,13 @@ Distribuido bajo la licencia **MIT**. Ver [`LICENSE`](LICENSE) para más informa
 ```
 MIT License
 
-Copyright (c) 2026 Cripto Analizador Pro
+Copyright (c) 2024 Cripto Analizador Pro
 
 Se concede permiso, libre de cargos, a cualquier persona que obtenga una copia
 de este software y de los archivos de documentación asociados...
 ```
 
 ## ⚠️ Descargo de Responsabilidad
-
-![Warning](https://img.shields.io/badge/⚠️-ADVERTENCIA-important?logo=exclamation-triangle)
 
 **ESTE SOFTWARE ES PARA FINES EDUCATIVOS Y DE ANÁLISIS ÚNICAMENTE**
 
@@ -367,17 +440,40 @@ de este software y de los archivos de documentación asociados...
 - ✅ **SÍ** ayuda a entender el mercado
 - ✅ **SÍ** promueve el trading responsable
 
-**El trading de criptomonedas conlleva riesgos significativos de pérdida de capital. Nunca invierta más de lo que puede permitirse perder.**
+**El trading de criptomonedas conlleva riesgos significativos de pérdida de capital. Nunca invierta más de lo que puede permitirse perder. Consulte con un asesor financiero profesional antes de tomar cualquier decisión de inversión.**
 
 ---
 
 <div align="center">
 
-### ⭐ ¡Dale una estrella al proyecto si te gusta!
+## 🤝 Contribuir
+
+¡Las contribuciones son bienvenidas! Por favor, lee nuestra [guía de contribución](CONTRIBUTING.md) antes de enviar un pull request.
+
+## 📞 Soporte
+
+- 📖 [Documentación completa](docs/)
+- 🐛 [Reportar un problema](https://github.com/tu-usuario/cripto-analizador-pro/issues)
+- 💬 [Discusiones](https://github.com/tu-usuario/cripto-analizador-pro/discussions)
+
+## ⭐ ¡Dale una estrella al proyecto!
 
 [![Star History Chart](https://api.star-history.com/svg?repos=tu-usuario/cripto-analizador-pro&type=Date)](https://star-history.com/#tu-usuario/cripto-analizador-pro&Date)
 
 **Hecho con ❤️ para la comunidad cripto**
 
-</div>#   c r i p t o - a n a l i z a d o r - p r o  
- 
+</div>
+```
+
+## 🎯 Principales Mejoras Realizadas:
+
+1. **Tabla de contenidos** para navegación más fácil
+2. **Sección de troubleshooting** para problemas comunes
+3. **Múltiples métodos de instalación** (Docker incluido)
+4. **Estructura de archivos más clara**
+5. **Sección de contribución y soporte**
+6. **Mejor organización de la configuración**
+7. **Eliminación de placeholders** redundantes
+8. **Formato más limpio y profesional**
+9. **Instrucciones más detalladas** para cada sección
+10. **Enlaces a documentación adicional**

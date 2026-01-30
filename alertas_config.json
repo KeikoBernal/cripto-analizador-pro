@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "tipo": "pump",
+    "cripto": "all",
+    "valor": null,
+    "condicion": null,
+    "activa": true,
+    "fecha_creacion": "2026-01-29T20:07:33.411125",
+    "ultima_ejecucion": null,
+    "ejecuciones": []
+  }
+]

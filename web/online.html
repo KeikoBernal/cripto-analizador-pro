@@ -1,0 +1,3236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">    <title>Modo Online - Cripto Analizador Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-chart-line"></i>
+            <span>Cripto Pro</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <h4>Monitoreo</h4>
+                <button class="nav-btn active" onclick="showSection('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('graficos')">
+                    <i class="fas fa-chart-area"></i>
+                    <span>Gráficos</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('alertas')">
+                    <i class="fas fa-bell"></i>
+                    <span>Alertas</span>
+                    <span class="badge" id="alert-count">0</span>
+                </button>
+            </div>
+            
+            <div class="nav-section">
+                <h4>Análisis</h4>
+                <button class="nav-btn" onclick="showSection('sentimiento')">
+                    <i class="fas fa-heart"></i>
+                    <span>Sentimiento</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('ia')">
+                    <i class="fas fa-brain"></i>
+                    <span>IA Explicativa</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('correlacion')">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Correlación</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('backtesting')">
+                    <i class="fas fa-history"></i>
+                    <span>Backtesting</span>
+                </button>
+            </div>
+            
+            <div class="nav-section">
+                <h4>Herramientas</h4>
+                <button class="nav-btn" onclick="showSection('comparacion')">
+                    <i class="fas fa-balance-scale"></i>
+                    <span>Comparación</span>
+                </button>
+            </div>
+            
+            <div class="nav-section">
+                <h4>Configuración</h4>
+                <button class="nav-btn" onclick="toggleAutoUpdate()">
+                    <i class="fas fa-sync" id="auto-icon"></i>
+                    <span>Auto-actualización</span>
+                </button>
+                <button class="nav-btn" onclick="showConfig()">
+                    <i class="fas fa-cog"></i>
+                    <span>Configuración</span>
+                </button>
+            </div>
+            <div class="nav-section">
+                <h4>Exportar</h4>
+                <button class="nav-btn" onclick="exportOnlineResults('csv')">
+                    <i class="fas fa-file-csv"></i>
+                    <span>Exportar CSV</span>
+                </button>
+                <button class="nav-btn" onclick="exportOnlineResults('pdf')">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Exportar PDF</span>
+                </button>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="connection-status online">
+                <i class="fas fa-circle"></i>
+                <span>Online</span>
+            </div>
+            <div class="last-update">
+                Última actualización: <span id="last-update-time">--:--</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header">
+            <h1>Dashboard Online</h1>
+            <div class="header-actions">
+                <button class="btn-primary" onclick="forceUpdate()">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar Ahora
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="content-section active">
+            <div class="stats-grid">
+                <div class="stat-card-large">
+                    <div class="stat-header">
+                        <i class="fas fa-coins" style="color: #f7931a;"></i>
+                        <span>Bitcoin (BTC)</span>
+                    </div>
+                    <div class="stat-value" id="btc-price">$--,---</div>
+                    <div class="stat-change" id="btc-change">--%</div>
+                    <div class="stat-signal" id="btc-signal">ANALIZANDO...</div>
+                </div>
+                
+                <div class="stat-card-large">
+                    <div class="stat-header">
+                        <i class="fas fa-coins" style="color: #627eea;"></i>
+                        <span>Ethereum (ETH)</span>
+                    </div>
+                    <div class="stat-value" id="eth-price">$--,---</div>
+                    <div class="stat-change" id="eth-change">--%</div>
+                    <div class="stat-signal" id="eth-signal">ANALIZANDO...</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-list"></i> Resumen de Análisis</h3>
+                    <span class="update-indicator" id="update-indicator" style="display: none;">
+                        <i class="fas fa-circle-notch fa-spin"></i> Actualizando...
+                    </span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table" id="analysis-table">
+                        <thead>
+                            <tr>
+                                <th>Cripto</th>
+                                <th>Precio</th>
+                                <th>Tendencia</th>
+                                <th>RSI</th>
+                                <th>Decisión</th>
+                                <th>Confianza</th>
+                                <th>Predicción 24h</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analysis-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Precio en Tiempo Real</h3>
+                        <button onclick="exportChart('realtime-chart')" class="btn-icon" title="Exportar gráfico">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="realtime-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Señales de Trading</h3>
+                        <button onclick="exportChart('signals-chart')" class="btn-icon" title="Exportar gráfico">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="signals-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Confianza por Criptomoneda</h3>
+                        <button onclick="exportChart('confidence-chart')" class="btn-icon" title="Exportar gráfico">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="confidence-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Volumen por Cripto</h3>
+                        <button onclick="exportChart('volume-chart')" class="btn-icon" title="Exportar gráfico">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="volume-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gráficos Section -->
+        <section id="graficos-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Análisis Técnico Avanzado</h3>
+                    <div class="chart-controls">
+                        <select id="chart-cripto" onchange="updateChart()">
+                            <option value="">Cargando criptomonedas...</option>
+                        </select>
+                        <select id="chart-indicator" onchange="updateChart()">
+                            <option value="price">Precio + Medias</option>
+                            <option value="rsi">RSI</option>
+                            <option value="macd">MACD</option>
+                            <option value="bollinger">Bollinger Bands</option>
+                            <option value="volume">Volumen</option>
+                            <option value="candlestick">Velas Japonesas</option>
+                        </select>
+                        <select id="chart-period" onchange="updateChart()">
+                            <option value="1d">1 Día</option>
+                            <option value="7d" selected>7 Días</option>
+                            <option value="30d">30 Días</option>
+                            <option value="90d">90 Días</option>
+                        </select>
+                        <button onclick="updateChart()" class="btn-icon">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button onclick="exportChart('technical-chart')" class="btn-icon" title="Exportar gráfico">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-container large">
+                    <canvas id="technical-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alertas Section -->
+        <section id="alertas-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Configuración de Alertas</h3>
+                </div>
+                <div class="alerts-config" style="padding: 1.5rem;">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>Tipo de Alerta</label>
+                        <select id="alert-type" onchange="updateAlertConfig()" style="width: 100%; padding: 0.5rem;">
+                            <option value="pump">Pump Detection (>10% en 1h)</option>
+                            <option value="dump">Dump Detection (<-10% en 1h)</option>
+                            <option value="volumen">Volumen Anormal (>3x promedio)</option>
+                            <option value="rsi">RSI Extremo (>80 o <20)</option>
+                            <option value="precio">Precio Objetivo</option>
+                            <option value="cambio">Cambio Porcentual</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>Criptomoneda</label>
+                        <select id="alert-cripto" style="width: 100%; padding: 0.5rem;">
+                            <option value="all">Todas las monitoreadas</option>
+                        </select>
+                    </div>
+                    
+                    <div id="alert-price-config" style="display: none; margin-bottom: 1rem;">
+                        <label>Precio Objetivo ($)</label>
+                        <input type="number" id="alert-price-value" placeholder="50000" style="width: 100%; padding: 0.5rem;">
+                        <select id="alert-price-condition" style="width: 100%; padding: 0.5rem; margin-top: 0.5rem;">
+                            <option value="above">Por encima de</option>
+                            <option value="below">Por debajo de</option>
+                        </select>
+                    </div>
+                    
+                    <div id="alert-change-config" style="display: none; margin-bottom: 1rem;">
+                        <label>Cambio Porcentual (%)</label>
+                        <input type="number" id="alert-change-value" placeholder="5" style="width: 100%; padding: 0.5rem;">
+                        <select id="alert-change-condition" style="width: 100%; padding: 0.5rem; margin-top: 0.5rem;">
+                            <option value="increase">Subida de</option>
+                            <option value="decrease">Bajada de</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="saveAlertConfig()" class="btn-primary">
+                        <i class="fas fa-save"></i> Guardar Alerta
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-bell"></i> Alertas Activas</h3>
+                    <button class="btn-small" onclick="checkAnomalies()">
+                        <i class="fas fa-search"></i> Verificar Ahora
+                    </button>
+                </div>
+                <div id="alerts-container" class="alerts-list">
+                    <p class="empty-state">No hay alertas activas. El sistema monitorea automáticamente.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sentimiento Section -->
+        <section id="sentimiento-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-heart"></i> Análisis de Sentimiento de Mercado</h3>
+                    <select id="sentiment-cripto" onchange="loadSentiment()" style="padding: 0.5rem;">
+                        <option value="BTC">Bitcoin</option>
+                        <option value="ETH">Ethereum</option>
+                        <option value="BNB">BNB</option>
+                    </select>
+                </div>
+                <div id="sentiment-content" class="sentiment-grid" style="padding: 1.5rem;">
+                    <div class="loading">Cargando análisis de sentimiento...</div>
+                </div>
+                <div class="chart-container" style="height: 300px; margin: 1.5rem;">
+                    <canvas id="sentiment-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- IA Section -->
+        <section id="ia-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-brain"></i> Asistente de IA Explicativa</h3>
+                </div>
+                <div class="ia-container" style="padding: 1.5rem;">
+                    <div class="ia-input" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                        <select id="ia-cripto" style="flex: 1; padding: 0.75rem;">
+                            <option value="">Selecciona una criptomoneda...</option>
+                        </select>
+                        <select id="ia-depth" style="padding: 0.75rem;">
+                            <option value="basico">Básico</option>
+                            <option value="intermedio">Intermedio</option>
+                            <option value="avanzado">Avanzado</option>
+                        </select>
+                        <button onclick="getAIExplanation()" class="btn-primary">
+                            <i class="fas fa-magic"></i> Generar Análisis
+                        </button>
+                    </div>
+                    <div id="ia-output" class="ia-output" style="background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; min-height: 300px;">
+                        <p class="placeholder" style="color: var(--text-secondary); text-align: center; padding: 3rem;">
+                            Selecciona una criptomoneda y presiona "Generar Análisis" para recibir una explicación detallada de la decisión recomendada.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Correlación Section -->
+        <section id="correlacion-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-project-diagram"></i> Análisis de Correlación</h3>
+                </div>
+                <div class="correlation-selector" style="padding: 1.5rem;">
+                    <p>Selecciona al menos 2 criptomonedas para analizar correlaciones:</p>
+                    <div class="checkbox-group" id="correlation-checkboxes" style="margin: 1rem 0;">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    <button onclick="calculateCorrelation()" class="btn-primary">
+                        <i class="fas fa-calculator"></i> Calcular Matriz
+                    </button>
+                </div>
+                <div id="correlation-results" style="display: none; padding: 1.5rem;">
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="correlation-chart"></canvas>
+                    </div>
+                    <div id="correlation-recommendations" style="margin-top: 1.5rem;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Backtesting Section -->
+        <section id="backtesting-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-history"></i> Backtesting de Estrategias</h3>
+                </div>
+                <div class="backtesting-form" style="padding: 1.5rem;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Criptomoneda</label>
+                            <select id="backtest-cripto" style="width: 100%; padding: 0.5rem;">
+                                <option value="">Selecciona...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Estrategia</label>
+                            <select id="backtest-estrategia" style="width: 100%; padding: 0.5rem;">
+                                <option value="rsi_macd">RSI + MACD</option>
+                                <option value="bollinger">Bollinger Bands</option>
+                                <option value="golden_cross">Golden Cross (SMA50/200)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Capital Inicial ($)</label>
+                            <input type="number" id="backtest-capital" value="10000" min="100" style="width: 100%; padding: 0.5rem;">
+                        </div>
+                    </div>
+                    <button onclick="runBacktesting()" class="btn-primary">
+                        <i class="fas fa-play"></i> Ejecutar Backtesting
+                    </button>
+                </div>
+
+                <div id="backtest-results" style="display: none; padding: 1.5rem;">
+                    <h4>Resultados</h4>
+                    <div class="stats-grid" id="backtest-stats"></div>
+                    <div class="chart-container" style="height: 400px; margin-top: 1.5rem;">
+                        <canvas id="backtest-chart"></canvas>
+                    </div>
+                    <div class="operations-table" style="margin-top: 1.5rem;">
+                        <h5>Operaciones</h5>
+                        <div class="table-responsive">
+                            <table class="data-table" id="backtest-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>Precio</th>
+                                        <th>Ganancia</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparación Section -->
+        <section id="comparacion-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-balance-scale"></i> Comparación Múltiple</h3>
+                </div>
+                <div class="comparison-config" style="padding: 1.5rem;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Métrica a comparar</label>
+                            <select id="comparison-metric" style="width: 100%; padding: 0.5rem;">
+                                <option value="precio">Precio Actual</option>
+                                <option value="cambio">Cambio 24h</option>
+                                <option value="volumen">Volumen</option>
+                                <option value="rsi">RSI</option>
+                                <option value="macd">MACD</option>
+                                <option value="volatilidad">Volatilidad</option>
+                                <option value="confianza">Confianza</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de gráfico</label>
+                            <select id="comparison-chart-type" style="width: 100%; padding: 0.5rem;">
+                                <option value="barras">Barras</option>
+                                <option value="lineas">Líneas</option>
+                                <option value="radar">Radar</option>
+                                <option value="heatmap">Heatmap</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="checkbox-group" id="comparison-checkboxes" style="margin: 1rem 0;">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    <button onclick="runComparison()" class="btn-primary">
+                        <i class="fas fa-chart-bar"></i> Generar Comparación
+                    </button>
+                </div>
+                <div id="comparison-results" style="display: none; padding: 1.5rem;">
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="comparison-chart"></canvas>
+                    </div>
+                    
+                    <!-- NUEVO CONTENEDOR PARA LA TABLA Y ANÁLISIS -->
+                    <div id="comparison-analysis" style="margin-top: 2rem;">
+                        <!-- Aquí se insertará dinámicamente el contenido -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gestión Section -->
+        <section id="gestion-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-cog"></i> Gestión de Criptomonedas</h3>
+                </div>
+                <div class="management-container" style="padding: 1.5rem;">
+                    <div class="management-add" style="margin-bottom: 2rem;">
+                        <h4>Agregar Nueva Criptomoneda</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Símbolo</label>
+                                <input type="text" id="new-crypto-symbol" placeholder="Ej: BTC" style="width: 100%; padding: 0.5rem;">
+                            </div>
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input type="text" id="new-crypto-name" placeholder="Ej: Bitcoin" style="width: 100%; padding: 0.5rem;">
+                            </div>
+                        </div>
+                        <button onclick="addNewCrypto()" class="btn-primary">
+                            <i class="fas fa-plus"></i> Agregar
+                        </button>
+                    </div>
+                    
+                    <div class="management-list">
+                        <h4>Criptomonedas Monitoreadas</h4>
+                        <div id="managed-cryptos" class="cryptos-management-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuración Modal -->
+        <div id="config-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Configuración Online</h3>
+                    <button onclick="closeConfig()" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 1.5rem;">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>Intervalo de actualización (minutos)</label>
+                        <input type="number" id="update-interval" value="5" min="1" max="60" style="width: 100%; padding: 0.5rem;">
+                    </div>
+                    <div class="form-group">
+                        <label>Criptomonedas a monitorear</label>
+                        <div class="checkbox-group" id="cripto-selection" style="margin-top: 0.5rem;">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label>Tema</label>
+                        <select id="theme-select" style="width: 100%; padding: 0.5rem;">
+                            <option value="oscuro">Oscuro</option>
+                            <option value="claro">Claro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Idioma</label>
+                        <select id="language-select" style="width: 100%; padding: 0.5rem;">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button onclick="saveConfig()" class="btn-primary">Guardar</button>
+                    <button onclick="closeConfig()" class="btn-secondary">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <button class="fab-mode-switch" onclick="switchMode()" title="Cambiar a Modo Offline">
+        <i class="fas fa-exchange-alt"></i>
+        <span>Cambiar Modo</span>
+    </button>
+
+    <script src="script.js"></script>
+    <script>
+        let onlineConfig = {
+            intervalo: 5,
+            criptos: ['BTC', 'ETH', 'BNB', 'XRP', 'ADA', 'SOL', 'DOT', 'DOGE'],
+            autoUpdate: true
+        };
+
+        let updateTimer = null;
+        let charts = {};
+        let currentData = {};
+        let allCriptos = ['ADA', 'BNB', 'BTC', 'DOGE', 'DOT', 'ETH', 'SOL', 'XRP', 'USDT']
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAvailableCriptos();
+            initOnline();
+            setupThemeAndLanguage();
+        });
+
+        function setupThemeAndLanguage() {
+            // Aplicar tema guardado
+            const savedTheme = localStorage.getItem('theme') || 'oscuro';
+            applyTheme(savedTheme);
+            
+            // Aplicar idioma guardado
+            const savedLang = localStorage.getItem('lang') || 'es';
+            applyLanguage(savedLang);
+        }
+
+        function loadAvailableCriptos() {
+            // Llenar selector de gráficos
+            const chartSelect = document.getElementById('chart-cripto');
+            chartSelect.innerHTML = allCriptos.map(c => `<option value="${c}">${c}</option>`).join('');
+            
+            // Llenar selector de IA
+            const iaSelect = document.getElementById('ia-cripto');
+            iaSelect.innerHTML = '<option value="">Selecciona una criptomoneda...</option>' +
+                allCriptos.map(c => `<option value="${c}">${c}</option>`).join('');
+            
+            // Llenar selector de alertas
+            const alertSelect = document.getElementById('alert-cripto');
+            alertSelect.innerHTML = '<option value="all">Todas las monitoreadas</option>' +
+                allCriptos.map(c => `<option value="${c}">${c}</option>`).join('');
+            
+            // Llenar selector de sentimiento
+            const sentimentSelect = document.getElementById('sentiment-cripto');
+            sentimentSelect.innerHTML = allCriptos.map(c => `<option value="${c}">${c}</option>`).join('');
+            
+            // Llenar checkboxes de correlación
+            const corrContainer = document.getElementById('correlation-checkboxes');
+            corrContainer.innerHTML = allCriptos.map(c => `
+                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: var(--bg-dark); border-radius: 6px; cursor: pointer;">
+                    <input type="checkbox" value="${c}" style="width: 18px; height: 18px;">
+                    <span>${c}</span>
+                </label>
+            `).join('');
+            
+            // Llenar checkboxes de comparación
+            const compContainer = document.getElementById('comparison-checkboxes');
+            compContainer.innerHTML = allCriptos.map(c => `
+                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: var(--bg-dark); border-radius: 6px; cursor: pointer;">
+                    <input type="checkbox" value="${c}" checked style="width: 18px; height: 18px;">
+                    <span>${c}</span>
+                </label>
+            `).join('');
+            
+            // Llenar configuración
+            const configContainer = document.getElementById('cripto-selection');
+            configContainer.innerHTML = allCriptos.map(c => `
+                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;">
+                    <input type="checkbox" value="${c}" ${onlineConfig.criptos.includes(c) ? 'checked' : ''}>
+                    <span>${c}</span>
+                </label>
+            `).join('');
+            
+            // Llenar gestión de criptomonedas
+            updateManagementList();
+            updateBacktestSelector();
+        }
+
+        function initOnline() {
+            fetch('/api/online/iniciar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    intervalo: onlineConfig.intervalo,
+                    criptos: onlineConfig.criptos
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    startAutoUpdate();
+                    loadData();
+                }
+            });
+
+            setInterval(loadData, 30000);
+            initCharts();
+            loadAlertas();
+            setInterval(verificarAlertasActivas, 30000);
+        }
+
+        function loadData() {
+            fetch('/api/online/estado')
+                .then(r => r.json())
+                .then(data => {
+                    currentData = data;
+                    updateDashboard(data);
+                    document.getElementById('last-update-time').textContent = 
+                        data.ultima_actualizacion ? new Date(data.ultima_actualizacion).toLocaleTimeString() : '--:--';
+                });
+        }
+
+        function updateDashboard(data) {
+            const tbody = document.getElementById('analysis-tbody');
+            tbody.innerHTML = '';
+            
+            const signals = { compra: 0, venta: 0, mantener: 0 };
+            
+            Object.entries(data.analisis || {}).forEach(([cripto, analisis]) => {
+                const row = tbody.insertRow();
+                const decisionClass = analisis.decision.includes('COMPRAR') ? 'buy' : 
+                                     analisis.decision.includes('VENDER') ? 'sell' : 'hold';
+                
+                if (analisis.decision.includes('COMPRAR')) signals.compra++;
+                else if (analisis.decision.includes('VENDER')) signals.venta++;
+                else signals.mantener++;
+                
+                row.innerHTML = `
+                    <td><strong>${cripto}</strong></td>
+                    <td>$${analisis.precio_actual?.toLocaleString()}</td>
+                    <td><span class="trend ${analisis.tendencia?.toLowerCase()}">${analisis.tendencia}</span></td>
+                    <td>${analisis.rsi?.toFixed(1)}</td>
+                    <td><span class="signal ${decisionClass}">${analisis.decision}</span></td>
+                    <td>${(analisis.confianza * 100).toFixed(0)}%</td>
+                    <td>$${analisis.prediccion?.toLocaleString()} (${analisis.cambio_esperado > 0 ? '+' : ''}${analisis.cambio_esperado?.toFixed(1)}%)</td>
+                `;
+            });
+
+            if(data.analisis.BTC) {
+                document.getElementById('btc-price').textContent = '$' + data.analisis.BTC.precio_actual?.toLocaleString();
+                document.getElementById('btc-change').textContent = (data.analisis.BTC.cambio_esperado > 0 ? '+' : '') + data.analisis.BTC.cambio_esperado?.toFixed(1) + '%';
+                document.getElementById('btc-change').className = 'stat-change ' + (data.analisis.BTC.cambio_esperado > 0 ? 'positive' : 'negative');
+                document.getElementById('btc-signal').textContent = data.analisis.BTC.decision;
+                document.getElementById('btc-signal').className = 'stat-signal ' + 
+                    (data.analisis.BTC.decision.includes('COMPRAR') ? 'buy' : 
+                     data.analisis.BTC.decision.includes('VENDER') ? 'sell' : 'hold');
+            }
+            
+            if(data.analisis.ETH) {
+                document.getElementById('eth-price').textContent = '$' + data.analisis.ETH.precio_actual?.toLocaleString();
+                document.getElementById('eth-change').textContent = (data.analisis.ETH.cambio_esperado > 0 ? '+' : '') + data.analisis.ETH.cambio_esperado?.toFixed(1) + '%';
+                document.getElementById('eth-change').className = 'stat-change ' + (data.analisis.ETH.cambio_esperado > 0 ? 'positive' : 'negative');
+                document.getElementById('eth-signal').textContent = data.analisis.ETH.decision;
+                document.getElementById('eth-signal').className = 'stat-signal ' + 
+                    (data.analisis.ETH.decision.includes('COMPRAR') ? 'buy' : 
+                     data.analisis.ETH.decision.includes('VENDER') ? 'sell' : 'hold');
+            }
+
+            updateCharts(data, signals);
+            updateManagementList();
+        }
+
+        function initCharts() {
+            const ctx1 = document.getElementById('realtime-chart').getContext('2d');
+            charts.realtime = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Precio BTC',
+                        data: [],
+                        borderColor: '#f7931a',
+                        backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Precio ETH',
+                        data: [],
+                        borderColor: '#627eea',
+                        backgroundColor: 'rgba(98, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { 
+                            ticks: {
+                                callback: value => '$' + value.toLocaleString()
+                            }
+                        }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('signals-chart').getContext('2d');
+            charts.signals = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Compra', 'Venta', 'Mantener'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: ['#4CAF50', '#F44336', '#FFC107'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#f1f5f9' }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de confianza
+            const ctx3 = document.getElementById('confidence-chart').getContext('2d');
+            charts.confidence = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Confianza (%)',
+                        data: [],
+                        backgroundColor: '#2196F3',
+                        borderColor: '#1976D2',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: value => value + '%'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de volumen
+            const ctx4 = document.getElementById('volume-chart').getContext('2d');
+            charts.volume = new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Volumen 24h',
+                        data: [],
+                        backgroundColor: 'rgba(33, 150, 243, 0.8)',
+                        borderColor: '#2196F3',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: value => '$' + value.toLocaleString()
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de sentimiento
+            const ctx5 = document.getElementById('sentiment-chart').getContext('2d');
+            charts.sentiment = new Chart(ctx5, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Sentimiento',
+                        data: [],
+                        borderColor: '#9C27B0',
+                        backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 1,
+                            ticks: {
+                                callback: value => (value * 100).toFixed(0) + '%'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCharts(data, signals) {
+            if(charts.signals && signals) {
+                charts.signals.data.datasets[0].data = [signals.compra, signals.venta, signals.mantener];
+                charts.signals.update();
+            }
+            
+            if(charts.realtime && data.analisis) {
+                const now = new Date();
+                if(data.analisis.BTC) {
+                    charts.realtime.data.labels.push(now.toLocaleTimeString());
+                    charts.realtime.data.datasets[0].data.push(data.analisis.BTC.precio_actual);
+                }
+                if(data.analisis.ETH) {
+                    charts.realtime.data.datasets[1].data.push(data.analisis.ETH.precio_actual);
+                }
+                
+                if(charts.realtime.data.labels.length > 20) {
+                    charts.realtime.data.labels.shift();
+                    charts.realtime.data.datasets.forEach(ds => ds.data.shift());
+                }
+                charts.realtime.update();
+            }
+
+            // Actualizar gráfico de confianza
+            if(charts.confidence && data.analisis) {
+                const labels = [];
+                const confidences = [];
+                
+                Object.entries(data.analisis).forEach(([cripto, analisis]) => {
+                    labels.push(cripto);
+                    confidences.push(analisis.confianza * 100);
+                });
+                
+                charts.confidence.data.labels = labels;
+                charts.confidence.data.datasets[0].data = confidences;
+                charts.confidence.update();
+            }
+
+            // Actualizar gráfico de volumen
+            if(charts.volume && data.analisis) {
+                const labels = [];
+                const volumes = [];
+                
+                Object.entries(data.analisis).forEach(([cripto, analisis]) => {
+                    labels.push(cripto);
+                    volumes.push(analisis.volumen_24h || 0);
+                });
+                
+                charts.volume.data.labels = labels;
+                charts.volume.data.datasets[0].data = volumes;
+                charts.volume.update();
+            }
+        }
+
+        function updateChart() {
+            const cripto = document.getElementById('chart-cripto').value;
+            const indicator = document.getElementById('chart-indicator').value;
+            const period = document.getElementById('chart-period').value;
+            
+            if(!cripto) return;
+            
+            fetch(`/api/online/historial/${cripto}?periodo=${period}`)
+                .then(r => r.json())
+                .then(data => {
+                    if(data.error) {
+                        alert('Error cargando datos: ' + data.error);
+                        return;
+                    }
+                    
+                    const ctx = document.getElementById('technical-chart').getContext('2d');
+                    
+                    if(charts.technical) {
+                        charts.technical.destroy();
+                    }
+                    
+                    let datasets = [];
+                    
+                    if(indicator === 'price') {
+                        datasets = [
+                            {
+                                label: 'Precio',
+                                data: data.precios,
+                                borderColor: '#2196F3',
+                                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                                fill: true,
+                                tension: 0.1
+                            },
+                            {
+                                label: 'SMA 20',
+                                data: calculateSMA(data.precios, 20),
+                                borderColor: '#FF9800',
+                                borderDash: [5, 5],
+                                fill: false
+                            }
+                        ];
+                    } else if(indicator === 'rsi') {
+                        const rsiValues = calculateRSI(data.precios);
+                        datasets = [{
+                            label: 'RSI',
+                            data: rsiValues,
+                            borderColor: '#9C27B0',
+                            fill: false
+                        }, {
+                            label: 'Sobrecompra (70)',
+                            data: new Array(rsiValues.length).fill(70),
+                            borderColor: '#F44336',
+                            borderDash: [5, 5],
+                            pointRadius: 0
+                        }, {
+                            label: 'Sobreventa (30)',
+                            data: new Array(rsiValues.length).fill(30),
+                            borderColor: '#4CAF50',
+                            borderDash: [5, 5],
+                            pointRadius: 0
+                        }];
+                    } else if(indicator === 'macd') {
+                        const macdData = calculateMACD(data.precios);
+                        datasets = [{
+                            label: 'MACD',
+                            data: macdData.macd,
+                            borderColor: '#2196F3',
+                            fill: false
+                        }, {
+                            label: 'Señal',
+                            data: macdData.signal,
+                            borderColor: '#FF9800',
+                            fill: false
+                        }, {
+                            label: 'Histograma',
+                            data: macdData.histogram,
+                            type: 'bar',
+                            backgroundColor: 'rgba(33, 150, 243, 0.5)',
+                            borderColor: '#2196F3'
+                        }];
+                    } else if(indicator === 'volume') {
+                        datasets = [{
+                            type: 'bar',
+                            label: 'Volumen',
+                            data: data.volumenes,
+                            backgroundColor: 'rgba(33, 150, 243, 0.5)'
+                        }];
+                    } else if(indicator === 'candlestick') {
+                        // Velas japonesas
+                        const candleData = data.fechas.map((fecha, i) => ({
+                            x: fecha,
+                            o: data.open[i],
+                            h: data.high[i],
+                            l: data.low[i],
+                            c: data.precios[i]
+                        }));
+                        
+                        datasets = [{
+                            label: 'Velas Japonesas',
+                            data: candleData,
+                            borderColor: '#2196F3',
+                            backgroundColor: 'rgba(33, 150, 243, 0.8)',
+                            borderWidth: 1
+                        }];
+                    } else if(indicator === 'bollinger') {
+                        const bbData = calculateBollinger(data.precios);
+                        datasets = [{
+                            label: 'Precio',
+                            data: data.precios,
+                            borderColor: '#2196F3',
+                            fill: false
+                        }, {
+                            label: 'Banda Superior',
+                            data: bbData.upper,
+                            borderColor: '#FF9800',
+                            borderDash: [5, 5],
+                            fill: false
+                        }, {
+                            label: 'Banda Media (SMA)',
+                            data: bbData.middle,
+                            borderColor: '#9E9E9E',
+                            fill: false
+                        }, {
+                            label: 'Banda Inferior',
+                            data: bbData.lower,
+                            borderColor: '#FF9800',
+                            borderDash: [5, 5],
+                            fill: false
+                        }];
+                    }
+                    
+                    charts.technical = new Chart(ctx, {
+                        type: indicator === 'candlestick' ? 'candlestick' : 'line',
+                        data: {
+                            labels: data.fechas,
+                            datasets: datasets
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: value => indicator === 'price' || indicator === 'candlestick' || indicator === 'bollinger' ? '$' + value.toLocaleString() : value
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+        function calculateSMA(data, period) {
+            const sma = [];
+            for(let i = 0; i < data.length; i++) {
+                if(i < period - 1) {
+                    sma.push(null);
+                } else {
+                    const sum = data.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
+                    sma.push(sum / period);
+                }
+            }
+            return sma;
+        }
+
+        function calculateRSI(prices, period = 14) {
+            const rsi = [];
+            for(let i = 0; i < prices.length; i++) {
+                if(i < period) {
+                    rsi.push(50);
+                } else {
+                    let gains = 0, losses = 0;
+                    for(let j = i - period + 1; j <= i; j++) {
+                        const change = prices[j] - prices[j-1];
+                        if(change > 0) gains += change;
+                        else losses += Math.abs(change);
+                    }
+                    const avgGain = gains / period;
+                    const avgLoss = losses / period;
+                    const rs = avgGain / (avgLoss || 1);
+                    rsi.push(100 - (100 / (1 + rs)));
+                }
+            }
+            return rsi;
+        }
+
+        function calculateMACD(prices) {
+            const ema12 = [];
+            const ema26 = [];
+            const macd = [];
+            const signal = [];
+            const histogram = [];
+            
+            // Calcular EMAs
+            let ema12_prev = prices[0];
+            let ema26_prev = prices[0];
+            const alpha12 = 2 / (12 + 1);
+            const alpha26 = 2 / (26 + 1);
+            
+            for(let i = 0; i < prices.length; i++) {
+                ema12_prev = alpha12 * prices[i] + (1 - alpha12) * ema12_prev;
+                ema26_prev = alpha26 * prices[i] + (1 - alpha26) * ema26_prev;
+                
+                ema12.push(ema12_prev);
+                ema26.push(ema26_prev);
+                
+                const macd_val = ema12_prev - ema26_prev;
+                macd.push(macd_val);
+            }
+            
+            // Calcular señal
+            let signal_prev = macd[0];
+            const alphaSignal = 2 / (9 + 1);
+            
+            for(let i = 0; i < macd.length; i++) {
+                signal_prev = alphaSignal * macd[i] + (1 - alphaSignal) * signal_prev;
+                signal.push(signal_prev);
+                histogram.push(macd[i] - signal_prev);
+            }
+            
+            return { macd, signal, histogram };
+        }
+
+        function calculateBollinger(prices, period = 20, stdDev = 2) {
+            const sma = [];
+            const upper = [];
+            const lower = [];
+            
+            for(let i = 0; i < prices.length; i++) {
+                if(i < period - 1) {
+                    sma.push(null);
+                    upper.push(null);
+                    lower.push(null);
+                } else {
+                    const slice = prices.slice(i - period + 1, i + 1);
+                    const mean = slice.reduce((a, b) => a + b, 0) / period;
+                    const std = Math.sqrt(slice.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / period);
+                    
+                    sma.push(mean);
+                    upper.push(mean + stdDev * std);
+                    lower.push(mean - stdDev * std);
+                }
+            }
+            
+            return { upper, middle: sma, lower };
+        }
+
+        function updateAlertConfig() {
+            const type = document.getElementById('alert-type').value;
+            document.getElementById('alert-price-config').style.display = type === 'precio' ? 'block' : 'none';
+            document.getElementById('alert-change-config').style.display = type === 'cambio' ? 'block' : 'none';
+        }
+
+        function saveAlertConfig() {
+            const type = document.getElementById('alert-type').value;
+            const cripto = document.getElementById('alert-cripto').value;
+            
+            let config = { tipo: type, cripto: cripto };
+            
+            if(type === 'precio') {
+                config.valor = parseFloat(document.getElementById('alert-price-value').value);
+                config.condicion = document.getElementById('alert-price-condition').value;
+            } else if(type === 'cambio') {
+                config.valor = parseFloat(document.getElementById('alert-change-value').value);
+                config.condicion = document.getElementById('alert-change-condition').value;
+            }
+            
+            fetch('/api/online/guardar-alerta', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(config)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    showNotification('Alerta guardada correctamente', 'success');
+                    loadAlertas();
+                } else {
+                    showNotification('Error al guardar alerta', 'error');
+                }
+            });
+        }
+
+        function loadAlertas() {
+            fetch('/api/online/obtener-alertas')
+                .then(r => r.json())
+                .then(data => {
+                    const container = document.getElementById('alerts-container');
+                    
+                    if(data.alertas && data.alertas.length > 0) {
+                        container.innerHTML = data.alertas.map(alerta => `
+                            <div class="alert-item" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.75rem;">
+                                <i class="fas fa-bell" style="color: var(--primary-color);"></i>
+                                <div style="flex: 1;">
+                                    <strong>${alerta.tipo.toUpperCase()}</strong> - ${alerta.cripto}
+                                    <p style="color: var(--text-secondary); margin: 0.25rem 0; font-size: 0.875rem;">
+                                        ${getAlertaDescripcion(alerta)}
+                                    </p>
+                                </div>
+                                <button onclick="eliminarAlerta(${alerta.id})" class="btn-icon" style="color: var(--danger-color);" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `).join('');
+                    } else {
+                        container.innerHTML = '<p class="empty-state">No hay alertas configuradas.</p>';
+                    }
+                });
+        }
+
+        function eliminarAlerta(id) {
+            if(!confirm('¿Eliminar esta alerta?')) return;
+            
+            fetch(`/api/online/eliminar-alerta/${id}`, {method: 'DELETE'})
+                .then(r => r.json())
+                .then(data => {
+                    if(data.success) {
+                        showNotification('Alerta eliminada', 'success');
+                        loadAlertas();
+                    }
+                });
+        }
+
+        function getAlertaDescripcion(alerta) {
+            switch(alerta.tipo) {
+                case 'pump': return 'Detecta subidas >10% en 1h';
+                case 'dump': return 'Detecta bajadas >10% en 1h';
+                case 'volumen': return 'Volumen >3x el promedio';
+                case 'rsi': return 'RSI >80 o <20';
+                case 'precio': return `Precio ${alerta.condicion === 'above' ? 'por encima de' : 'por debajo de'} $${alerta.valor}`;
+                case 'cambio': return `Cambio ${alerta.condicion === 'increase' ? 'al alza' : 'a la baja'} de ${alerta.valor}%`;
+                default: return 'Alerta personalizada';
+            }
+        }
+
+function loadSentiment() {
+    const cripto = document.getElementById('sentiment-cripto').value;
+    const container = document.getElementById('sentiment-content');
+    
+    // Mostrar loading
+    container.innerHTML = '<div class="loading"><i class="fas fa-circle-notch fa-spin"></i> Analizando sentimiento del mercado...</div>';
+    
+    fetch(`/api/online/sentimiento-detallado?cripto=${cripto}`)
+        .then(r => {
+            if (!r.ok) throw new Error('Error en la respuesta del servidor');
+            return r.json();
+        })
+        .then(data => {
+            console.log('Datos de sentimiento recibidos:', data);
+            
+            if(data.error) {
+                container.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Error: ${data.error}</div>`;
+                return;
+            }
+            
+            // Verificar que tenemos todos los datos necesarios
+            if (!data.sentimiento_general || !data.score === undefined) {
+                container.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Datos incompletos recibidos del servidor</div>`;
+                return;
+            }
+            
+            // Renderizar análisis de sentimiento
+            renderizarAnalisisSentimiento(data, cripto);
+            
+            // Actualizar gráfico de sentimiento
+            actualizarGraficoSentimiento(data);
+        })
+        .catch(error => {
+            console.error('Error completo en sentimiento:', error);
+            container.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Error al cargar análisis de sentimiento: ${error.message}</div>`;
+        });
+}
+
+// También reemplaza las funciones auxiliares
+function renderizarAnalisisSentimiento(data, cripto) {
+    const container = document.getElementById('sentiment-content');
+    
+    // Validar datos
+    if (!data.metricas || !data.analisis) {
+        container.innerHTML = '<div class="error">Datos de análisis incompletos</div>';
+        return;
+    }
+    
+    const sentimentColor = data.score > 0.7 ? '#4CAF50' : 
+                         data.score > 0.6 ? '#8BC34A' :
+                         data.score < 0.3 ? '#F44336' :
+                         data.score < 0.4 ? '#FF9800' : '#FFC107';
+    
+    container.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                <h4 style="color: var(--text-secondary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-heart" style="color: ${sentimentColor};"></i>
+                    Sentimiento General
+                </h4>
+                <div style="font-size: 2rem; font-weight: bold; color: ${sentimentColor}; margin-bottom: 0.5rem;">
+                    ${data.sentimiento_general}
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Score: <strong>${(data.score * 100).toFixed(1)}%</strong></span>
+                    <span style="color: ${data.tendencia === 'alcista' ? '#4CAF50' : '#F44336'};">
+                        <i class="fas fa-arrow-${data.tendencia === 'alcista' ? 'up' : 'down'}"></i>
+                        ${data.tendencia}
+                    </span>
+                </div>
+            </div>
+            
+            <div style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                <h4 style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    <i class="fas fa-chart-line"></i> Rendimiento
+                </h4>
+                <div style="display: grid; gap: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Rendimiento 7d:</span>
+                        <strong style="color: ${data.metricas.rendimiento_7d > 0 ? '#4CAF50' : '#F44336'};">
+                            ${data.metricas.rendimiento_7d > 0 ? '+' : ''}${data.metricas.rendimiento_7d}%
+                        </strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Volatilidad:</span>
+                        <strong>${data.metricas.volatilidad_7d}%</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Precio actual:</span>
+                        <strong>$${data.metricas.precio_actual.toLocaleString()}</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                <h4 style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    <i class="fas fa-tachometer-alt"></i> Indicadores
+                </h4>
+                <div style="display: grid; gap: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>RSI:</span>
+                        <strong style="color: ${data.metricas.rsi_actual > 70 ? '#F44336' : data.metricas.rsi_actual < 30 ? '#4CAF50' : '#FFC107'};">
+                            ${data.metricas.rsi_actual}
+                        </strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Volumen:</span>
+                        <strong style="color: ${data.metricas.volumen_ratio > 2 ? '#4CAF50' : data.metricas.volumen_ratio < 0.5 ? '#F44336' : '#FFC107'};">
+                            ${data.metricas.volumen_ratio > 1 ? '+' : ''}${((data.metricas.volumen_ratio - 1) * 100).toFixed(0)}%
+                        </strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Condición:</span>
+                        <strong style="color: ${data.analisis.condicion === 'Sobrecompra' ? '#F44336' : data.analisis.condicion === 'Sobreventa' ? '#4CAF50' : '#FFC107'};">
+                            ${data.analisis.condicion}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                <h4 style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    <i class="fas fa-rocket"></i> Momentum
+                </h4>
+                <div style="display: grid; gap: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Momentum:</span>
+                        <strong>${data.analisis.momentum}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Volatilidad:</span>
+                        <strong>${data.analisis.volatilidad}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function actualizarGraficoSentimiento(data) {
+    // Verificar que el gráfico existe
+    if(!charts.sentiment) {
+        console.error('Gráfico de sentimiento no inicializado');
+        return;
+    }
+    
+    if(data.historico && data.historico.length > 0) {
+        const labels = data.historico.map(h => h.fecha);
+        const values = data.historico.map(h => h.score);
+        
+        // Colores para cada punto según valor
+        const pointColors = values.map(v => v > 0.7 ? '#4CAF50' : v > 0.6 ? '#8BC34A' : v < 0.3 ? '#F44336' : v < 0.4 ? '#FF9800' : '#FFC107');
+        
+        charts.sentiment.data = {
+            labels: labels,
+            datasets: [{
+                label: 'Sentimiento de ' + data.cripto,
+                data: values,
+                borderColor: '#9C27B0',
+                backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: pointColors,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4
+            }, {
+                label: 'Línea de Neutralidad',
+                data: new Array(values.length).fill(0.5),
+                borderColor: '#9E9E9E',
+                borderDash: [5, 5],
+                pointRadius: 0,
+                fill: false
+            }]
+        };
+        
+        charts.sentiment.options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: `Evolución del Sentimiento de ${data.cripto}`,
+                    color: '#F1F5F9',
+                    font: { size: 16 }
+                },
+                tooltip: {
+                    callbacks: {
+                        afterLabel: function(context) {
+                            const index = context.dataIndex;
+                            const punto = data.historico[index];
+                            if(!punto) return [];
+                            
+                            return [
+                                `Precio: $${punto.precio.toLocaleString()}`,
+                                `Cambio 7d: ${punto.cambio_7d > 0 ? '+' : ''}${punto.cambio_7d}%`,
+                                `RSI: ${punto.rsi}`,
+                                `Volumen: ${punto.volumen_ratio > 1 ? '+' : ''}${((punto.volumen_ratio - 1) * 100).toFixed(0)}%`
+                            ];
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    min: 0,
+                    max: 1,
+                    ticks: {
+                        callback: value => (value * 100).toFixed(0) + '%',
+                        stepSize: 0.1,
+                        color: '#94A3B8'
+                    },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                x: {
+                    ticks: { color: '#94A3B8' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        };
+        
+        charts.sentiment.update();
+        console.log('Gráfico de sentimiento actualizado');
+    } else {
+        console.log('No hay datos históricos para el gráfico');
+    }
+}
+
+        function getAIExplanation() {
+            const cripto = document.getElementById('ia-cripto').value;
+            const depth = document.getElementById('ia-depth').value;
+            
+            if(!cripto) {
+                alert('Selecciona una criptomoneda');
+                return;
+            }
+            
+            const output = document.getElementById('ia-output');
+            output.innerHTML = '<div style="text-align: center; padding: 3rem;"><i class="fas fa-circle-notch fa-spin fa-2x"></i><p>Analizando...</p></div>';
+            
+            fetch('/api/online/ia-explicacion', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({cripto: cripto})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.error) {
+                    output.innerHTML = `<div class="error">${data.error}</div>`;
+                    return;
+                }
+                
+                // Convertir markdown simple a HTML
+                let html = data.explicacion
+                    .replace(/# (.*)/g, '<h2 style="color: var(--primary-color); margin-top: 0;">$1</h2>')
+                    .replace(/## (.*)/g, '<h3 style="color: var(--primary-color); margin-top: 1.5rem;">$1</h3>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/🟢 (.*)/g, '<div style="color: #4CAF50; margin: 0.5rem 0;">🟢 $1</div>')
+                    .replace(/🔴 (.*)/g, '<div style="color: #F44336; margin: 0.5rem 0;">🔴 $1</div>')
+                    .replace(/🟡 (.*)/g, '<div style="color: #FFC107; margin: 0.5rem 0;">🟡 $1</div>')
+                    .replace(/⚠️ (.*)/g, '<div style="color: #FF9800; margin: 0.5rem 0;">⚠️ $1</div>')
+                    .replace(/✅ (.*)/g, '<div style="color: #4CAF50; margin: 0.5rem 0;">✅ $1</div>')
+                    .replace(/📈 (.*)/g, '<div style="color: #4CAF50; margin: 0.5rem 0;">📈 $1</div>')
+                    .replace(/📉 (.*)/g, '<div style="color: #F44336; margin: 0.5rem 0;">📉 $1</div>')
+                    .replace(/🚀 (.*)/g, '<div style="color: #4CAF50; font-weight: bold; margin: 0.5rem 0;">🚀 $1</div>')
+                    .replace(/💡 (.*)/g, '<div style="background: rgba(33, 150, 243, 0.1); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0;">💡 $1</div>')
+                    .replace(/---/g, '<hr style="border-color: var(--border-color); margin: 1.5rem 0;">')
+                    .replace(/\\n/g, '<br>');
+                
+                output.innerHTML = `<div class="ia-response" style="line-height: 1.8;">${html}</div>`;
+            });
+        }
+
+        function calculateCorrelation() {
+            const checkboxes = document.querySelectorAll('#correlation-checkboxes input:checked');
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+            
+            if(selected.length < 2) {
+                showNotification('Selecciona al menos 2 criptomonedas', 'warning');
+                return;
+            }
+
+            if(selected.length > 6) {
+                showNotification('Máximo 6 criptomonedas para mejor visualización', 'warning');
+                return;
+            }
+
+            // Mostrar loading
+            document.getElementById('correlation-results').style.display = 'block';
+            const resultsDiv = document.getElementById('correlation-recommendations');
+            
+            if (resultsDiv) {
+                resultsDiv.innerHTML = '<div class="loading"><i class="fas fa-circle-notch fa-spin"></i> Calculando matriz de correlación...</div>';
+            }
+
+            fetch('/api/online/correlacion', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({criptos: selected})
+            })
+            .then(r => {
+                if (!r.ok) throw new Error('Error en la respuesta del servidor');
+                return r.json();
+            })
+            .then(data => {
+                if(data.error) {
+                    showNotification(data.error, 'error');
+                    if (resultsDiv) {
+                        resultsDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                    }
+                    return;
+                }
+
+                crearMatrizCorrelacion(data, selected);
+                showNotification('Matriz de correlación calculada con éxito', 'success');
+            })
+            .catch(error => {
+                console.error('Error completo en correlación:', error);
+                showNotification('Error al calcular correlación', 'error');
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Error: ${error.message}</div>`;
+                }
+            });
+        }
+
+        function crearMatrizCorrelacion(data, selected) {
+            const ctx = document.getElementById('correlation-chart');
+            if (!ctx) return;
+            
+            if(charts.correlation) charts.correlation.destroy();
+
+            const labels = data.matriz_correlacion.labels;
+            const valores = data.matriz_correlacion.valores;
+            
+            if (!labels || !valores || labels.length === 0 || valores.length === 0) {
+                console.error('Datos de correlación inválidos:', data);
+                return;
+            }
+
+            // Colores para la matriz
+            const colors = valores.map(fila => 
+                fila.map(valor => {
+                    if(valor > 0.8) return 'rgba(244, 67, 54, 0.8)';
+                    if(valor > 0.6) return 'rgba(255, 152, 0, 0.8)';
+                    if(valor > 0.3) return 'rgba(255, 193, 7, 0.8)';
+                    if(valor > 0) return 'rgba(76, 175, 80, 0.6)';
+                    if(valor > -0.3) return 'rgba(33, 150, 243, 0.6)';
+                    if(valor > -0.6) return 'rgba(3, 169, 244, 0.8)';
+                    return 'rgba(156, 39, 176, 0.8)';
+                })
+            );
+
+            charts.correlation = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: labels.map((label, i) => ({
+                        label: label,
+                        data: valores[i],
+                        backgroundColor: colors[i],
+                        borderColor: valores[i].map(valor => {
+                            if(valor > 0.8) return '#F44336';
+                            if(valor > 0.6) return '#FF9800';
+                            if(valor > 0.3) return '#FFC107';
+                            if(valor > 0) return '#4CAF50';
+                            if(valor > -0.3) return '#2196F3';
+                            if(valor > -0.6) return '#03A9F4';
+                            return '#9C27B0';
+                        }),
+                        borderWidth: 1
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Matriz de Correlación - ${selected.join(', ')}`,
+                            color: '#F1F5F9',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                color: '#F1F5F9',
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return `${context[0].dataset.label} vs ${labels[context[0].dataIndex]}`;
+                                },
+                                label: function(context) {
+                                    const valor = context.raw;
+                                    let interpretacion = '';
+                                    if(valor > 0.8) interpretacion = 'Muy Alta - Se mueven casi idénticas';
+                                    else if(valor > 0.6) interpretacion = 'Alta - Correlación significativa';
+                                    else if(valor > 0.3) interpretacion = 'Moderada - Alguna relación';
+                                    else if(valor > 0) interpretacion = 'Baja - Poca relación';
+                                    else if(valor > -0.3) interpretacion = 'Muy Baja - Casi ninguna relación';
+                                    else if(valor > -0.6) interpretacion = 'Negativa Baja - Se mueven opuestas';
+                                    else interpretacion = 'Negativa Alta - Se mueven fuertemente opuestas';
+                                    
+                                    return [
+                                        `Correlación: ${(valor * 100).toFixed(1)}%`,
+                                        `Interpretación: ${interpretacion}`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            ticks: { 
+                                color: '#94A3B8',
+                                font: { size: 11 }
+                            },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        y: { 
+                            min: -1,
+                            max: 1,
+                            ticks: { 
+                                color: '#94A3B8',
+                                callback: value => (value * 100).toFixed(0) + '%',
+                                stepSize: 0.2
+                            },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Mostrar recomendaciones
+            mostrarRecomendacionesCorrelacion(data);
+        }
+
+        function mostrarRecomendacionesCorrelacion(data) {
+            const resultsDiv = document.getElementById('correlation-recommendations');
+            if (!resultsDiv) return;
+            
+            let html = '';
+            
+            if(data.recomendaciones && data.recomendaciones.length > 0) {
+                html += `
+                    <h4 style="margin: 1.5rem 0 1rem; color: #F1F5F9;">
+                        <i class="fas fa-lightbulb"></i> Recomendaciones de Diversificación
+                    </h4>
+                    <div style="display: grid; gap: 0.75rem;">
+                `;
+                
+                data.recomendaciones.forEach(r => {
+                    html += `
+                        <div style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; border-left: 4px solid ${r.correlacion > 0.7 ? '#F44336' : '#4CAF50'};">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <strong>${r.par}</strong>
+                                <span style="background: ${r.correlacion > 0.7 ? 'rgba(244, 67, 54, 0.2)' : 'rgba(76, 175, 80, 0.2)'}; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem;">
+                                    ${(r.correlacion * 100).toFixed(1)}%
+                                </span>
+                            </div>
+                            <div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${r.tipo}</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">${r.mensaje}</div>
+                            <div style="color: #2196F3; font-size: 0.875rem;">
+                                <i class="fas fa-brain"></i> ${r.estrategia}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            if(data.clusters && data.clusters.length > 0) {
+                html += `
+                    <h4 style="margin: 1.5rem 0 1rem; color: #F1F5F9;">
+                        <i class="fas fa-project-diagram"></i> Grupos Identificados
+                    </h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                `;
+                
+                data.clusters.forEach(c => {
+                    html += `
+                        <div style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                <div style="width: 30px; height: 30px; background: linear-gradient(135deg, #2196F3, #9C27B0); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                    ${c.id}
+                                </div>
+                                <strong>Grupo ${c.id}</strong>
+                            </div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem;">
+                                ${c.criptomonedas.join(', ')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            // Estadísticas
+            if(data.estadisticas) {
+                html += `
+                    <div style="margin-top: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(156, 39, 176, 0.1)); border-radius: 12px;">
+                        <h5 style="margin-bottom: 1rem; color: #F1F5F9;">
+                            <i class="fas fa-chart-bar"></i> Estadísticas Generales
+                        </h5>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #2196F3;">${(data.estadisticas.correlacion_promedio * 100).toFixed(1)}%</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Correlación Promedio</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #4CAF50;">${(data.estadisticas.max_correlacion * 100).toFixed(1)}%</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Máxima Correlación</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #F44336;">${(data.estadisticas.min_correlacion * 100).toFixed(1)}%</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Mínima Correlación</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #9C27B0;">${data.periodo_analisis}</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Días Analizados</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Correlación
+            const correlacionBtn = document.querySelector('button[onclick="calculateCorrelation()"]');
+            if (correlacionBtn) {
+                correlacionBtn.addEventListener('click', calculateCorrelation);
+            }
+            
+            // Comparación
+            const comparacionBtn = document.querySelector('button[onclick="runComparison()"]');
+            if (comparacionBtn) {
+                comparacionBtn.addEventListener('click', runComparison);
+            }
+        });
+
+        function mostrarRecomendacionesCorrelacion(data) {
+            const resultsDiv = document.getElementById('correlation-recommendations');
+            
+            let html = '';
+            
+            if(data.recomendaciones && data.recomendaciones.length > 0) {
+                html += `
+                    <h4 style="margin: 1.5rem 0 1rem; color: #F1F5F9;">
+                        <i class="fas fa-lightbulb"></i> Recomendaciones de Diversificación
+                    </h4>
+                    <div style="display: grid; gap: 0.75rem;">
+                `;
+                
+                data.recomendaciones.forEach(r => {
+                    html += `
+                        <div style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; border-left: 4px solid ${r.correlacion > 0.7 ? '#F44336' : '#4CAF50'};">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <strong>${r.par}</strong>
+                                <span style="background: ${r.correlacion > 0.7 ? 'rgba(244, 67, 54, 0.2)' : 'rgba(76, 175, 80, 0.2)'}; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem;">
+                                    ${(r.correlacion * 100).toFixed(1)}%
+                                </span>
+                            </div>
+                            <div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${r.tipo}</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">${r.mensaje}</div>
+                            <div style="color: #2196F3; font-size: 0.875rem;">
+                                <i class="fas fa-brain"></i> ${r.estrategia}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            if(data.clusters && data.clusters.length > 0) {
+                html += `
+                    <h4 style="margin: 1.5rem 0 1rem; color: #F1F5F9;">
+                        <i class="fas fa-project-diagram"></i> Grupos Identificados
+                    </h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                `;
+                
+                data.clusters.forEach(c => {
+                    html += `
+                        <div style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                <div style="width: 30px; height: 30px; background: linear-gradient(135deg, #2196F3, #9C27B0); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                    ${c.id}
+                                </div>
+                                <strong>Grupo ${c.id}</strong>
+                            </div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem;">
+                                ${c.criptomonedas.join(', ')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            // Estadísticas
+            if(data.estadisticas) {
+                html += `
+                    <div style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(156, 39, 176, 0.1)); padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem;">
+                        <h5 style="margin-bottom: 1rem; color: #F1F5F9;">
+                            <i class="fas fa-chart-bar"></i> Estadísticas Generales
+                        </h5>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #2196F3;">${(data.estadisticas.correlacion_promedio * 100).toFixed(1)}%</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Correlación Promedio</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #4CAF50;">${(data.estadisticas.max_correlacion * 100).toFixed(1)}%</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Máxima Correlación</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #F44336;">${(data.estadisticas.min_correlacion * 100).toFixed(1)}%</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Mínima Correlación</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #9C27B0;">${data.periodo_analisis}</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Días Analizados</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function checkAnomalies() {
+            fetch('/api/online/anomalias')
+                .then(r => r.json())
+                .then(data => {
+                    const container = document.getElementById('alerts-container');
+                    document.getElementById('alert-count').textContent = data.count;
+                    
+                    if(data.anomalias && data.anomalias.length > 0) {
+                        container.innerHTML = data.anomalias.map(a => `
+                            <div class="alert-item ${a.tipo}" style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 0.75rem; border-left: 4px solid ${a.tipo === 'pump' ? '#4CAF50' : a.tipo === 'dump' ? '#F44336' : '#FF9800'};">
+                                <i class="fas fa-exclamation-circle" style="font-size: 1.25rem; margin-top: 0.125rem; color: ${a.tipo === 'pump' ? '#4CAF50' : a.tipo === 'dump' ? '#F44336' : '#FF9800'};"></i>
+                                <div>
+                                    <strong style="text-transform: uppercase;">${a.tipo.replace('_', ' ')}</strong>
+                                    <p style="color: var(--text-secondary); margin: 0.25rem 0 0; font-size: 0.875rem;">${a.mensaje}</p>
+                                </div>
+                            </div>
+                        `).join('');
+                    } else {
+                        container.innerHTML = '<p class="empty-state" style="text-align: center; color: var(--text-secondary); padding: 3rem;">No se detectaron anomalías en este momento.</p>';
+                    }
+                });
+        }
+
+        function forceUpdate() {
+            document.getElementById('update-indicator').style.display = 'inline-flex';
+            fetch('/api/online/actualizar-manual', {method: 'POST'})
+                .then(() => {
+                    setTimeout(() => {
+                        loadData();
+                        document.getElementById('update-indicator').style.display = 'none';
+                    }, 2000);
+                });
+        }
+
+        function toggleAutoUpdate() {
+            onlineConfig.autoUpdate = !onlineConfig.autoUpdate;
+            const icon = document.getElementById('auto-icon');
+            if(onlineConfig.autoUpdate) {
+                icon.classList.add('fa-spin');
+                startAutoUpdate();
+            } else {
+                icon.classList.remove('fa-spin');
+                stopAutoUpdate();
+            }
+        }
+
+        function startAutoUpdate() {
+            if(updateTimer) clearInterval(updateTimer);
+            updateTimer = setInterval(loadData, onlineConfig.intervalo * 60 * 1000);
+        }
+
+        function stopAutoUpdate() {
+            if(updateTimer) {
+                clearInterval(updateTimer);
+                updateTimer = null;
+            }
+        }
+
+        function showConfig() {
+            document.getElementById('config-modal').style.display = 'flex';
+        }
+
+        function closeConfig() {
+            document.getElementById('config-modal').style.display = 'none';
+        }
+
+        function saveConfig() {
+            const checkboxes = document.querySelectorAll('#cripto-selection input:checked');
+            onlineConfig.criptos = Array.from(checkboxes).map(cb => cb.value);
+            onlineConfig.intervalo = parseInt(document.getElementById('update-interval').value);
+            
+            // Guardar tema e idioma
+            const theme = document.getElementById('theme-select').value;
+            const language = document.getElementById('language-select').value;
+            
+            localStorage.setItem('theme', theme);
+            localStorage.setItem('lang', language);
+            
+            applyTheme(theme);
+            applyLanguage(language);
+            
+            fetch('/api/online/detener', {method: 'POST'})
+                .then(() => {
+                    initOnline();
+                    closeConfig();
+                });
+        }
+
+        function runBacktesting() {
+            const cripto = document.getElementById('backtest-cripto').value;
+            const estrategia = document.getElementById('backtest-estrategia').value;
+            const capital = parseFloat(document.getElementById('backtest-capital').value);
+
+            // Validaciones mejoradas
+            if (!cripto) {
+                showNotification('Por favor selecciona una criptomoneda', 'warning');
+                document.getElementById('backtest-cripto').focus();
+                return;
+            }
+
+            if (!capital || capital <= 0) {
+                showNotification('El capital inicial debe ser mayor a 0', 'warning');
+                document.getElementById('backtest-capital').focus();
+                return;
+            }
+
+            if (capital < 100) {
+                showNotification('El capital mínimo recomendado es $100', 'warning');
+                return;
+            }
+
+            // Deshabilitar botón durante la ejecución con feedback visual
+            const btn = document.querySelector('button[onclick="runBacktesting()"]');
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Ejecutando backtesting...';
+            btn.style.opacity = '0.7';
+
+            // Mostrar indicador de progreso
+            const resultsDiv = document.getElementById('backtest-results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-cog fa-spin fa-2x" style="color: var(--primary-color); margin-bottom: 1rem;"></i>
+                    <h4>Ejecutando backtesting...</h4>
+                    <p style="color: var(--text-secondary);">Analizando datos históricos y simulando estrategia</p>
+                    <div style="width: 100%; max-width: 300px; margin: 1rem auto;">
+                        <div style="background: var(--border-color); height: 4px; border-radius: 2px; overflow: hidden;">
+                            <div id="backtest-progress" style="width: 0%; height: 100%; background: var(--primary-color); transition: width 0.3s;"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Simular progreso
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 5;
+                const progressBar = document.getElementById('backtest-progress');
+                if (progressBar) {
+                    progressBar.style.width = Math.min(progress, 90) + '%';
+                }
+                if (progress >= 90) clearInterval(progressInterval);
+            }, 200);
+
+            fetch('/api/online/backtesting', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    cripto: cripto,
+                    estrategia: estrategia,
+                    capital: capital
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                // Detener progreso
+                clearInterval(progressInterval);
+                const progressBar = document.getElementById('backtest-progress');
+                if (progressBar) {
+                    progressBar.style.width = '100%';
+                }
+
+                setTimeout(() => {
+                    // Restaurar botón
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                    btn.style.opacity = '1';
+
+                    if (data.error) {
+                        showNotification(data.error, 'error');
+                        resultsDiv.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> ${data.error}</div>`;
+                        return;
+                    }
+
+                    // Mostrar resultados exitosos
+                    mostrarResultadosBacktesting(data);
+
+                }, 500);
+
+            })
+            .catch(error => {
+                // Restaurar botón en caso de error
+                clearInterval(progressInterval);
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                btn.style.opacity = '1';
+
+                showNotification('Error en el backtesting', 'error');
+                console.error('Error:', error);
+                
+                resultsDiv.innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Error al ejecutar el backtesting. Por favor, intenta nuevamente.
+                    </div>
+                `;
+            });
+        }
+
+        function mostrarResultadosBacktesting(data) {
+            const resultsDiv = document.getElementById('backtest-results');
+            
+            // Calcular métricas adicionales
+            const winRate = data.ganadoras > 0 ? (data.ganadoras / data.cantidad_operaciones * 100).toFixed(1) : 0;
+            const profitFactor = data.ganadoras > 0 ? (data.capital_final / data.capital_inicial).toFixed(2) : 1.0;
+            const mejorOperacion = data.operaciones.filter(op => op.ganancia > 0).reduce((max, op) => op.ganancia > max.ganancia ? op : max, {ganancia: 0});
+            const peorOperacion = data.operaciones.filter(op => op.ganancia < 0).reduce((min, op) => op.ganancia < min.ganancia ? op : min, {ganancia: 0});
+
+            resultsDiv.innerHTML = `
+                <div style="margin-bottom: 2rem;">
+                    <h4><i class="fas fa-chart-line"></i> Resultados del Backtesting</h4>
+                    
+                    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+                        <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-dollar-sign" style="color: var(--primary-color);"></i>
+                                <span class="label" style="color: var(--text-secondary); font-size: 0.875rem;">Capital Inicial</span>
+                            </div>
+                            <div class="value" style="font-size: 1.25rem; font-weight: 600;">$${data.capital_inicial.toLocaleString()}</div>
+                        </div>
+                        
+                        <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-chart-line" style="color: ${data.retorno_total > 0 ? 'var(--success-color)' : 'var(--danger-color)'};"></i>
+                                <span class="label" style="color: var(--text-secondary); font-size: 0.875rem;">Capital Final</span>
+                            </div>
+                            <div class="value" style="font-size: 1.25rem; font-weight: 600; color: ${data.retorno_total > 0 ? 'var(--success-color)' : 'var(--danger-color)'};">$${data.capital_final.toLocaleString()}</div>
+                        </div>
+                        
+                        <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-percentage" style="color: ${data.retorno_total > 0 ? 'var(--success-color)' : 'var(--danger-color)'};"></i>
+                                <span class="label" style="color: var(--text-secondary); font-size: 0.875rem;">Retorno Total</span>
+                            </div>
+                            <div class="value" style="font-size: 1.25rem; font-weight: 600; color: ${data.retorno_total > 0 ? 'var(--success-color)' : 'var(--danger-color)'};">${data.retorno_total > 0 ? '+' : ''}${data.retorno_total.toFixed(2)}%</div>
+                        </div>
+                        
+                        <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-balance-scale" style="color: var(--info-color);"></i>
+                                <span class="label" style="color: var(--text-secondary); font-size: 0.875rem;">Buy & Hold</span>
+                            </div>
+                            <div class="value" style="font-size: 1.25rem; font-weight: 600; color: ${data.buy_and_hold > 0 ? 'var(--success-color)' : 'var(--danger-color)'};">${data.buy_and_hold > 0 ? '+' : ''}${data.buy_and_hold.toFixed(2)}%</div>
+                        </div>
+                        
+                        <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-arrow-down" style="color: var(--danger-color);"></i>
+                                <span class="label" style="color: var(--text-secondary); font-size: 0.875rem;">Max Drawdown</span>
+                            </div>
+                            <div class="value" style="font-size: 1.25rem; font-weight: 600; color: var(--danger-color);">${data.max_drawdown.toFixed(2)}%</div>
+                        </div>
+                        
+                        <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-exchange-alt" style="color: var(--primary-color);"></i>
+                                <span class="label" style="color: var(--text-secondary); font-size: 0.875rem;">Operaciones</span>
+                            </div>
+                            <div class="value" style="font-size: 1.25rem; font-weight: 600;">${data.cantidad_operaciones}</div>
+                        </div>
+                        
+                        <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-trophy" style="color: var(--success-color);"></i>
+                                <span class="label" style="color: var(--text-secondary); font-size: 0.875rem;">Win Rate</span>
+                            </div>
+                            <div class="value" style="font-size: 1.25rem; font-weight: 600; color: var(--success-color);">${winRate}%</div>
+                        </div>
+                        
+                        <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-calculator" style="color: var(--info-color);"></i>
+                                <span class="label" style="color: var(--text-secondary); font-size: 0.875rem;">Profit Factor</span>
+                            </div>
+                            <div class="value" style="font-size: 1.25rem; font-weight: 600; color: ${profitFactor > 1 ? 'var(--success-color)' : 'var(--danger-color)'};">${profitFactor}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container" style="height: 400px; margin: 1.5rem 0;">
+                        <canvas id="backtest-chart"></canvas>
+                    </div>
+                    
+                    <div class="operations-table" style="margin-top: 1.5rem;">
+                        <h5><i class="fas fa-list"></i> Detalle de Operaciones</h5>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <small style="color: var(--text-secondary);">
+                                <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Ganadoras: ${data.ganadoras} 
+                                | <i class="fas fa-times-circle" style="color: var(--danger-color);"></i> Perdedoras: ${data.perdedoras}
+                            </small>
+                            <small style="color: var(--text-secondary);">
+                                Mejor operación: ${mejorOperacion.ganancia ? (mejorOperacion.ganancia * 100).toFixed(2) + '%' : 'N/A'} | 
+                                Peor operación: ${peorOperacion.ganancia ? (peorOperacion.ganancia * 100).toFixed(2) + '%' : 'N/A'}
+                            </small>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="backtest-table">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-calendar"></i> Fecha</th>
+                                        <th><i class="fas fa-exchange-alt"></i> Tipo</th>
+                                        <th><i class="fas fa-dollar-sign"></i> Precio</th>
+                                        <th><i class="fas fa-chart-line"></i> Ganancia</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Tabla de operaciones
+            const tbody = document.querySelector('#backtest-table tbody');
+            tbody.innerHTML = '';
+            
+            data.operaciones.forEach(op => {
+                const row = tbody.insertRow();
+                const esGanadora = op.ganancia > 0;
+                
+                row.innerHTML = `
+                    <td>${new Date(op.fecha).toLocaleDateString('es-ES')}</td>
+                    <td>
+                        <span class="signal ${op.tipo === 'COMPRA' ? 'buy' : 'sell'}" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-arrow-${op.tipo === 'COMPRA' ? 'up' : 'down'}"></i>
+                            ${op.tipo}
+                        </span>
+                    </td>
+                    <td>$${op.precio.toLocaleString()}</td>
+                    <td>
+                        <span style="color: ${esGanadora ? 'var(--success-color)' : 'var(--danger-color)'}; font-weight: 500;">
+                            ${op.ganancia !== undefined ? (esGanadora ? '+' : '') + (op.ganancia * 100).toFixed(2) + '%' : '-'}
+                        </span>
+                    </td>
+                `;
+            });
+
+            // Gráfico de capital evolución
+            const ctx = document.getElementById('backtest-chart').getContext('2d');
+            if (charts.backtest) charts.backtest.destroy();
+
+            const capitalData = [];
+            const buyHoldData = [];
+            let currentCapital = data.capital_inicial;
+            const precioInicial = data.operaciones.length > 0 ? data.operaciones[0].precio : 1;
+            
+            data.operaciones.forEach((op, i) => {
+                if (op.ganancia !== undefined) {
+                    currentCapital *= (1 + op.ganancia);
+                }
+                capitalData.push(currentCapital);
+                
+                // Calcular Buy & Hold (asumiendo que el precio inicial es el primer precio de operación)
+                const precioActual = op.precio;
+                const buyHoldValue = data.capital_inicial * (precioActual / precioInicial);
+                buyHoldData.push(buyHoldValue);
+            });
+
+            charts.backtest = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.operaciones.map(op => new Date(op.fecha).toLocaleDateString('es-ES')),
+                    datasets: [{
+                        label: 'Capital con Estrategia',
+                        data: capitalData,
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        fill: true,
+                        tension: 0.1,
+                        pointBackgroundColor: '#2196F3',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }, {
+                        label: 'Buy & Hold',
+                        data: buyHoldData,
+                        borderColor: '#9E9E9E',
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Evolución del Capital - Estrategia vs Buy & Hold',
+                            color: '#F1F5F9',
+                            font: { size: 14 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: $${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: value => '$' + value.toLocaleString(),
+                                color: '#94A3B8'
+                            },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#94A3B8' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Añadir resumen de estrategia
+            const estrategiaNombre = {
+                'rsi_macd': 'RSI + MACD',
+                'bollinger': 'Bandas de Bollinger',
+                'golden_cross': 'Cruce Dorado (SMA50/200)'
+            }[estrategia] || estrategia;
+
+            const resumenEstrategia = document.createElement('div');
+            resumenEstrategia.innerHTML = `
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(33, 150, 243, 0.1); border-left: 4px solid var(--primary-color); border-radius: 0 8px 8px 0;">
+                    <h5><i class="fas fa-chess"></i> Resumen de la Estrategia</h5>
+                    <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+                        <strong>Estrategia:</strong> ${estrategiaNombre} | 
+                        <strong>Período:</strong> 1 año de datos históricos | 
+                        <strong>Criptomoneda:</strong> ${cripto}
+                    </p>
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <span style="background: rgba(76, 175, 80, 0.2); color: var(--success-color); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem;">
+                            <i class="fas fa-thumbs-up"></i> ${data.ganadoras} operaciones ganadoras
+                        </span>
+                        <span style="background: rgba(244, 67, 54, 0.2); color: var(--danger-color); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem;">
+                            <i class="fas fa-thumbs-down"></i> ${data.perdedoras} operaciones perdedoras
+                        </span>
+                        <span style="background: rgba(33, 150, 243, 0.2); color: var(--primary-color); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem;">
+                            <i class="fas fa-percentage"></i> Win rate: ${winRate}%
+                        </span>
+                    </div>
+                </div>
+            `;
+            resultsDiv.appendChild(resumenEstrategia);
+
+            showNotification('Backtesting completado con éxito', 'success');
+        }
+
+        function runComparison() {
+            const checkboxes = document.querySelectorAll('#comparison-checkboxes input:checked');
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+            const metric = document.getElementById('comparison-metric').value;
+            const chartType = document.getElementById('comparison-chart-type').value;
+
+            if(selected.length < 2) {
+                showNotification('Selecciona al menos 2 criptomonedas', 'warning');
+                return;
+            }
+
+            // Mostrar loading
+            const resultsDiv = document.getElementById('comparison-results');
+            if (resultsDiv) {
+                resultsDiv.style.display = 'block';
+            }
+            
+            const tableDiv = document.getElementById('comparison-table');
+            if (tableDiv) {
+                tableDiv.innerHTML = '<div class="loading"><i class="fas fa-circle-notch fa-spin"></i> Calculando comparación...</div>';
+            }
+
+            try {
+                // Obtener datos actuales del estado online
+                const datosActuales = currentData.analisis || {};
+                
+                // Filtrar solo las criptomonedas seleccionadas que tengan datos
+                const datosValidos = [];
+                for (const cripto of selected) {
+                    const datos = datosActuales[cripto];
+                    if (!datos) continue;
+                    
+                    let valor = null;
+                    if (metric === 'precio') {
+                        valor = datos.precio_actual || 0;
+                    } else if (metric === 'cambio') {
+                        valor = datos.cambio_esperado || 0;
+                    } else if (metric === 'volumen') {
+                        valor = datos.volumen_24h || 0;
+                    } else if (metric === 'rsi') {
+                        valor = datos.rsi || 50;
+                    } else if (metric === 'macd') {
+                        valor = datos.macd || 0;
+                    } else if (metric === 'volatilidad') {
+                        valor = Math.abs(datos.cambio_esperado || 0) * 2;
+                    } else if (metric === 'confianza') {
+                        valor = (datos.confianza || 0) * 100;
+                    }
+
+                    if (valor !== null) {
+                        datosValidos.push({
+                            cripto: cripto,
+                            valor: valor,
+                            metrica: metric
+                        });
+                    }
+                }
+
+                if (datosValidos.length < 2) {
+                    throw new Error('Datos insuficientes para las criptomonedas seleccionadas');
+                }
+
+                // Actualizar gráfico de comparación
+                actualizarGraficoComparacion(datosValidos, metric, chartType);
+                
+                // Actualizar tabla de comparación
+                actualizarTablaComparacion(datosValidos, metric);
+                
+                showNotification('Comparación generada con éxito', 'success');
+                
+            } catch (error) {
+                console.error('Error en comparación:', error);
+                if (tableDiv) {
+                    tableDiv.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Error al procesar los datos de comparación: ${error.message}</div>`;
+                }
+                showNotification('Error al generar comparación', 'error');
+            }
+        }
+
+        function actualizarGraficoComparacion(datosValidos, metric, chartType) {
+            const ctx = document.getElementById('comparison-chart');
+            if (!ctx) return;
+            
+            if(charts.comparison) charts.comparison.destroy();
+
+            const labels = datosValidos.map(d => d.cripto);
+            const values = datosValidos.map(d => d.valor);
+            const colors = ['#2196F3', '#4CAF50', '#F44336', '#FFC107', '#9C27B0', '#00BCD4', '#FF5722', '#E91E63', '#673AB7'];
+
+            let chartConfig = {
+                type: chartType === 'radar' ? 'radar' : 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: getMetricaNombre(metric),
+                        data: values,
+                        backgroundColor: values.map((v, i) => colors[i % colors.length] + '80'),
+                        borderColor: values.map((v, i) => colors[i % colors.length]),
+                        borderWidth: 2,
+                        pointBackgroundColor: values.map((v, i) => colors[i % colors.length]),
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: values.map((v, i) => colors[i % colors.length])
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Comparación de ${getMetricaNombre(metric)} entre Criptomonedas`,
+                            color: '#F1F5F9',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const valor = context.raw;
+                                    const posicion = context.dataIndex + 1;
+                                    return [
+                                        `${getMetricaNombre(metric)}: ${formatValorComparacion(valor, metric)}`,
+                                        `Posición: #${posicion} de ${values.length}`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: chartType === 'radar' ? {
+                        r: {
+                            beginAtZero: true,
+                            ticks: { 
+                                color: '#94A3B8',
+                                callback: value => formatValorComparacion(value, metric)
+                            },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { color: '#F1F5F9' }
+                        }
+                    } : {
+                        y: { 
+                            beginAtZero: true,
+                            ticks: { 
+                                color: '#94A3B8',
+                                callback: value => formatValorComparacion(value, metric)
+                            },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#94A3B8' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        }
+                    }
+                }
+            };
+
+            // Si es línea, cambiar tipo
+            if(chartType === 'lineas') {
+                chartConfig.type = 'line';
+                chartConfig.data.datasets[0].fill = false;
+                chartConfig.data.datasets[0].tension = 0.4;
+            }
+
+            charts.comparison = new Chart(ctx, chartConfig);
+        }
+
+        function actualizarTablaComparacion(datosValidos, metric) {
+            console.log('🔍 ACTUALIZAR TABLA COMPARACIÓN - Datos recibidos:', datosValidos);
+            console.log('📊 Métrica:', metric);
+            
+            const analysisContainer = document.getElementById('comparison-analysis');
+            if (!analysisContainer) {
+                console.error('❌ ERROR: No se encontró el contenedor comparison-analysis');
+                return;
+            }
+            
+            const colors = ['#2196F3', '#4CAF50', '#F44336', '#FFC107', '#9C27B0', '#00BCD4', '#FF5722', '#E91E63', '#673AB7'];
+            
+            // Ordenar datos por valor (de mayor a menor)
+            const datosOrdenados = [...datosValidos].sort((a, b) => b.valor - a.valor);
+            
+            console.log('📈 Datos ordenados:', datosOrdenados);
+            
+            // Construir la tabla HTML
+            let tablaHTML = `
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
+                    <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
+                        <h4 style="display: flex; align-items: center; gap: 0.75rem; margin: 0;">
+                            <i class="fas fa-table"></i> Tabla de Comparación Detallada
+                        </h4>
+                        <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                            Análisis completo de ${datosValidos.length} criptomonedas ordenadas por ${getMetricaNombre(metric)}
+                        </p>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center; width: 60px;">#</th>
+                                    <th>Criptomoneda</th>
+                                    <th>${getMetricaNombre(metric)}</th>
+                                    <th style="text-align: center;">Estado</th>
+                                    <th style="text-align: center;">Señal</th>
+                                    <th style="text-align: center; width: 200px;">Análisis</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            datosOrdenados.forEach((d, i) => {
+                const esMejor = i === 0;
+                const esPeor = i === datosOrdenados.length - 1;
+                
+                let estadoColor = '#FFC107';
+                let estadoIcono = 'fas fa-minus';
+                let estadoTexto = 'Medio';
+                
+                if(esMejor) {
+                    estadoColor = '#4CAF50';
+                    estadoIcono = 'fas fa-trophy';
+                    estadoTexto = 'Mejor';
+                } else if(esPeor) {
+                    estadoColor = '#F44336';
+                    estadoIcono = 'fas fa-arrow-down';
+                    estadoTexto = 'Peor';
+                }
+
+                // Obtener datos adicionales
+                const datosCripto = currentData.analisis[d.cripto] || {};
+                const decision = datosCripto.decision || 'MANTENER';
+                const confianza = (datosCripto.confianza || 0) * 100;
+                const rsi = datosCripto.rsi || 50;
+                const cambio = datosCripto.cambio_esperado || 0;
+
+                // Análisis inteligente
+                let senal = 'NEUTRAL';
+                let analisis = 'Sin análisis disponible';
+                let senalColor = '#FFC107';
+
+                switch(metric) {
+                    case 'precio':
+                        if (esMejor) {
+                            senal = 'CONSIDERAR VENTA';
+                            analisis = 'Precio elevado - Evaluar toma de ganancias';
+                            senalColor = '#F44336';
+                        } else if (esPeor) {
+                            senal = 'OPORTUNIDAD';
+                            analisis = 'Precio atractivo - Buen momento para entrada';
+                            senalColor = '#4CAF50';
+                        } else {
+                            senal = 'MANTENER';
+                            analisis = 'Precio en rango estable';
+                            senalColor = '#FFC107';
+                        }
+                        break;
+                        
+                    case 'cambio':
+                        if (d.valor > 5) {
+                            senal = 'MOMENTUM ALCISTA';
+                            analisis = 'Fuerza compradora dominante';
+                            senalColor = '#4CAF50';
+                        } else if (d.valor < -5) {
+                            senal = 'PRESIÓN BAJISTA';
+                            analisis = 'Vendedores controlan el mercado';
+                            senalColor = '#F44336';
+                        } else {
+                            senal = 'CONSOLIDACIÓN';
+                            analisis = 'Movimiento lateral, esperar confirmación';
+                            senalColor = '#FFC107';
+                        }
+                        break;
+                        
+                    case 'rsi':
+                        if (d.valor > 70) {
+                            senal = 'SOBRECOMPRA';
+                            analisis = 'Extremo alcista - Corrección probable';
+                            senalColor = '#F44336';
+                        } else if (d.valor < 30) {
+                            senal = 'SOBREVENTA';
+                            analisis = 'Extremo bajista - Rebote esperado';
+                            senalColor = '#4CAF50';
+                        } else {
+                            senal = 'NEUTRAL';
+                            analisis = 'Zona de equilibrio técnico';
+                            senalColor = '#FFC107';
+                        }
+                        break;
+                        
+                    case 'confianza':
+                        if (d.valor > 70) {
+                            senal = 'ALTA CONFIANZA';
+                            analisis = 'Señales técnicas muy confiables';
+                            senalColor = '#4CAF50';
+                        } else if (d.valor < 40) {
+                            senal = 'BAJA CONFIANZA';
+                            analisis = 'Señales mixtas - Mayor riesgo';
+                            senalColor = '#F44336';
+                        } else {
+                            senal = 'CONFIANZA MEDIA';
+                            analisis = 'Señales moderadamente confiables';
+                            senalColor = '#FFC107';
+                        }
+                        break;
+                }
+
+                tablaHTML += `
+                    <tr style="${esMejor ? 'background: rgba(76, 175, 80, 0.1);' : esPeor ? 'background: rgba(244, 67, 54, 0.1);' : ''}">
+                        <td style="text-align: center; font-weight: bold; font-size: 1.1rem;">
+                            #${i + 1}
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div style="width: 32px; height: 32px; background: ${colors[i % colors.length]}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.875rem;">
+                                    ${d.cripto.substring(0, 2)}
+                                </div>
+                                <div>
+                                    <strong style="font-size: 1rem;">${d.cripto}</strong>
+                                    <br><small style="color: var(--text-secondary);">Posición ${i + 1} de ${datosOrdenados.length}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-weight: 600; font-size: 1.1rem;">
+                            ${formatValorComparacion(d.valor, metric)}
+                        </td>
+                        <td style="text-align: center;">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                                <i class="${estadoIcono}" style="color: ${estadoColor}; font-size: 1.2rem;"></i>
+                                <small style="color: ${estadoColor}; font-weight: 600;">${estadoTexto}</small>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <span style="background: ${senalColor}20; color: ${senalColor}; padding: 0.375rem 0.75rem; border-radius: 16px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px;">
+                                ${senal}
+                            </span>
+                        </td>
+                        <td style="font-size: 0.875rem;">
+                            <div style="color: var(--text-secondary); line-height: 1.5;">
+                                ${analisis}
+                            </div>
+                            <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-secondary); opacity: 0.8;">
+                                <i class="fas fa-info-circle"></i> RSI: ${rsi.toFixed(1)} | Δ: ${cambio.toFixed(1)}% | Conf: ${confianza.toFixed(0)}%
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tablaHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            // Calcular estadísticas
+            const valores = datosValidos.map(d => d.valor);
+            const promedio = valores.reduce((a, b) => a + b, 0) / valores.length;
+            const maximo = Math.max(...valores);
+            const minimo = Math.min(...valores);
+            const desviacion = Math.sqrt(valores.map(v => Math.pow(v - promedio, 2)).reduce((a, b) => a + b, 0) / valores.length);
+
+            // Análisis general
+            let analisisGeneral = '';
+            if (metric === 'precio') {
+                const masCara = datosOrdenados[0].cripto;
+                const masBarata = datosOrdenados[datosOrdenados.length - 1].cripto;
+                const ratio = maximo / minimo;
+                
+                analisisGeneral = ratio > 2 ? 
+                    `📊 <strong>Análisis de Precios:</strong> ${masCara} tiene un valor ${ratio.toFixed(1)} veces mayor que ${masBarata}. Esta divergencia sugiere diferentes niveles de adopción y utilidad en el ecosistema crypto.` :
+                    `📊 <strong>Análisis de Precios:</strong> Los precios están relativamente alineados, indicando una correlación positiva entre estos activos.`;
+            } else if (metric === 'cambio') {
+                const positivas = datosOrdenados.filter(d => d.valor > 0).length;
+                const negativas = datosOrdenados.filter(d => d.valor < 0).length;
+                
+                if (positivas > negativas) {
+                    analisisGeneral = `📈 <strong>Tendencia Alcista Dominante:</strong> ${positivas} de ${datosOrdenados.length} criptomonedas muestran ganancias. El sentimiento del mercado es predominantemente positivo.`;
+                } else if (negativas > positivas) {
+                    analisisGeneral = `📉 <strong>Tendencia Bajista Dominante:</strong> ${negativas} de ${datosOrdenados.length} criptomonedas muestran pérdidas. Predomina el sentimiento negativo en el mercado.`;
+                } else {
+                    analisisGeneral = `⚖️ <strong>Mercado Mixto:</strong> Igual número de criptomonedas en alza y baja. Indecisión del mercado, esperar confirmaciones de dirección.`;
+                }
+            }
+
+            const estadisticasHtml = `
+                <div style="margin-top: 2rem; display: grid; gap: 1.5rem;">
+                    <div style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(156, 39, 176, 0.1)); padding: 1.5rem; border-radius: 12px;">
+                        <h5 style="margin-bottom: 1rem; color: #F1F5F9;">
+                            <i class="fas fa-chart-bar"></i> Estadísticas Generales
+                        </h5>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: bold; color: #4CAF50;">${formatValorComparacion(maximo, metric)}</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Máximo</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: bold; color: #F44336;">${formatValorComparacion(minimo, metric)}</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Mínimo</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: bold; color: #2196F3;">${formatValorComparacion(promedio, metric)}</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Promedio</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.25rem; font-weight: bold; color: #9C27B0;">${formatValorComparacion(desviacion, metric)}</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Desviación</div>
+                            </div>
+                        </div>
+                        ${analisisGeneral ? `
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                            <h6 style="color: #F1F5F9; margin-bottom: 0.5rem;">
+                                <i class="fas fa-lightbulb"></i> Análisis General
+                            </h6>
+                            <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">
+                                ${analisisGeneral}
+                            </p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Insertar TODO el contenido en el contenedor
+            analysisContainer.innerHTML = tablaHTML + estadisticasHtml;
+            
+            console.log('✅ TABLA COMPARATIVA GENERADA CORRECTAMENTE');
+            console.log('📊 Filas creadas:', datosOrdenados.length);
+            console.log('📈 Contenedor actualizado:', analysisContainer.id);
+        }
+
+        // Función auxiliar para obtener el valor según la métrica
+        function getValorParaMetrica(dato, metric) {
+            switch(metric) {
+                case 'precio': return dato.precio;
+                case 'cambio': return dato.cambio;
+                case 'volumen': return dato.volumen;
+                case 'rsi': return dato.rsi;
+                case 'macd': return dato.macd;
+                case 'volatilidad': return dato.volatilidad;
+                case 'confianza': return dato.confianza;
+                default: return 0;
+            }
+        }
+
+        function getMetricaNombre(metric) {
+            const nombres = {
+                'precio': 'Precio Actual',
+                'cambio': 'Cambio 24h',
+                'volumen': 'Volumen 24h',
+                'rsi': 'RSI',
+                'macd': 'MACD',
+                'volatilidad': 'Volatilidad',
+                'confianza': 'Confianza'
+            };
+            return nombres[metric] || metric;
+        }
+
+        function formatValorComparacion(valor, metric) {
+            switch(metric) {
+                case 'precio':
+                    return '$' + valor.toLocaleString();
+                case 'cambio':
+                case 'volatilidad':
+                case 'confianza':
+                    return valor.toFixed(2) + '%';
+                case 'volumen':
+                    return '$' + valor.toLocaleString();
+                case 'rsi':
+                case 'macd':
+                    return valor.toFixed(2);
+                default:
+                    return valor.toFixed(2);
+            }
+        }
+
+        function formatValue(value, metric) {
+            switch(metric) {
+                case 'precio':
+                case 'volumen':
+                    return '$' + value.toLocaleString();
+                case 'cambio':
+                case 'volatilidad':
+                case 'confianza':
+                    return value.toFixed(2) + '%';
+                case 'rsi':
+                case 'macd':
+                    return value.toFixed(2);
+                default:
+                    return value;
+            }
+        }
+
+        function addNewCrypto() {
+            const symbol = document.getElementById('new-crypto-symbol').value.trim().toUpperCase();
+            const name = document.getElementById('new-crypto-name').value.trim();
+
+            if(!symbol || !name) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+
+            // Agregar a la lista de monitoreo
+            if(!onlineConfig.criptos.includes(symbol)) {
+                onlineConfig.criptos.push(symbol);
+                
+                // Actualizar configuración
+                fetch('/api/online/detener', {method: 'POST'})
+                    .then(() => {
+                        initOnline();
+                        updateManagementList();
+                        alert(`${name} (${symbol}) agregado al monitoreo`);
+                        
+                        // Limpiar campos
+                        document.getElementById('new-crypto-symbol').value = '';
+                        document.getElementById('new-crypto-name').value = '';
+                    });
+            } else {
+                alert('Esta criptomoneda ya está siendo monitoreada');
+            }
+        }
+
+        function removeCrypto(symbol) {
+            if(confirm(`¿Eliminar ${symbol} del monitoreo?`)) {
+                onlineConfig.criptos = onlineConfig.criptos.filter(c => c !== symbol);
+                
+                fetch('/api/online/detener', {method: 'POST'})
+                    .then(() => {
+                        initOnline();
+                        updateManagementList();
+                        alert(`${symbol} eliminado del monitoreo`);
+                    });
+            }
+        }
+
+        function updateManagementList() {
+            const container = document.getElementById('managed-cryptos');
+            container.innerHTML = onlineConfig.criptos.map(crypto => `
+                <div class="crypto-management-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px;">
+                    <i class="fas fa-coins" style="color: var(--primary-color);"></i>
+                    <span style="flex: 1;">${crypto}</span>
+                    <button onclick="removeCrypto('${crypto}')" class="btn-icon" title="Eliminar" style="width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--text-secondary); cursor: pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function exportData() {
+            if(Object.keys(currentData.analisis || {}).length === 0) {
+                alert('No hay datos para exportar');
+                return;
+            }
+            
+            const format = prompt('Formato de exportación (pdf/csv/json):', 'pdf') || 'pdf';
+            
+            const resultados = Object.entries(currentData.analisis).map(([cripto, data]) => ({
+                cripto,
+                precio_actual: data.precio_actual,
+                tendencia: data.tendencia,
+                decision_info: { decision: data.decision, confianza: data.confianza },
+                prediccion: { prediccion_final: data.prediccion, cambio_porcentual: data.cambio_esperado },
+                indicadores: { rsi: data.rsi },
+                estadisticas: { media: data.indicadores?.media || 0 },
+                success: true
+            }));
+            
+            fetch('/api/offline/exportar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({formato: format, resultados: resultados})
+            })
+            .then(r => r.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `analisis_online_${new Date().toISOString().slice(0,10)}.${format}`;
+                a.click();
+            });
+        }
+
+        function exportChart(chartId) {
+            const canvas = document.getElementById(chartId);
+            if (!canvas) return;
+            
+            const format = prompt('Formato de imagen (png/svg):', 'png') || 'png';
+            const url = canvas.toDataURL(`image/${format}`);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `grafico_${chartId}_${new Date().toISOString().slice(0,10)}.${format}`;
+            a.click();
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section + '-section').classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.closest('.nav-btn').classList.add('active');
+            
+            if(section === 'sentimiento') {
+                loadSentiment();
+            } else if(section === 'comparacion') {
+                // Inicializar comparación si es necesario
+            } else if(section === 'gestion') {
+                updateManagementList();
+            }
+        }
+
+        function switchMode() {
+            window.location.href = 'offline.html';
+        }
+
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            const isDark = theme === 'oscuro';
+            
+            if (isDark) {
+                root.style.setProperty('--bg-dark', '#0f172a');
+                root.style.setProperty('--bg-card', '#1e293b');
+                root.style.setProperty('--bg-sidebar', '#1e293b');
+                root.style.setProperty('--text-primary', '#f1f5f9');
+                root.style.setProperty('--text-secondary', '#94a3b8');
+                root.style.setProperty('--border-color', '#334155');
+            } else {
+                root.style.setProperty('--bg-dark', '#ffffff');
+                root.style.setProperty('--bg-card', '#f8fafc');
+                root.style.setProperty('--bg-sidebar', '#e2e8f0');
+                root.style.setProperty('--text-primary', '#1e293b');
+                root.style.setProperty('--text-secondary', '#64748b');
+                root.style.setProperty('--border-color', '#cbd5e1');
+            }
+        }
+
+        function applyLanguage(lang) {
+            // Aquí se implementaría la lógica de cambio de idioma
+            // Por ahora solo guardamos la preferencia
+            console.log('Idioma aplicado:', lang);
+        }
+
+        // Notificaciones de alertas
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }, 100);
+        }
+
+        // Detectar anomalías automáticamente
+        setInterval(checkAnomalies, 60000); // Cada minuto
+
+        // Precargar datos iniciales
+        window.addEventListener('load', () => {
+            setTimeout(loadData, 1000);
+        });
+
+        function updateBacktestSelector() {
+            const select = document.getElementById('backtest-cripto');
+            select.innerHTML = '<option value="">Selecciona una criptomoneda...</option>' +
+                allCriptos.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        // Función para verificar que los elementos existan antes de usarlos
+        function safeGetElement(id) {
+            const element = document.getElementById(id);
+            if (!element) {
+                console.warn(`Elemento con ID '${id}' no encontrado`);
+                return null;
+            }
+            return element;
+        }
+
+        // Función para esperar a que el DOM esté completamente cargado
+        function waitForElement(id, callback, maxAttempts = 50) {
+            let attempts = 0;
+            const checkElement = () => {
+                const element = document.getElementById(id);
+                if (element) {
+                    callback(element);
+                } else if (attempts < maxAttempts) {
+                    attempts++;
+                    setTimeout(checkElement, 100);
+                } else {
+                    console.error(`Elemento ${id} no encontrado después de ${maxAttempts} intentos`);
+                }
+            };
+            checkElement();
+        }
+
+        function exportOnlineResults(formato) {
+            console.log('📤 Exportando resultados online como:', formato);
+            
+            // Verificar que hay datos
+            if(!currentData || !currentData.analisis || Object.keys(currentData.analisis).length === 0) {
+                showNotification('❌ No hay datos para exportar. Realiza un análisis primero.', 'warning');
+                return;
+            }
+            
+            // Mostrar loading
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exportando...';
+            
+            try {
+                // Preparar resultados en formato compatible
+                const resultados = Object.entries(currentData.analisis).map(([cripto, data]) => ({
+                    cripto: cripto,
+                    precio_actual: data.precio_actual || 0,
+                    tendencia: data.tendencia || 'ESTABLE',
+                    decision_info: {
+                        decision: data.decision || 'MANTENER',
+                        confianza: data.confianza || 0.5
+                    },
+                    prediccion: {
+                        prediccion_final: data.prediccion || 0,
+                        cambio_porcentual: data.cambio_esperado || 0
+                    },
+                    indicadores: {
+                        rsi: data.rsi || 50,
+                        macd: data.macd || 0
+                    },
+                    estadisticas: {
+                        media: data.indicadores?.media || 0
+                    },
+                    success: true
+                }));
+                
+                // Llamar al API de exportación
+                fetch('/api/online/exportar', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        formato: formato,
+                        resultados: resultados
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error en la exportación');
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Crear URL del blob
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    
+                    // Nombre del archivo con timestamp
+                    const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, '');
+                    const filename = `analisis_online_${timestamp}.${formato}`;
+                    a.download = filename;
+                    
+                    // Forzar descarga
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    // Limpiar memoria
+                    setTimeout(() => window.URL.revokeObjectURL(url), 100);
+                    
+                    showNotification(`✅ Exportación ${formato.toUpperCase()} completada: ${filename}`, 'success');
+                    
+                    // Restaurar botón
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                })
+                .catch(error => {
+                    console.error('❌ Error en exportación:', error);
+                    showNotification('❌ Error al exportar los resultados', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                });
+                
+            } catch (error) {
+                console.error('❌ Error preparando exportación:', error);
+                showNotification('❌ Error al preparar los datos', 'error');
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+            }
+        }
+
+        // ✅ EXPORTAR GRÁFICOS ONLINE - IDENTICO A OFFLINE
+        function exportOnlineChart(chartId) {
+            console.log('🎨 Exportando gráfico online:', chartId);
+            
+            const canvas = document.getElementById(chartId);
+            if (!canvas) {
+                showNotification('❌ Gráfico no encontrado', 'error');
+                return;
+            }
+            
+            // Verificar que el gráfico existe y tiene datos
+            const chartKey = chartId.replace('-chart', '');
+            if (!window.charts || !window.charts[chartKey]) {
+                showNotification('⚠️ No hay datos para exportar', 'warning');
+                return;
+            }
+            
+            const format = prompt('Formato de imagen (png/svg):', 'png') || 'png';
+            
+            try {
+                let url;
+                let filename;
+                
+                if (format === 'svg') {
+                    // Para SVG, usar PNG como fallback
+                    showNotification('ℹ️ SVG requiere configuración adicional. Usando PNG...', 'info');
+                    url = canvas.toDataURL('image/png');
+                    filename = `grafico_${chartId}_${new Date().toISOString().slice(0,10)}.png`;
+                } else {
+                    // PNG por defecto
+                    url = canvas.toDataURL('image/png');
+                    filename = `grafico_${chartId}_${new Date().toISOString().slice(0,10)}.png`;
+                }
+                
+                // Crear enlace de descarga
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = url;
+                link.target = '_blank';
+                
+                // Forzar descarga
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Limpiar memoria
+                setTimeout(() => window.URL.revokeObjectURL(url), 100);
+                
+                showNotification(`📊 Gráfico exportado: ${filename}`, 'success');
+                
+            } catch (error) {
+                console.error('❌ Error exportando gráfico:', error);
+                showNotification('❌ Error al exportar el gráfico', 'error');
+            }
+        }
+
+        // ✅ EXPORTAR DESDE EL HEADER (como en offline)
+        function exportData() {
+            if(!currentData || !currentData.analisis || Object.keys(currentData.analisis).length === 0) {
+                showNotification('❌ No hay datos para exportar', 'warning');
+                return;
+            }
+            
+            const formato = prompt('Formato de exportación (pdf/csv/json):', 'pdf') || 'pdf';
+            exportOnlineResults(formato);
+        }
+
+    </script>
+</body>
+</html>

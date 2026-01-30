@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-chart-line"></i>
+            <span>Cripto Pro</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <h4>Análisis</h4>
+                <button class="nav-btn active" onclick="showSection('analisis')">
+                    <i class="fas fa-microscope"></i>
+                    <span>Análisis Completo</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('graficos')">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Gráficos</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('datos')">
+                    <i class="fas fa-database"></i>
+                    <span>Gestión de Datos</span>
+                </button>
+            </div>
+            
+            <div class="nav-section">
+                <h4>Herramientas</h4>
+                <button class="nav-btn" onclick="showSection('simulacion')">
+                    <i class="fas fa-flask"></i>
+                    <span>Simulación</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('correlacion')">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Correlación</span>
+                </button>
+            </div>
+            <div class="nav-section">
+                <h4>Educación</h4>
+                <button class="nav-btn" onclick="showSection('sandbox')">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Sandbox Educativo</span>
+                </button>
+            </div>
+            <div class="nav-section">
+                <h4>Exportar</h4>
+                <button class="nav-btn" onclick="exportResults('csv')">
+                    <i class="fas fa-file-csv"></i>
+                    <span>Exportar CSV</span>
+                </button>
+                <button class="nav-btn" onclick="exportResults('pdf')">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Exportar PDF</span>
+                </button>
+            </div>
+            
+            <div class="nav-section">
+                <h4>Backtesting</h4>
+                <button class="nav-btn" onclick="showSection('backtesting')">
+                    <i class="fas fa-history"></i>
+                    <span>Backtesting</span>
+                </button>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="connection-status offline">
+                <i class="fas fa-circle"></i>
+                <span>Offline</span>
+            </div>
+            <div class="criptos-count">
+                <span id="offline-cripto-count">0</span> criptos cargadas
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header">
+            <h1>Modo Offline</h1>
+            <div class="header-actions">
+                <button class="btn-primary" onclick="runFullAnalysis()">
+                    <i class="fas fa-play"></i>
+                    Análisis Completo
+                </button>
+            </div>
+        </header>
+
+        <!-- Análisis Section -->
+        <section id="analisis-section" class="content-section active">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-list-check"></i> Selección de Criptomonedas</h3>
+                </div>
+                <div class="cripto-selector" id="cripto-selector">
+                    <p class="loading">Cargando criptomonedas disponibles...</p>
+                </div>
+                <div class="selector-actions" style="padding: 0 1.5rem 1.5rem; display: flex; gap: 1rem;">
+                    <button onclick="selectAllCriptos()" class="btn-small">
+                        <i class="fas fa-check-square"></i> Seleccionar Todas
+                    </button>
+                    <button onclick="deselectAllCriptos()" class="btn-small">
+                        <i class="fas fa-square"></i> Deseleccionar Todas
+                    </button>
+                </div>
+            </div>
+
+            <div class="panel" id="results-panel" style="display: none;">
+                <div class="panel-header">
+                    <h3><i class="fas fa-chart-bar"></i> Resultados del Análisis</h3>
+                    <span id="analysis-timestamp"></span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table" id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Cripto</th>
+                                <th>Precio</th>
+                                <th>Tendencia</th>
+                                <th>RSI</th>
+                                <th>MACD</th>
+                                <th>Decisión</th>
+                                <th>Confianza</th>
+                                <th>Predicción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+<!-- 📊 GRÁFICOS PARA SECCIÓN DE ANÁLISIS OFFLINE -->
+            <div class="offline-charts-container">
+                <!-- Señales de Trading -->
+                <div class="offline-chart-card">
+                    <div class="chart-header">
+                        <h4><i class="fas fa-signal"></i> Señales de Trading</h4>
+                        <button onclick="actualizarGraficoAnalisis('signals')" class="btn-icon">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="offline-signals-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Confianza por Criptomoneda -->
+                <div class="offline-chart-card">
+                    <div class="chart-header">
+                        <h4><i class="fas fa-chart-bar"></i> Confianza por Criptomoneda</h4>
+                        <button onclick="actualizarGraficoAnalisis('confidence')" class="btn-icon">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="offline-confidence-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Volumen por Criptomoneda -->
+                <div class="offline-chart-card">
+                    <div class="chart-header">
+                        <h4><i class="fas fa-coins"></i> Volumen por Criptomoneda</h4>
+                        <button onclick="actualizarGraficoAnalisis('volume')" class="btn-icon">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="offline-volume-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gráficos Section -->
+        <section id="graficos-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Visualización de Datos</h3>
+                    <div class="chart-controls" style="display: flex; gap: 0.75rem; align-items: center;">
+                        <select id="offline-chart-cripto" onchange="updateOfflineChart()" style="padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px;">
+                            <option value="">Selecciona criptomoneda...</option>
+                        </select>
+                        <select id="offline-chart-type" onchange="updateOfflineChart()" style="padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px;">
+                            <option value="price">Precio Histórico</option>
+                            <option value="candlestick">Velas Japonesas</option>
+                            <option value="comparison">Comparación</option>
+                            <option value="tendencias">Tendencias</option>
+                            <option value="volumen">Volumen</option>
+                            <option value="tecnico">Análisis Técnico</option>
+                        </select>
+                        <button onclick="updateOfflineChart()" class="btn-icon" style="width: 32px; height: 32px; border-radius: 6px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer;">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button onclick="exportChart('offline-chart')" class="btn-icon" title="Exportar gráfico">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-container large" style="height: 500px; padding: 1rem;">
+                    <canvas id="offline-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gestión de Datos Section -->
+        <section id="datos-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-upload"></i> Subir Nuevos Datos</h3>
+                </div>
+                <div class="upload-area" id="upload-area" style="border: 2px dashed var(--border-color); border-radius: 12px; padding: 3rem; text-align: center; margin: 1.5rem; transition: all 0.3s; cursor: pointer;">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Arrastra archivos CSV aquí o haz clic para seleccionar</p>
+                    <input type="file" id="csv-input" accept=".csv" hidden onchange="handleFileSelect(event)">
+                    <button onclick="document.getElementById('csv-input').click()" class="btn-secondary">
+                        Seleccionar Archivo
+                    </button>
+                </div>
+                <div class="upload-form" id="upload-form" style="display: none; padding: 1.5rem;">
+                    <h4>Configurar Criptomoneda</h4>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>Nombre de la criptomoneda</label>
+                        <input type="text" id="new-cripto-name" placeholder="Ej: Bitcoin" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                    </div>
+                    <div class="preview-data" id="preview-data" style="background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin: 1rem 0; max-height: 200px; overflow: auto;"></div>
+                    <div class="form-actions" style="display: flex; gap: 1rem;">
+                        <button onclick="confirmUpload()" class="btn-primary">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                        <button onclick="cancelUpload()" class="btn-secondary">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-folder-open"></i> Criptomonedas Disponibles</h3>
+                </div>
+                <div class="criptos-grid" id="criptos-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; padding: 1.5rem;">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Backtesting Section -->
+        <section id="backtesting-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-history"></i> Backtesting Offline</h3>
+                </div>
+                <div class="backtesting-form" style="padding: 1.5rem;">
+                    <div class="form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label>Criptomoneda</label>
+                            <select id="backtest-cripto" style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px;">
+                                <option value="">Selecciona...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Estrategia</label>
+                            <select id="backtest-estrategia" style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px;">
+                                <option value="rsi_macd">RSI + MACD</option>
+                                <option value="bollinger">Bollinger Bands</option>
+                                <option value="golden_cross">Golden Cross (SMA50/200)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Capital Inicial ($)</label>
+                            <input type="number" id="backtest-capital" value="10000" min="100" style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px;">
+                        </div>
+                    </div>
+                    <button onclick="runBacktesting()" class="btn-primary">
+                        <i class="fas fa-play"></i> Ejecutar Backtesting
+                    </button>
+                </div>
+
+                <div id="backtest-results" style="display: none; padding: 1.5rem;">
+                    <h4>Resultados</h4>
+                    <div class="stats-grid" id="backtest-stats"></div>
+                    <div class="chart-container" style="height: 400px; margin-top: 1.5rem;">
+                        <canvas id="backtest-chart"></canvas>
+                    </div>
+                    <div class="operations-table" style="margin-top: 1.5rem;">
+                        <h5>Operaciones</h5>
+                        <div class="table-responsive">
+                            <table class="data-table" id="backtest-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>Precio</th>
+                                        <th>Ganancia</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulación Section -->
+        <section id="simulacion-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-flask"></i> Simulador de Mercado Sintético</h3>
+                </div>
+                <div class="simulation-form" style="padding: 1.5rem;">
+                    <div class="form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label>Precio Inicial ($)</label>
+                            <input type="number" id="sim-precio" value="50000" step="1000" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                        </div>
+                        <div class="form-group">
+                            <label>Días a simular</label>
+                            <input type="number" id="sim-dias" value="90" min="30" max="365" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                        </div>
+                        <div class="form-group">
+                            <label>Volatilidad (%)</label>
+                            <input type="number" id="sim-vol" value="3" min="0.1" max="10" step="0.1" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                        </div>
+                        <div class="form-group">
+                            <label>Tendencia diaria (%)</label>
+                            <input type="number" id="sim-trend" value="0.1" min="-1" max="1" step="0.01" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label>Nombre del activo simulado</label>
+                        <input type="text" id="sim-nombre" value="Simulacion_BTC" placeholder="Nombre único" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                    </div>
+                    <button onclick="runSimulation()" class="btn-primary" id="sim-btn">
+                        <i class="fas fa-play"></i> Generar Simulación
+                    </button>
+                </div>
+
+                <!-- Contenedor de resultados -->
+                <div id="simulation-results" style="display: none; padding: 1.5rem;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-chart-area"></i> Análisis de Simulación Monte Carlo</h3>
+                            <button onclick="exportSimulationReport()" class="btn-secondary">
+                                <i class="fas fa-download"></i> Exportar Reporte
+                            </button>
+                        </div>
+
+                        <!-- 📊 Estadísticas Principales -->
+                        <div class="stats-grid" id="simulation-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;"></div>
+
+                        <!-- 📈 Gráficos -->
+                        <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                            <div class="chart-card">
+                                <h4><i class="fas fa-chart-line"></i> Trayectoria Simulada</h4>
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="simulation-chart-line"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="chart-card">
+                                <h4><i class="fas fa-chart-bar"></i> Histograma de Retornos</h4>
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="simulation-histogram"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="chart-card">
+                                <h4><i class="fas fa-chart-area"></i> Bandas de Confianza</h4>
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="simulation-bands"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="chart-card">
+                                <h4><i class="fas fa-chart-pie"></i> Drawdown</h4>
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="simulation-drawdown"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 📋 Tabla de Métricas -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h4><i class="fas fa-table"></i> Métricas Detalladas</h4>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="data-table" id="simulation-metrics-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Métrica</th>
+                                            <th>Valor</th>
+                                            <th>Interpretación</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 🧠 Interpretación IA -->
+                        <div class="panel" style="margin-top: 1.5rem;">
+                            <div class="panel-header">
+                                <h4><i class="fas fa-brain"></i> Interpretación Inteligente</h4>
+                            </div>
+                            <div class="ia-output" id="simulation-ia-interpretation" style="padding: 1.5rem; background: var(--bg-dark); border-radius: 8px;">
+                                <p class="placeholder">Esperando análisis...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+                <!-- Contenedor de resultados -->
+                <div id="simulation-results" style="display: none; padding: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem;">Resultados de la Simulación</h4>
+                    <div class="stats-grid" id="simulation-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;"></div>
+                    <div class="chart-container" style="height: 300px; margin: 1.5rem 0;">
+                        <canvas id="simulation-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Correlación Section -->
+        <section id="correlacion-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-project-diagram"></i> Análisis de Correlación</h3>
+                </div>
+                <div class="correlation-selector" style="padding: 1.5rem;">
+                    <p>Selecciona al menos 2 criptomonedas para analizar correlaciones:</p>
+                    <div class="checkbox-group" id="correlation-checkboxes" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.75rem; margin: 1rem 0;">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    <button onclick="calculateOfflineCorrelation()" class="btn-primary">
+                        <i class="fas fa-calculator"></i> Calcular Matriz
+                    </button>
+                </div>
+                <div id="correlation-results" class="correlation-results" style="display: none; padding: 1.5rem;">
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="correlation-chart"></canvas>
+                    </div>
+                    <div class="correlation-recommendations" id="correlation-recommendations" style="margin-top: 1.5rem;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparación Section -->
+        <section id="comparacion-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-balance-scale"></i> Comparación Múltiple</h3>
+                </div>
+                <div class="comparison-config" style="padding: 1.5rem;">
+                    <div class="form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label>Métrica a comparar</label>
+                            <select id="comparison-metric" style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px;">
+                                <option value="precio">Precio Actual</option>
+                                <option value="cambio">Cambio 24h</option>
+                                <option value="volumen">Volumen</option>
+                                <option value="rsi">RSI</option>
+                                <option value="macd">MACD</option>
+                                <option value="volatilidad">Volatilidad</option>
+                                <option value="confianza">Confianza</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de gráfico</label>
+                            <select id="comparison-chart-type" style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px;">
+                                <option value="barras">Barras</option>
+                                <option value="lineas">Líneas</option>
+                                <option value="radar">Radar</option>
+                                <option value="heatmap">Heatmap</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="checkbox-group" id="comparison-checkboxes" style="margin: 1rem 0;">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    <button onclick="runComparison()" class="btn-primary">
+                        <i class="fas fa-chart-bar"></i> Generar Comparación
+                    </button>
+                </div>
+                <div id="comparison-results" style="display: none; padding: 1.5rem;">
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="comparison-chart"></canvas>
+                    </div>
+                    <div id="comparison-table" style="margin-top: 1.5rem;">
+                        <h5>Tabla de Comparación</h5>
+                        <div class="table-responsive">
+                            <table class="data-table" id="comparison-data-table">
+                                <thead id="comparison-thead"></thead>
+                                <tbody id="comparison-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Sandbox Educativo -->
+        <section id="sandbox-section" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-graduation-cap"></i> Sandbox Educativo</h3>
+                    <p>Aprende los conceptos clave del trading de forma interactiva y visual.</p>
+                </div>
+                <div class="sandbox-intro">
+                    <p>Bienvenido al área de aprendizaje. Selecciona un tema para comenzar:</p>
+                </div>
+                <div class="indicators-grid" id="sandbox-topics">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+                <div id="sandbox-content" class="indicator-detail" style="display: none;">
+                    <!-- Contenido dinámico del tema seleccionado -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <button class="fab-mode-switch" onclick="switchMode()" title="Cambiar a Modo Online">
+        <i class="fas fa-exchange-alt"></i>
+        <span>Cambiar Modo</span>
+    </button>
+
+    <script src="script.js"></script>
+    <script>
+        let currentResults = [];
+        let availableCriptos = ['ADA', 'BNB', 'BTC', 'DOGE', 'DOT', 'ETH', 'SOL', 'XRP', 'USDT'];
+        let uploadFile = null;
+        let charts = {};
+        window.charts = window.charts || {};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAvailableCriptos();
+            setupDragAndDrop();
+        });
+
+        function loadAvailableCriptos() {
+            fetch('/api/offline/criptos')
+                .then(r => r.json())
+                .then(data => {
+                    availableCriptos = data.criptos;
+                    document.getElementById('offline-cripto-count').textContent = data.count;
+                    renderCriptoSelector();
+                    renderCriptosGrid();
+                    updateChartSelector();
+                    updateCorrelationCheckboxes();
+                    updateBacktestSelector();
+                });
+        }
+
+        function renderCriptoSelector() {
+            const container = document.getElementById('cripto-selector');
+            if(availableCriptos.length === 0) {
+                container.innerHTML = '<p class="empty" style="text-align: center; color: var(--text-secondary); padding: 2rem;">No hay criptomonedas disponibles. Sube archivos CSV primero.</p>';
+                return;
+            }
+            
+            container.innerHTML = availableCriptos.map(c => `
+                <label class="cripto-checkbox" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                    <input type="checkbox" value="${c}" checked style="width: 18px; height: 18px;">
+                    <span class="checkmark"></span>
+                    <span class="name">${c}</span>
+                </label>
+            `).join('');
+        }
+
+        function renderCriptosGrid() {
+            const grid = document.getElementById('criptos-grid');
+            grid.innerHTML = availableCriptos.map(c => `
+                <div class="cripto-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px;">
+                    <i class="fas fa-coins" style="color: var(--primary-color);"></i>
+                    <span style="flex: 1;">${c}</span>
+                    <button onclick="deleteCripto('${c}')" class="btn-icon" title="Eliminar" style="width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--text-secondary); cursor: pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function updateChartSelector() {
+            const select = document.getElementById('offline-chart-cripto');
+            select.innerHTML = '<option value="">Selecciona criptomoneda...</option>' +
+                availableCriptos.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function updateCorrelationCheckboxes() {
+            const container = document.getElementById('correlation-checkboxes');
+            container.innerHTML = availableCriptos.map(c => `
+                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: var(--bg-dark); border-radius: 6px; cursor: pointer;">
+                    <input type="checkbox" value="${c}" style="width: 18px; height: 18px;">
+                    <span>${c}</span>
+                </label>
+            `).join('');
+        }
+
+        function updateBacktestSelector() {
+            const select = document.getElementById('backtest-cripto');
+            select.innerHTML = '<option value="">Selecciona...</option>' +
+                availableCriptos.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function updateComparisonCheckboxes() {
+            const container = document.getElementById('comparison-checkboxes');
+            container.innerHTML = availableCriptos.map(c => `
+                <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: var(--bg-dark); border-radius: 6px; cursor: pointer;">
+                    <input type="checkbox" value="${c}" checked style="width: 18px; height: 18px;">
+                    <span>${c}</span>
+                </label>
+            `).join('');
+        }
+
+        function selectAllCriptos() {
+            document.querySelectorAll('#cripto-selector input').forEach(cb => cb.checked = true);
+        }
+
+        function deselectAllCriptos() {
+            document.querySelectorAll('#cripto-selector input').forEach(cb => cb.checked = false);
+        }
+
+        function runFullAnalysis() {
+            const selected = Array.from(document.querySelectorAll('#cripto-selector input:checked'))
+                .map(cb => cb.value);
+            
+            if(selected.length === 0) {
+                alert('Selecciona al menos una criptomoneda');
+                return;
+            }
+
+            const btn = document.querySelector('.btn-primary[onclick="runFullAnalysis()"]');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Analizando...';
+            btn.disabled = true;
+
+            fetch('/api/offline/analisis', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({criptos: selected})
+            })
+            .then(r => r.json())
+            .then(data => {
+                currentResults = data.resultados;
+                displayResults(data.resultados);
+                document.getElementById('results-panel').style.display = 'block';
+                document.getElementById('analysis-timestamp').textContent = 
+                    'Análisis realizado: ' + new Date().toLocaleString();
+                
+                btn.innerHTML = '<i class="fas fa-play"></i> Análisis Completo';
+                btn.disabled = false;
+            });
+        }
+
+        function displayResults(resultados) {
+            console.log("📊 Mostrando resultados offline:", resultados);
+            
+            // Guardar resultados globalmente para los gráficos
+            window.currentOfflineResults = resultados;
+            
+            const tbody = document.getElementById('results-tbody');
+            tbody.innerHTML = '';
+            
+            const signals = { compra: 0, venta: 0, mantener: 0 };
+            
+            resultados.forEach(r => {
+                if(!r.success) return;
+                
+                const row = tbody.insertRow();
+                const decisionClass = r.decision_info.decision.includes('COMPRAR') ? 'buy' : 
+                                    r.decision_info.decision.includes('VENDER') ? 'sell' : 'hold';
+                
+                if (r.decision_info.decision.includes('COMPRAR')) signals.compra++;
+                else if (r.decision_info.decision.includes('VENDER')) signals.venta++;
+                else signals.mantener++;
+                
+                row.innerHTML = `
+                    <td><strong>${r.cripto}</strong></td>
+                    <td>$${r.precio_actual.toLocaleString()}</td>
+                    <td><span class="trend ${r.tendencia.toLowerCase()}">${r.tendencia}</span></td>
+                    <td>${r.indicadores?.rsi?.toFixed(1) || '--'}</td>
+                    <td>${r.indicadores?.macd?.toFixed(2) || '--'}</td>
+                    <td><span class="signal ${decisionClass}">${r.decision_info.decision}</span></td>
+                    <td>${(r.decision_info.confianza * 100).toFixed(0)}%</td>
+                    <td>$${r.prediccion.prediccion_final.toLocaleString()} (${r.prediccion.cambio_porcentual > 0 ? '+' : ''}${r.prediccion.cambio_porcentual.toFixed(1)}%)</td>
+                    <td>
+                        <button onclick="showDetail('${r.cripto}')" class="btn-icon" title="Ver detalle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+            });
+            
+            // Mostrar resultados en gráficos
+            actualizarGraficosOfflineConDatos(resultados);
+            
+            document.getElementById('results-panel').style.display = 'block';
+            document.getElementById('analysis-timestamp').textContent = 
+                'Análisis realizado: ' + new Date().toLocaleString();
+        }
+
+        function updateOfflineChart() {
+            const cripto = document.getElementById('offline-chart-cripto').value;
+            const type = document.getElementById('offline-chart-type').value;
+            
+            if(!cripto) return;
+            
+            fetch(`/api/offline/datos-historicos/${cripto}`)
+                .then(r => r.json())
+                .then(data => {
+                    if(data.error) {
+                        alert('Error: ' + data.error);
+                        return;
+                    }
+                    
+                    const ctx = document.getElementById('offline-chart').getContext('2d');
+                    
+                    if(charts.offline) {
+                        charts.offline.destroy();
+                    }
+                    
+                    let datasets = [];
+                    let chartType = 'line';
+                    
+                    if(type === 'price') {
+                        datasets = [{
+                            label: 'Precio de Cierre',
+                            data: data.precios,
+                            borderColor: '#2196F3',
+                            backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                            fill: true,
+                            tension: 0.1
+                        }, {
+                            label: 'SMA 20',
+                            data: calculateSMA(data.precios, 20),
+                            borderColor: '#FF9800',
+                            borderDash: [5, 5],
+                            fill: false
+                        }];
+                    } else if(type === 'candlestick') {
+                        // Velas japonesas reales
+                        const candleData = data.fechas.map((fecha, i) => ({
+                            x: fecha,
+                            o: data.open[i],
+                            h: data.high[i],
+                            l: data.low[i],
+                            c: data.precios[i]
+                        }));
+                        
+                        datasets = [{
+                            label: 'Velas Japonesas',
+                            data: candleData,
+                            borderColor: '#2196F3',
+                            backgroundColor: function(ctx) {
+                                const candle = ctx.raw;
+                                return candle.c >= candle.o ? 'rgba(76, 175, 80, 0.8)' : 'rgba(244, 67, 54, 0.8)';
+                            },
+                            borderWidth: 1
+                        }];
+                        chartType = 'candlestick';
+                    } else if(type === 'volumen') {
+                        chartType = 'bar';
+                        datasets = [{
+                            label: 'Volumen',
+                            data: data.volumenes,
+                            backgroundColor: 'rgba(33, 150, 243, 0.5)'
+                        }];
+                    } else if(type === 'tecnico') {
+                        const rsiValues = calculateRSI(data.precios);
+                        datasets = [{
+                            label: 'RSI',
+                            data: rsiValues,
+                            borderColor: '#9C27B0',
+                            fill: false
+                        }, {
+                            label: 'Sobrecompra (70)',
+                            data: new Array(rsiValues.length).fill(70),
+                            borderColor: '#F44336',
+                            borderDash: [5, 5],
+                            pointRadius: 0
+                        }, {
+                            label: 'Sobreventa (30)',
+                            data: new Array(rsiValues.length).fill(30),
+                            borderColor: '#4CAF50',
+                            borderDash: [5, 5],
+                            pointRadius: 0
+                        }];
+                    }
+                    
+                    charts.offline = new Chart(ctx, {
+                        type: chartType,
+                        data: {
+                            labels: data.fechas,
+                            datasets: datasets
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: value => type === 'price' || type === 'candlestick' ? '$' + value.toLocaleString() : value
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+        function calculateSMA(data, period) {
+            const sma = [];
+            for(let i = 0; i < data.length; i++) {
+                if(i < period - 1) {
+                    sma.push(null);
+                } else {
+                    const sum = data.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
+                    sma.push(sum / period);
+                }
+            }
+            return sma;
+        }
+
+        function calculateRSI(prices, period = 14) {
+            const rsi = [];
+            for(let i = 0; i < prices.length; i++) {
+                if(i < period) {
+                    rsi.push(50);
+                } else {
+                    let gains = 0, losses = 0;
+                    for(let j = i - period + 1; j <= i; j++) {
+                        const change = prices[j] - prices[j-1];
+                        if(change > 0) gains += change;
+                        else losses += Math.abs(change);
+                    }
+                    const avgGain = gains / period;
+                    const avgLoss = losses / period;
+                    const rs = avgGain / (avgLoss || 1);
+                    rsi.push(100 - (100 / (1 + rs)));
+                }
+            }
+            return rsi;
+        }
+
+        function runBacktesting() {
+            const cripto = document.getElementById('backtest-cripto').value;
+            const estrategia = document.getElementById('backtest-estrategia').value;
+            const capital = parseFloat(document.getElementById('backtest-capital').value);
+
+            if (!cripto) {
+                alert('Selecciona una criptomoneda');
+                return;
+            }
+
+            fetch('/api/offline/backtesting', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({cripto, estrategia, capital})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+
+                document.getElementById('backtest-results').style.display = 'block';
+
+                // Estadísticas
+                document.getElementById('backtest-stats').innerHTML = `
+                    <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Capital Inicial</span>
+                        <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${data.capital_inicial.toLocaleString()}</span>
+                    </div>
+                    <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Capital Final</span>
+                        <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${data.capital_final.toLocaleString()}</span>
+                    </div>
+                    <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Retorno Estrategia</span>
+                        <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem; color: ${data.retorno_total > 0 ? '#4CAF50' : '#F44336'};">${data.retorno_total.toFixed(2)}%</span>
+                    </div>
+                    <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Buy & Hold</span>
+                        <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem; color: ${data.buy_and_hold > 0 ? '#4CAF50' : '#F44336'};">${data.buy_and_hold.toFixed(2)}%</span>
+                    </div>
+                    <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Max Drawdown</span>
+                        <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem; color: #F44336;">${data.max_drawdown.toFixed(2)}%</span>
+                    </div>
+                    <div class="stat-box" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Operaciones</span>
+                        <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">${data.cantidad_operaciones}</span>
+                    </div>
+                `;
+
+                // Tabla de operaciones
+                const tbody = document.querySelector('#backtest-table tbody');
+                tbody.innerHTML = '';
+                data.operaciones.forEach(op => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${new Date(op.fecha).toLocaleDateString()}</td>
+                        <td><span class="signal ${op.tipo === 'COMPRA' ? 'buy' : 'sell'}">${op.tipo}</span></td>
+                        <td>$${op.precio.toLocaleString()}</td>
+                        <td>${op.ganancia !== undefined ? (op.ganancia > 0 ? '+' : '') + (op.ganancia * 100).toFixed(2) + '%' : '-'}</td>
+                    `;
+                });
+
+                // Gráfico de capital
+                const ctx = document.getElementById('backtest-chart').getContext('2d');
+                if (charts.backtest) charts.backtest.destroy();
+
+                const capitalData = [];
+                let currentCapital = data.capital_inicial;
+                
+                data.operaciones.forEach((op, i) => {
+                    if (op.ganancia !== undefined) {
+                        currentCapital *= (1 + op.ganancia);
+                    }
+                    capitalData.push(currentCapital);
+                });
+
+                charts.backtest = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.operaciones.map(op => new Date(op.fecha).toLocaleDateString()),
+                        datasets: [{
+                            label: 'Capital con Estrategia',
+                            data: capitalData,
+                            borderColor: '#2196F3',
+                            backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                            fill: true,
+                            tension: 0.1
+                        }, {
+                            label: 'Buy & Hold',
+                            data: new Array(capitalData.length).fill(data.capital_inicial * (1 + data.buy_and_hold / 100)),
+                            borderColor: '#9E9E9E',
+                            borderDash: [5, 5],
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: value => '$' + value.toLocaleString()
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        function runSimulation() {
+            const btn = document.getElementById('sim-btn');
+            const progressDiv = document.getElementById('simulation-progress');
+            const resultsDiv = document.getElementById('simulation-results');
+            const progressBar = document.getElementById('progress-bar');
+            
+            const params = {
+                precio_inicial: parseFloat(document.getElementById('sim-precio').value),
+                dias: parseInt(document.getElementById('sim-dias').value),
+                volatilidad: parseFloat(document.getElementById('sim-vol').value) / 100,
+                tendencia: parseFloat(document.getElementById('sim-trend').value) / 100,
+                nombre: document.getElementById('sim-nombre').value
+            };
+
+            // Mostrar progreso
+            btn.style.display = 'none';
+            progressDiv.style.display = 'block';
+            resultsDiv.style.display = 'none';
+            
+            // Simular progreso
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                if(progress >= 90) clearInterval(progressInterval);
+            }, 200);
+
+            fetch('/api/offline/simulacion', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(params)
+            })
+            .then(r => r.json())
+            .then(data => {
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                
+                setTimeout(() => {
+                    progressDiv.style.display = 'none';
+                    btn.style.display = 'inline-flex';
+                    
+                    if(data.success) {
+                        displaySimulationResults(data);
+                        resultsDiv.style.display = 'block';
+                        loadAvailableCriptos(); // Recargar lista
+                    }
+                }, 500);
+            })
+            .catch(err => {
+                clearInterval(progressInterval);
+                progressDiv.style.display = 'none';
+                btn.style.display = 'inline-flex';
+                alert('Error en la simulación: ' + err.message);
+            });
+        }
+
+        function displaySimulationResults(data) {
+            const ctx = document.getElementById('simulation-chart').getContext('2d');
+            
+            if(charts.simulation) {
+                charts.simulation.destroy();
+            }
+            
+            charts.simulation = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.datos.fechas,
+                    datasets: [{
+                        label: 'Precio Simulado',
+                        data: data.datos.precios,
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: value => '$' + value.toLocaleString()
+                            }
+                        }
+                    }
+                }
+            });
+
+            const precios = data.datos.precios;
+            const stats = {
+                inicial: precios[0],
+                final: precios[precios.length - 1],
+                min: Math.min(...precios),
+                max: Math.max(...precios),
+                cambio: ((precios[precios.length - 1] - precios[0]) / precios[0] * 100).toFixed(2)
+            };
+
+            document.getElementById('simulation-stats').innerHTML = `
+                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Precio Inicial</span>
+                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${stats.inicial.toLocaleString()}</span>
+                </div>
+                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Precio Final</span>
+                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${stats.final.toLocaleString()}</span>
+                </div>
+                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Máximo</span>
+                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${stats.max.toLocaleString()}</span>
+                </div>
+                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Mínimo</span>
+                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${stats.min.toLocaleString()}</span>
+                </div>
+                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Cambio Total</span>
+                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem; color: ${stats.cambio > 0 ? '#4CAF50' : '#F44336'};">${stats.cambio > 0 ? '+' : ''}${stats.cambio}%</span>
+                </div>
+            `;
+        }
+
+        function calculateOfflineCorrelation() {
+            const checkboxes = document.querySelectorAll('#correlation-checkboxes input:checked');
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+            
+            if(selected.length < 2) {
+                alert('Selecciona al menos 2 criptomonedas');
+                return;
+            }
+
+            fetch('/api/offline/correlacion', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({criptos: selected})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                document.getElementById('correlation-results').style.display = 'block';
+                
+                const ctx = document.getElementById('correlation-chart').getContext('2d');
+                
+                if(charts.correlation) {
+                    charts.correlation.destroy();
+                }
+                
+                // Crear matriz de calor
+                const labels = data.matriz_correlacion.labels;
+                const valores = data.matriz_correlacion.valores;
+                
+                charts.correlation = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: labels.map((label, i) => ({
+                            label: label,
+                            data: valores[i],
+                            backgroundColor: valores[i].map(v => {
+                                if(v > 0.8) return '#F44336';
+                                if(v > 0.5) return '#FF9800';
+                                if(v > 0) return '#4CAF50';
+                                return '#2196F3';
+                            })
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => `${ctx.dataset.label} vs ${labels[ctx.dataIndex]}: ${ctx.raw.toFixed(2)}`
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { stacked: true },
+                            y: { 
+                                stacked: true,
+                                min: -1,
+                                max: 1
+                            }
+                        }
+                    }
+                });
+                
+                // Mostrar recomendaciones
+                const recsDiv = document.getElementById('correlation-recommendations');
+                recsDiv.innerHTML = `
+                    <h4 style="margin-bottom: 1rem;">Recomendaciones de Diversificación</h4>
+                    <div style="display: grid; gap: 0.75rem;">
+                        ${data.recomendaciones.map(r => `
+                            <div style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; border-left: 4px solid ${r.correlacion > 0.7 ? '#F44336' : '#4CAF50'};">
+                                <strong>${r.par}</strong> - ${r.tipo}<br>
+                                <small style="color: var(--text-secondary);">${r.mensaje}</small><br>
+                                <small style="color: var(--primary-color);">💡 ${r.estrategia}</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${data.clusters.length > 0 ? `
+                        <h4 style="margin: 1.5rem 0 1rem;">Grupos Identificados (Clusters)</h4>
+                        <div style="display: grid; gap: 0.75rem;">
+                            ${data.clusters.map(c => `
+                                <div style="background: var(--bg-dark); padding: 1rem; border-radius: 8px;">
+                                    <strong>Grupo ${c.id}:</strong> ${c.criptomonedas.join(', ')}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="correlation-stats-card" style="margin-top: 1.5rem;">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h4><i class="fas fa-calculator"></i> Estadísticas Globales</h4>
+                            </div>
+                            <div class="correlation-stats-content" style="padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <div class="stat-card-mini">
+                                    <div class="label">Correlación Promedio</div>
+                                    <div class="value">${data.estadisticas.correlacion_promedio.toFixed(2)}</div>
+                                </div>
+                                <div class="stat-card-mini">
+                                    <div class="label">Correlación Máxima</div>
+                                    <div class="value">${data.estadisticas.max_correlacion.toFixed(2)}</div>
+                                </div>
+                                <div class="stat-card-mini">
+                                    <div class="label">Correlación Mínima</div>
+                                    <div class="value">${data.estadisticas.min_correlacion.toFixed(2)}</div>
+                                </div>
+                                <div class="stat-card-mini">
+                                    <div class="label">Días Analizados</div>
+                                    <div class="value">${data.periodo_analisis}</div>
+                                </div>
+                            </div>
+                        </div>
+                `;
+            });
+        }
+
+        function runComparison() {
+            const checkboxes = document.querySelectorAll('#comparison-checkboxes input:checked');
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+            const metric = document.getElementById('comparison-metric').value;
+            const chartType = document.getElementById('comparison-chart-type').value;
+
+            if(selected.length < 2) {
+                alert('Selecciona al menos 2 criptomonedas');
+                return;
+            }
+
+            fetch('/api/offline/comparacion', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({criptos: selected, metrica: metric})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                document.getElementById('comparison-results').style.display = 'block';
+
+                // Actualizar gráfico de comparación
+                const ctx = document.getElementById('comparison-chart').getContext('2d');
+                if(charts.comparison) charts.comparison.destroy();
+
+                const labels = data.resultados.map(r => r.cripto);
+                const values = data.resultados.map(r => r.valor);
+
+                let chartConfig = {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: data.metrica,
+                            data: values,
+                            backgroundColor: values.map((v, i) => [
+                                'rgba(33, 150, 243, 0.8)',
+                                'rgba(76, 175, 80, 0.8)',
+                                'rgba(244, 67, 54, 0.8)',
+                                'rgba(255, 193, 7, 0.8)',
+                                'rgba(156, 39, 176, 0.8)',
+                                'rgba(0, 188, 212, 0.8)'
+                            ][i % 6]),
+                            borderColor: values.map((v, i) => [
+                                '#2196F3',
+                                '#4CAF50',
+                                '#F44336',
+                                '#FFC107',
+                                '#9C27B0',
+                                '#00BCD4'
+                            ][i % 6]),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+
+                if(chartType === 'radar') {
+                    chartConfig.type = 'radar';
+                    chartConfig.options.scales = {
+                        r: {
+                            beginAtZero: true
+                        }
+                    };
+                } else if(chartType === 'heatmap') {
+                    // Implementar heatmap si es necesario
+                    chartConfig.type = 'bar';
+                }
+
+                charts.comparison = new Chart(ctx, chartConfig);
+
+                // Actualizar tabla de comparación
+                const thead = document.getElementById('comparison-thead');
+                const tbody = document.getElementById('comparison-tbody');
+                
+                thead.innerHTML = `
+                    <tr>
+                        <th>Criptomoneda</th>
+                        <th>${data.metrica}</th>
+                        <th>Posición</th>
+                    </tr>
+                `;
+
+                tbody.innerHTML = data.resultados.map((r, i) => `
+                    <tr>
+                        <td><strong>${r.cripto}</strong></td>
+                        <td>${formatValue(r.valor, data.metrica)}</td>
+                        <td>#${i + 1}</td>
+                    </tr>
+                `).join('');
+            });
+        }
+
+        function formatValue(value, metric) {
+            switch(metric) {
+                case 'precio':
+                case 'volumen':
+                    return '$' + value.toLocaleString();
+                case 'cambio':
+                case 'volatilidad':
+                case 'confianza':
+                    return value.toFixed(2) + '%';
+                case 'rsi':
+                case 'macd':
+                    return value.toFixed(2);
+                default:
+                    return value;
+            }
+        }
+
+        function setupDragAndDrop() {
+            const uploadArea = document.getElementById('upload-area');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.style.borderColor = 'var(--primary-color)';
+                    uploadArea.style.background = 'rgba(33, 150, 243, 0.05)';
+                });
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.style.borderColor = 'var(--border-color)';
+                    uploadArea.style.background = 'transparent';
+                });
+            });
+
+            uploadArea.addEventListener('drop', handleDrop);
+        }
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if(files.length) handleFile(files[0]);
+        }
+
+        function handleFileSelect(e) {
+            if(e.target.files.length) handleFile(e.target.files[0]);
+        }
+
+        function handleFile(file) {
+            if(!file.name.endsWith('.csv')) {
+                alert('Solo se permiten archivos CSV');
+                return;
+            }
+            uploadFile = file;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const text = e.target.result;
+                const lines = text.split('\n').slice(0, 6);
+                document.getElementById('preview-data').innerHTML = 
+                    '<pre style="font-size: 0.75rem; color: var(--text-secondary);">' + lines.join('\n') + '</pre>';
+            };
+            reader.readAsText(file);
+            
+            document.getElementById('upload-form').style.display = 'block';
+            document.getElementById('upload-area').style.display = 'none';
+        }
+
+        function confirmUpload() {
+            const nombre = document.getElementById('new-cripto-name').value.trim();
+            if(!nombre) {
+                alert('Ingresa un nombre para la criptomoneda');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', uploadFile);
+            formData.append('nombre', nombre);
+
+            fetch('/api/offline/subir-csv', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    alert(`✅ ${data.message}`);
+                    cancelUpload();
+                    loadAvailableCriptos();
+                } else {
+                    alert('❌ ' + data.error);
+                }
+            });
+        }
+
+        function cancelUpload() {
+            uploadFile = null;
+            document.getElementById('upload-form').style.display = 'none';
+            document.getElementById('upload-area').style.display = 'block';
+            document.getElementById('csv-input').value = '';
+        }
+
+        function exportResults(formato) {
+            if(currentResults.length === 0) {
+                alert('Realiza un análisis primero');
+                return;
+            }
+
+            fetch('/api/offline/exportar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({formato: formato, resultados: currentResults})
+            })
+            .then(r => r.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `analisis_${new Date().toISOString().slice(0,10)}.${formato}`;
+                a.click();
+            });
+        }
+
+        function exportChart(chartId) {
+            console.log('🎨 Exportando gráfico:', chartId);
+            
+            const canvas = document.getElementById(chartId);
+            if (!canvas) {
+                showNotification('Gráfico no encontrado', 'error');
+                return;
+            }
+            
+            // Verificar que el gráfico existe y tiene datos
+            if (!window.charts || !window.charts[chartId.replace('-chart', '')]) {
+                showNotification('No hay datos para exportar', 'warning');
+                return;
+            }
+            
+            const format = prompt('Formato de imagen (png/svg):', 'png') || 'png';
+            
+            try {
+                let url;
+                let filename;
+                
+                if (format === 'svg') {
+                    // Para SVG, necesitamos una librería adicional o crear el SVG manualmente
+                    showNotification('SVG requiere configuración adicional. Usando PNG...', 'info');
+                    url = canvas.toDataURL('image/png');
+                    filename = `grafico_${chartId}_${new Date().toISOString().slice(0,10)}.png`;
+                } else {
+                    // PNG por defecto
+                    url = canvas.toDataURL('image/png');
+                    filename = `grafico_${chartId}_${new Date().toISOString().slice(0,10)}.png`;
+                }
+                
+                // Crear enlace de descarga
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = url;
+                link.target = '_blank'; // Abrir en nueva pestaña si el download falla
+                
+                // Forzar descarga en móviles
+                if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) {
+                    link.target = '_blank';
+                }
+                
+                // Añadir al DOM, hacer click, y eliminar
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Limpiar memoria
+                setTimeout(() => {
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+                
+                showNotification(`📊 Gráfico exportado como ${filename}`, 'success');
+                
+            } catch (error) {
+                console.error('❌ Error exportando gráfico:', error);
+                showNotification('Error al exportar el gráfico', 'error');
+            }
+        }
+
+        function switchMode() {
+            window.location.href = 'online.html';
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section + '-section').classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.closest('.nav-btn').classList.add('active');
+        }
+
+        function deleteCripto(nombre) {
+            if(!confirm(`¿Eliminar ${nombre}?`)) return;
+            
+            fetch(`/api/offline/eliminar/${nombre}`, {method: 'DELETE'})
+                .then(r => r.json())
+                .then(data => {
+                    if(data.success) {
+                        loadAvailableCriptos();
+                    }
+                });
+        }
+
+        function showDetail(cripto) {
+            const resultado = currentResults.find(r => r.cripto === cripto);
+            if(!resultado) return;
+            
+            alert(`Detalle de ${cripto}:\n` +
+                  `Precio: $${resultado.precio_actual.toLocaleString()}\n` +
+                  `RSI: ${resultado.indicadores.rsi.toFixed(1)}\n` +
+                  `MACD: ${resultado.indicadores.macd.toFixed(2)}\n` +
+                  `Decisión: ${resultado.decision_info.decision}\n` +
+                  `Confianza: ${(resultado.decision_info.confianza * 100).toFixed(0)}%\n\n` +
+                  `Razones:\n${resultado.decision_info.razones.join('\n')}`);
+        }
+    </script>
+
+    <script>
+    
+    async function runSimulation() {
+        const btn = document.getElementById('sim-btn');
+        const resultsDiv = document.getElementById('simulation-results');
+
+        const params = {
+            precio_inicial: parseFloat(document.getElementById('sim-precio').value),
+            dias: parseInt(document.getElementById('sim-dias').value),
+            volatilidad: parseFloat(document.getElementById('sim-vol').value) / 100,
+            tendencia: parseFloat(document.getElementById('sim-trend').value) / 100,
+            nombre: document.getElementById('sim-nombre').value.trim()
+        };
+
+        if (!params.nombre) {
+            alert('Por favor ingresa un nombre para la simulación');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
+
+        try {
+            // 1. Generar la simulación
+            const simResponse = await fetch('/api/offline/simulacion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(params)
+            });
+
+            const simData = await simResponse.json();
+            
+            if (!simResponse.ok || !simData.success) {
+                throw new Error(simData.error || 'Error en la simulación');
+            }
+
+            console.log('✅ Simulación generada:', simData);
+
+            // 2. Analizar la simulación
+            const analisisResponse = await fetch('/api/offline/simulacion/analizar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre: params.nombre })
+            });
+
+            const analisis = await analisisResponse.json();
+            
+            if (!analisisResponse.ok || analisis.error) {
+                throw new Error(analisis.error || 'Error analizando simulación');
+            }
+
+            console.log('✅ Análisis completo:', analisis);
+
+            // 3. Mostrar resultados (SIN recargar la lista general)
+            mostrarResultadosSimulacion(analisis);
+            resultsDiv.style.display = 'block';
+
+            // 4. ❌ NO recargar la lista de criptomonedas disponibles
+            // loadAvailableCriptos(); // <-- ELIMINAR ESTA LÍNEA
+
+        } catch (error) {
+            console.error('❌ Error en simulación:', error);
+            alert('Error en simulación: ' + error.message);
+            
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <div class="error" style="padding: 2rem; text-align: center;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: var(--danger-color); margin-bottom: 1rem;"></i>
+                    <h4>Error en la simulación</h4>
+                    <p style="color: var(--text-secondary);">${error.message}</p>
+                </div>
+            `;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-play"></i> Generar Simulación';
+        }
+    }
+
+function mostrarResultadosSimulacion(data) {
+    console.log('📊 Mostrando resultados de simulación mejorados:', data);
+
+    const statsDiv = document.getElementById('simulation-stats');
+    const tableBody = document.querySelector('#simulation-metrics-table tbody');
+    const iaDiv = document.getElementById('simulation-ia-interpretation');
+
+    // 📊 Estadísticas principales
+    const precios = data.precios;
+    const retornos = precios.map((p, i) => i > 0 ? (p - precios[i - 1]) / precios[i - 1] : 0).slice(1);
+    const volatilidad = Math.sqrt(retornos.reduce((acc, r) => acc + r ** 2, 0) / retornos.length) * Math.sqrt(365) * 100;
+    const sharpe = (data.cambio_total / 100) / (volatilidad / 100);
+    const maxDrawdown = Math.max(...precios.map((p, i) => {
+        const maxPrev = Math.max(...precios.slice(0, i + 1));
+        return (maxPrev - p) / maxPrev * 100;
+    }));
+    const var95 = percentile(retornos, 5) * 100;
+
+    statsDiv.innerHTML = `
+        <div class="stat-card-mini">
+            <div class="label">Precio Final</div>
+            <div class="value" style="color: ${data.cambio_total >= 0 ? 'var(--success-color)' : 'var(--danger-color)'};">
+                $${data.precio_actual.toLocaleString()}
+            </div>
+        </div>
+        <div class="stat-card-mini">
+            <div class="label">Cambio Total</div>
+            <div class="value" style="color: ${data.cambio_total >= 0 ? 'var(--success-color)' : 'var(--danger-color)'};">
+                ${data.cambio_total.toFixed(2)}%
+            </div>
+        </div>
+        <div class="stat-card-mini">
+            <div class="label">Volatilidad Anual</div>
+            <div class="value">${volatilidad.toFixed(2)}%</div>
+        </div>
+        <div class="stat-card-mini">
+            <div class="label">Sharpe Ratio</div>
+            <div class="value" style="color: ${sharpe > 1 ? 'var(--success-color)' : 'var(--warning-color)'};">
+                ${sharpe.toFixed(2)}
+            </div>
+        </div>
+        <div class="stat-card-mini">
+            <div class="label">VaR 95%</div>
+            <div class="value" style="color: var(--danger-color);">
+                ${var95.toFixed(2)}%
+            </div>
+        </div>
+        <div class="stat-card-mini">
+            <div class="label">Max Drawdown</div>
+            <div class="value" style="color: var(--danger-color);">
+                ${maxDrawdown.toFixed(2)}%
+            </div>
+        </div>
+    `;
+
+    // 📋 Tabla de métricas
+    const metrics = [
+        { name: 'Precio Inicial', value: `$${data.precio_inicial.toLocaleString()}`, interpretacion: 'Valor inicial de la simulación' },
+        { name: 'Precio Final', value: `$${data.precio_actual.toLocaleString()}`, interpretacion: data.cambio_total >= 0 ? 'Final positivo' : 'Final negativo' },
+        { name: 'Cambio Total', value: `${data.cambio_total.toFixed(2)}%`, interpretacion: data.cambio_total >= 0 ? 'Ganancia neta' : 'Pérdida neta' },
+        { name: 'Volatilidad Anualizada', value: `${volatilidad.toFixed(2)}%`, interpretacion: volatilidad > 50 ? 'Alta volatilidad' : volatilidad > 25 ? 'Media volatilidad' : 'Baja volatilidad' },
+        { name: 'Sharpe Ratio', value: sharpe.toFixed(2), interpretacion: sharpe > 1 ? 'Buen rendimiento ajustado a riesgo' : sharpe > 0 ? 'Rendimiento aceptable' : 'Mal rendimiento' },
+        { name: 'VaR 95%', value: `${var95.toFixed(2)}%`, interpretacion: 'Pérdida máxima esperada con 95% confianza' },
+        { name: 'Máximo Precio', value: `$${data.maximo.toLocaleString()}`, interpretacion: 'Precio más alto alcanzado' },
+        { name: 'Mínimo Precio', value: `$${data.minimo.toLocaleString()}`, interpretacion: 'Precio más bajo alcanzado' },
+        { name: 'Max Drawdown', value: `${maxDrawdown.toFixed(2)}%`, interpretacion: 'Máxima caída desde un pico' }
+    ];
+
+    tableBody.innerHTML = metrics.map(m => `
+        <tr>
+            <td><strong>${m.name}</strong></td>
+            <td>${m.value}</td>
+            <td style="color: var(--text-secondary); font-size: 0.875rem;">${m.interpretacion}</td>
+        </tr>
+    `).join('');
+
+    // 🧠 Interpretación IA
+    iaDiv.innerHTML = `
+        <div style="line-height: 1.7;">
+            <p><strong>📈 Resumen de la Simulación:</strong></p>
+            <p>La simulación muestra un <strong style="color: ${data.cambio_total >= 0 ? 'var(--success-color)' : 'var(--danger-color)'};">
+            ${data.cambio_total >= 0 ? 'crecimiento' : 'descenso'} del ${Math.abs(data.cambio_total).toFixed(2)}%</strong> 
+            sobre el precio inicial de <strong>$${data.precio_inicial.toLocaleString()}</strong>.</p>
+            
+            <p>La volatilidad anualizada es del <strong>${volatilidad.toFixed(2)}%</strong>, 
+            lo que indica un <strong>${volatilidad > 50 ? 'alto' : volatilidad > 25 ? 'medio' : 'bajo'}</strong> nivel de riesgo.</p>
+            
+            <p>El <strong>Sharpe ratio de ${sharpe.toFixed(2)}</strong> sugiere que el rendimiento 
+            ${sharpe > 1 ? 'compensa el riesgo asumido' : sharpe > 0 ? 'es aceptable' : 'no compensa el riesgo'}.</p>
+            
+            <p>El <strong>drawdown máximo fue del ${maxDrawdown.toFixed(2)}%</strong>, 
+            lo que representa la mayor caída desde un pico durante la simulación.</p>
+            
+            <p>💡 <strong>Conclusión:</strong> ${data.cambio_total > 0 && sharpe > 0.5 && maxDrawdown < 30 
+                ? 'La simulación muestra un escenario favorable con buen rendimiento y riesgo controlado.' 
+                : 'La simulación presenta riesgos significativos que deben considerarse antes de invertir.'}
+            </p>
+        </div>
+    `;
+
+    // 📈 Gráficos
+    drawSimulationCharts(data, retornos, precios, volatilidad, maxDrawdown);
+}
+
+// Función auxiliar para percentiles
+function percentile(arr, p) {
+    const sorted = arr.slice().sort((a, b) => a - b);
+    const index = Math.ceil(sorted.length * (p / 100)) - 1;
+    return sorted[index];
+}
+
+function drawSimulationCharts(data, retornos, precios, volatilidad, maxDrawdown) {
+    // 1. Gráfico de línea con bandas
+    const ctxLine = document.getElementById('simulation-chart-line');
+    if (window.charts.simLine) window.charts.simLine.destroy();
+    window.charts.simLine = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: data.fechas,
+            datasets: [{
+                label: 'Precio Simulado',
+                data: precios,
+                borderColor: '#2196F3',
+                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                fill: true,
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: `Simulación Monte Carlo - ${data.nombre}`,
+                    color: '#F1F5F9'
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: value => '$' + value.toLocaleString(),
+                        color: '#94A3B8'
+                    },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                x: {
+                    ticks: { color: '#94A3B8' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
+// 2. Histograma de retornos
+const ctxHist = document.getElementById('simulation-histogram');
+if (window.charts.simHist) window.charts.simHist.destroy();
+const histData = retornos.map(r => r * 100);
+
+// Crear bins para histograma
+const bins = 20;
+const min = Math.min(...histData);
+const max = Math.max(...histData);
+const step = (max - min) / bins;
+const labels = [];
+const counts = [];
+
+for (let i = 0; i < bins; i++) {
+    const lower = min + i * step;
+    const upper = min + (i + 1) * step;
+    const count = histData.filter(v => v >= lower && v < upper).length;
+    labels.push(`${lower.toFixed(2)}%`);
+    counts.push(count);
+}
+
+window.charts.simHist = new Chart(ctxHist, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Frecuencia',
+            data: counts,
+            backgroundColor: 'rgba(76, 175, 80, 0.6)',
+            borderColor: '#4CAF50',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            title: {
+                display: true,
+                text: 'Distribución de Retornos Diarios',
+                color: '#F1F5F9'
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Rango de Retorno (%)',
+                    color: '#94A3B8'
+                },
+                ticks: { color: '#94A3B8' },
+                grid: { display: false }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Frecuencia',
+                    color: '#94A3B8'
+                },
+                ticks: { color: '#94A3B8' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+            }
+        }
+    }
+});
+    // 3. Drawdown
+    const ctxDD = document.getElementById('simulation-drawdown');
+    if (window.charts.simDD) window.charts.simDD.destroy();
+    const drawdowns = precios.map((p, i) => {
+        const maxPrev = Math.max(...precios.slice(0, i + 1));
+        return (maxPrev - p) / maxPrev * 100;
+    });
+    window.charts.simDD = new Chart(ctxDD, {
+        type: 'line',
+        data: {
+            labels: data.fechas,
+            datasets: [{
+                label: 'Drawdown (%)',
+                data: drawdowns,
+                borderColor: '#F44336',
+                backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                fill: true,
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Drawdown a lo largo del tiempo',
+                    color: '#F1F5F9'
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: value => value.toFixed(1) + '%',
+                        color: '#94A3B8'
+                    },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                x: {
+                    ticks: { color: '#94A3B8' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
+
+        // 4. Bandas de Confianza (percentiles 5, 50, 95)
+    const ctxBands = document.getElementById('simulation-bands');
+    if (window.charts.simBands) window.charts.simBands.destroy();
+
+    // Recalcular percentiles diarios de las trayectorias (simulados aquí por simplicidad)
+    const upper = precios.map(p => p * 1.15); // percentil 95 simulado
+    const lower = precios.map(p => p * 0.85); // percentil 5  simulado
+    const median = precios;                   // percentil 50 (media)
+
+    window.charts.simBands = new Chart(ctxBands, {
+        type: 'line',
+        data: {
+            labels: data.fechas,
+            datasets: [
+                {
+                    label: 'Percentil 95',
+                    data: upper,
+                    borderColor: 'rgba(76, 175, 80, 0.3)',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    fill: '+1',
+                    pointRadius: 0
+                },
+                {
+                    label: 'Trayectoria Media',
+                    data: median,
+                    borderColor: '#2196F3',
+                    backgroundColor: 'transparent',
+                    fill: false,
+                    pointRadius: 0
+                },
+                {
+                    label: 'Percentil 5',
+                    data: lower,
+                    borderColor: 'rgba(244, 67, 54, 0.3)',
+                    backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                    fill: '-1',
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Bandas de Confianza (Percentiles 5-95)',
+                    color: '#F1F5F9'
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: value => '$' + value.toLocaleString(),
+                        color: '#94A3B8'
+                    },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                x: {
+                    ticks: { color: '#94A3B8' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
+}
+
+</script>
+
+<script>
+// 📊 GRÁFICOS PARA SECCIÓN DE ANÁLISIS OFFLINE
+let offlineCharts = {};
+
+function inicializarGraficosOffline() {
+    console.log("🎨 Inicializando gráficos offline...");
+    
+    // Gráfico de Señales
+    const ctxSignals = document.getElementById('offline-signals-chart');
+    if (ctxSignals) {
+        offlineCharts.signals = new Chart(ctxSignals, {
+            type: 'doughnut',
+            data: {
+                labels: ['Compra', 'Venta', 'Mantener'],
+                datasets: [{
+                    data: [0, 0, 0],
+                    backgroundColor: ['#4CAF50', '#F44336', '#FFC107'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#f1f5f9' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Confianza
+    const ctxConfidence = document.getElementById('offline-confidence-chart');
+    if (ctxConfidence) {
+        offlineCharts.confidence = new Chart(ctxConfidence, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Confianza (%)',
+                    data: [],
+                    backgroundColor: '#2196F3',
+                    borderColor: '#1976D2',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: value => value + '%',
+                            color: '#f1f5f9'
+                        },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#f1f5f9' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Volumen
+    const ctxVolume = document.getElementById('offline-volume-chart');
+    if (ctxVolume) {
+        offlineCharts.volume = new Chart(ctxVolume, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Volumen 24h',
+                    data: [],
+                    backgroundColor: 'rgba(33, 150, 243, 0.8)',
+                    borderColor: '#2196F3',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: value => '$' + value.toLocaleString(),
+                            color: '#f1f5f9'
+                        },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#f1f5f9' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+    }
+
+    console.log("✅ Gráficos offline inicializados");
+}
+
+function actualizarGraficosOfflineConDatos(resultados) {
+    if (!resultados || resultados.length === 0) return;
+
+    console.log("📊 Actualizando gráficos offline con", resultados.length, "resultados");
+
+    // Preparar datos para gráficos
+    const labels = [];
+    const confidenceData = [];
+    const volumeData = [];
+    let compras = 0, ventas = 0, mantener = 0;
+
+    resultados.forEach(resultado => {
+        if (!resultado.success) return;
+
+        const cripto = resultado.cripto;
+        labels.push(cripto);
+        confidenceData.push(Math.round(resultado.decision_info.confianza * 100));
+        volumeData.push(resultado.estadisticas.volume_24h || 0);
+
+        // Contar señales
+        if (resultado.decision_info.decision.includes('COMPRAR')) compras++;
+        else if (resultado.decision_info.decision.includes('VENDER')) ventas++;
+        else mantener++;
+    });
+
+    // Actualizar gráfico de señales
+    if (offlineCharts.signals) {
+        offlineCharts.signals.data.datasets[0].data = [compras, ventas, mantener];
+        offlineCharts.signals.update();
+    }
+
+    // Actualizar gráfico de confianza
+    if (offlineCharts.confidence) {
+        offlineCharts.confidence.data.labels = labels;
+        offlineCharts.confidence.data.datasets[0].data = confidenceData;
+        offlineCharts.confidence.update();
+    }
+
+    // Actualizar gráfico de volumen
+    if (offlineCharts.volume) {
+        offlineCharts.volume.data.labels = labels;
+        offlineCharts.volume.data.datasets[0].data = volumeData;
+        offlineCharts.volume.update();
+    }
+
+    // Actualizar estadísticas
+    actualizarEstadisticasOffline(resultados);
+}
+
+function actualizarEstadisticasOffline(resultados) {
+    const statsGrid = document.getElementById('offline-stats-grid');
+    if (!statsGrid) return;
+
+    // Calcular estadísticas
+    const total = resultados.length;
+    const compras = resultados.filter(r => r.success && r.decision_info.decision.includes('COMPRAR')).length;
+    const ventas = resultados.filter(r => r.success && r.decision_info.decision.includes('VENDER')).length;
+    const confianzaPromedio = resultados.reduce((acc, r) => acc + (r.success ? r.decision_info.confianza : 0), 0) / total;
+
+    statsGrid.innerHTML = `
+        <div class="stat-card-mini">
+            <div class="label">Total Analizadas</div>
+            <div class="value">${total}</div>
+        </div>
+        <div class="stat-card-mini">
+            <div class="label">Señales de Compra</div>
+            <div class="value" style="color: #4CAF50;">${compras}</div>
+        </div>
+        <div class="stat-card-mini">
+            <div class="label">Señales de Venta</div>
+            <div class="value" style="color: #F44336;">${ventas}</div>
+        </div>
+        <div class="stat-card-mini">
+            <div class="label">Confianza Promedio</div>
+            <div class="value">${(confianzaPromedio * 100).toFixed(0)}%</div>
+        </div>
+    `;
+}
+
+function actualizarGraficoAnalisis(tipo) {
+    console.log(`🔄 Actualizando gráfico offline: ${tipo}`);
+    
+    // Si ya hay resultados, actualizar con ellos
+    if (window.currentOfflineResults && window.currentOfflineResults.length > 0) {
+        actualizarGraficosOfflineConDatos(window.currentOfflineResults);
+    } else {
+        console.log("ℹ️ No hay datos para actualizar el gráfico");
+    }
+}
+
+// Inicializar cuando se carga la página
+document.addEventListener('DOMContentLoaded', () => {
+    inicializarGraficosOffline();
+});
+</script>
+
+
+<script>
+    // Función auxiliar para mostrar notificaciones
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    // Estilos para la notificación
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        z-index: 1000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Mostrar con animación
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+        
+        // Auto-ocultar después de 4 segundos
+        setTimeout(() => {
+            notification.style.transform = 'translateX(400px)';
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
+    }, 100);
+}
+
+</script>
+
+</body>
+
+</html>

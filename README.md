@@ -379,4 +379,5 @@ de este software y de los archivos de documentación asociados...
 
 **Hecho con ❤️ para la comunidad cripto**
 
-</div>
+</div>#   c r i p t o - a n a l i z a d o r - p r o  
+ 

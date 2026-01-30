@@ -1,384 +1,319 @@
 # 🚀 Cripto Analizador Pro
 
-[![Python Version](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-2.0%2B-lightgrey?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?logo=opensourceinitiative&logoColor=white)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.0-orange?logo=github&logoColor=white)](https://github.com/tu-usuario/cripto-analizador-pro/releases)
-[![Code Style](https://img.shields.io/badge/Code%20Style-PEP8-brightgreen?logo=python&logoColor=white)](https://pep8.org/)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-success?logo=check-circle&logoColor=white)](https://github.com/tu-usuario/cripto-analizador-pro)
+**Análisis técnico profesional de criptomonedas con IA explicativa**
 
-**Sistema profesional de análisis de criptomonedas** con capacidades avanzadas de trading, simulación Monte Carlo, backtesting y sandbox educativo integrado.
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
+[![Chart.js](https://img.shields.io/badge/Chart.js-3.0+-orange.svg)](https://www.chartjs.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-![Dashboard Preview](https://via.placeholder.com/800x400/2d3748/ffffff?text=Cripto+Analizador+Pro+Dashboard)
+## 📋 Índice
 
-## ✨ Características Principales
+- [Descripción](#descripción)
+- [Características](#características)
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Arquitectura](#arquitectura)
+- [API](#api)
+- [Tecnologías](#tecnologías)
+- [Contribuir](#contribuir)
+- [Licencia](#licencia)
 
-### 📈 **Análisis Técnico Avanzado**
-![Criptos](https://img.shields.io/badge/9-Criptomonedas%20Soportadas-blueviolet?logo=bitcoin&logoColor=white)
-![Indicadores](https://img.shields.io/badge/5%2B-Indicadores%20Técnicos-9cf?logo=chart-line&logoColor=white)
-- **9 criptomonedas principales**: BTC, ETH, BNB, XRP, ADA, SOL, DOGE, DOT, USDT
-- **Indicadores técnicos completos**: RSI, MACD, Bandas de Bollinger, EMA, SMA
-- **Detección de tendencias** automática con análisis de soporte/resistencia
-- **Predicción de precios** usando regresión lineal y aprendizaje automático
+## 🎯 Descripción
 
-### 🎮 **Dos Modos de Operación**
-![Online](https://img.shields.io/badge/MODO-ONLINE-success?logo=wifi&logoColor=white)
-![Offline](https://img.shields.io/badge/MODO-OFFLINE-informational?logo=database&logoColor=white)
-- **🔴 Modo Online**: Datos en tiempo real via Yahoo Finance
-- **💾 Modo Offline**: Análisis de datos históricos desde archivos CSV
-- **Cambio instantáneo** entre modos sin reiniciar la aplicación
+**Cripto Analizador Pro** es una plataforma profesional para análisis técnico de criptomonedas que combina datos en tiempo real, inteligencia artificial explicativa y herramientas educativas. Ofrece dos modos de operación: **Online** con datos en tiempo real y **Offline** para análisis profundo con datos locales.
 
-### 🎯 **Simulaciones Profesionales**
-![Monte Carlo](https://img.shields.io/badge/Simulación-Monte_Carlo-important?logo=dice&logoColor=white)
-![Backtesting](https://img.shields.io/badge/Backtesting-Strategies-blue?logo=trending-up&logoColor=white)
-- **Simulación Monte Carlo** con múltiples trayectorias de precios
-- **Backtesting completo** de estrategias de trading personalizadas
-- **Generación de datos sintéticos** realistas para testing
+### 🎯 Objetivo Principal
 
-### 📊 **Visualización y Reportes**
-![Export](https://img.shields.io/badge/Exportación-4_Formatos-9cf?logo=file-export&logoColor=white)
-![Charts](https://img.shields.io/badge/Gráficos-Interactivos-yellow?logo=chart-bar&logoColor=white)
-- **Gráficos interactivos** con Chart.js
-- **Exportación profesional** a PDF, CSV, JSON y HTML
-- **Dashboard ejecutivo** con métricas clave en tiempo real
-- **Reportes corporativos** con diseño profesional
+ Democratizar el análisis técnico de criptomonedas, haciéndolo accesible tanto para traders principiantes como profesionales, con explicaciones detalladas y educativas de cada indicador técnico.
 
-### 🎓 **Sandbox Educativo Integrado**
-![Education](https://img.shields.io/badge/Sandbox-Educativo-brightgreen?logo=graduation-cap&logoColor=white)
-![Cards](https://img.shields.io/badge/20%2B-Tarjetas%20Educativas-orange?logo=book&logoColor=white)
-- **4 categorías educativas** completas
-- **Tarjetas interactivas** con ejemplos prácticos
-- **Explicaciones para principiantes** generadas por IA
+## ✨ Características
 
-### 🔔 **Sistema Inteligente de Alertas**
-![Alerts](https://img.shields.io/badge/Alertas-Configurables-yellowgreen?logo=bell&logoColor=white)
-![Persistent](https://img.shields.io/badge/Persistentes-JSON%20Storage-lightgrey?logo=save&logoColor=white)
-- **Alertas configurables** por precio, volumen y tendencias
-- **Notificaciones en tiempo real** en la interfaz web
-- **Persistencia en JSON** para mantener alertas entre sesiones
+### 🔥 Modo Online (Tiempo Real)
+- ✅ **Datos en vivo** desde Yahoo Finance
+- ✅ **Actualización automática** configurable
+- ✅ **15+ indicadores técnicos** (RSI, MACD, Bollinger, etc.)
+- ✅ **IA Explicativa** con análisis detallado en lenguaje simple
+- ✅ **Alertas inteligentes** (pumps, dumps, volúmenes anormales)
+- ✅ **Análisis de sentimiento** del mercado
+- ✅ **Correlación entre criptomonedas**
+- ✅ **Backtesting** de estrategias
+- ✅ **Comparación múltiple** de métricas
+- ✅ **Exportación** en PDF, CSV y JSON
 
-### 🌐 **Interfaz Web Profesional**
-![Themes](https://img.shields.io/badge/Temas-Oscuro%2FClaro-ff69b4?logo=paint-brush&logoColor=white)
-![Languages](https://img.shields.io/badge/Idiomas-2-important?logo=language&logoColor=white)
-![Responsive](https://img.shields.io/badge/100%25-Responsive-success?logo=mobile-alt&logoColor=white)
-- **Tema oscuro/claro** automático o manual
-- **Soporte multi-idioma** (Español/Inglés)
-- **Diseño 100% responsive** para móviles y escritorio
+### 💾 Modo Offline (Análisis Profundo)
+- ✅ **Carga de archivos CSV** personalizados
+- ✅ **Simulación de mercado** con Monte Carlo
+- ✅ **Sandbox educativo** con explicaciones interactivas
+- ✅ **Gestión completa** de datos locales
+- ✅ **Análisis de correlación** offline
+- ✅ **Backtesting** sobre datos históricos
+- ✅ **Exportación avanzada** de informes
 
-## 🚀 Instalación Rápida
+### 🎨 Interfaz de Usuario
+- 📱 **Diseño responsive** para móviles y tablets
+- 📊 **Gráficos interactivos** con Chart.js
+- 📈 **Dashboard intuitivo** con métricas clave
 
-### Prerrequisitos
-![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
-![pip](https://img.shields.io/badge/pip-Instalado-3776AB?logo=pypi&logoColor=white)
+### 🧠 Educación
+- 📚 **Explicaciones detalladas** de cada indicador
+- 🎓 **Conceptos clave** del trading
+- ⚠️ **Errores comunes** y cómo evitarlos
+- 💡 **Ejemplos prácticos** con casos reales
+- 🧠 **Psicología del trading** y gestión de riesgo
+
+## 🚀 Instalación
+
+### 📋 Requisitos Previos
 
 ```bash
-# Clonar repositorio
+# Python 3.8 o superior
+python --version
+
+# pip actualizado
+python -m pip install --upgrade pip
+```
+
+### 📥 Instalación Rápida
+
+```bash
+# 1. Clonar el repositorio
 git clone https://github.com/tu-usuario/cripto-analizador-pro.git
 cd cripto-analizador-pro
 
-# Instalar dependencias
+# 2. Crear entorno virtual (recomendado)
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# Linux/Mac
+source venv/bin/activate
+
+# 3. Instalar dependencias
 pip install -r requirements.txt
 
-# Ejecutar aplicación
+# 4. Crear carpetas necesarias
+mkdir -p datos simulacion resultados web/assets
+
+# 5. Ejecutar la aplicación
 python main.py
 ```
 
-### 📋 Lista de Dependencias Principales
+### 📦 Dependencias Principales
+
 ```txt
-flask==2.3.3
+Flask==2.3.3
+flask-cors==4.0.0
 pandas==2.0.3
 numpy==1.24.3
+matplotlib==3.7.2
 yfinance==0.2.28
 scikit-learn==1.3.0
-matplotlib==3.7.2
+requests==2.31.0
+beautifulsoup4==4.12.2
 reportlab==4.0.4
 pywebview==4.2.2
 ```
 
-### ⚡ Instalación en 30 Segundos
-```bash
-# Script de instalación automática (Linux/macOS)
-chmod +x install.sh
-./install.sh
+## 🎯 Uso
 
-# O manualmente
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+### 🌐 Iniciar la Aplicación
+
+```bash
 python main.py
 ```
 
-## 📁 Estructura del Proyecto
-
-```tree
-cripto-analizador-pro/
-├── 📄 main.py                 # Punto de entrada principal
-├── 📄 funciones.py           # Funciones de análisis y lógica de negocio
-├── 📄 global_data.py         # Variables globales y configuración
-├── 📄 script.js              # Frontend JavaScript completo
-├── 📄 requirements.txt       # Dependencias de Python
-├── 📄 index.html            # Interfaz web principal
-│
-├── 📂 data/                 # Datos históricos (CSV)
-│   ├── 📊 btc_data.csv
-│   ├── 📊 eth_data.csv
-│   └── 📊 ...
-│
-├── 📂 alertas/              # Alertas guardadas (JSON)
-├── 📂 exportaciones/        # Reportes exportados
-│   ├── 📑 pdf/
-│   ├── 📊 csv/
-│   ├── 📝 json/
-│   └── 🌐 html/
-│
-└── 📂 docs/                 # Documentación adicional
+La aplicación se abrirá automáticamente en tu navegador predeterminado en:
+```
+http://localhost:5000
 ```
 
-## 🎮 Guía de Uso Paso a Paso
+### 📊 Seleccionar Modo de Operación
 
-### 1. **Inicio Rápido desde Python**
+#### 🔥 Modo Online
+1. Selecciona "Modo Online" desde la página principal
+2. Elige las criptomonedas a monitorear
+3. Configura el intervalo de actualización
+4. Activa las alertas deseadas
+5. ¡Listo! Los datos se actualizarán automáticamente
+
+#### 💾 Modo Offline
+1. Selecciona "Modo Offline"
+2. Sube archivos CSV con datos históricos
+3. O genera simulaciones sintéticas
+4. Realiza análisis profundos
+5. Exporta resultados en diferentes formatos
+
+### 📈 Funciones Principales
+
+#### Análisis Técnico
 ```python
-from funciones import AnalizadorCripto
+# Ejemplo de análisis rápido
+from funciones import analisis_rapido_cripto
 
-# Crear analizador
-analizador = AnalizadorCripto(modo="online")
-
-# Analizar Bitcoin
-resultados = analizador.analizar_cripto("BTC")
-
-# Ver resultados
-print(f"Precio actual: ${resultados['precio_actual']:,.2f}")
-print(f"Tendencia: {resultados['tendencia']}")
-print(f"Recomendación: {resultados['recomendacion']}")
+resultado = analisis_rapido_cripto('BTC', 'datos')
+print(f"Decisión: {resultado['decision_info']['decision']}")
+print(f"Confianza: {resultado['decision_info']['confianza']}")
 ```
 
-### 2. **Modo Online (Tiempo Real)**
-![Online Demo](https://via.placeholder.com/600x200/2d3748/ffffff?text=Modo+Online+-+Datos+en+Tiempo+Real)
-
-1. **Seleccionar** "Modo Online" en el dashboard
-2. **Elegir** criptomoneda de la lista desplegable
-3. **Configurar** parámetros de análisis personalizados
-4. **Ver** resultados actualizados cada 60 segundos
-
-### 3. **Modo Offline (Datos Históricos)**
+#### Simulación de Monte Carlo
 ```python
-# Cargar datos desde CSV
-datos = analizador.cargar_datos_csv("data/btc_2023.csv")
+# Generar datos sintéticos
+from funciones import generar_datos_sinteticos
 
-# Analizar período específico
-analisis = analizador.analizar_periodo(
-    datos=datos,
-    inicio="2023-01-01",
-    fin="2023-12-31",
-    indicadores=['rsi', 'macd', 'bollinger']
+df = generar_datos_sinteticos(
+    precio_inicial=50000,
+    dias=90,
+    volatilidad=0.03,
+    tendencia=0.001
 )
 ```
 
-### 4. **Simulación Monte Carlo**
-![Monte Carlo](https://via.placeholder.com/600x200/4a5568/ffffff?text=Simulación+Monte+Carlo+-+1000+Trayectorias)
-
+#### Backtesting
 ```python
-# Generar simulación avanzada
-simulacion = analizador.simular_monte_carlo(
-    precio_actual=50000,
-    dias=30,
-    simulaciones=1000,
-    volatilidad=0.02,
-    drift=0.0005
-)
+# Probar estrategia RSI + MACD
+from funciones import backtesting_estrategia
 
-# Analizar resultados
-prob_ganancia = simulacion['probabilidad_ganancia']
-precio_esperado = simulacion['precio_medio_final']
-
-print(f"Probabilidad de ganancia: {prob_ganancia:.1f}%")
-print(f"Precio esperado en 30 días: ${precio_esperado:,.2f}")
-```
-
-### 5. **Backtesting de Estrategias**
-```python
-# Estrategia personalizada
-def estrategia_cruce_medias(datos, corta=20, larga=50):
-    # Lógica de trading
-    return señales
-
-# Probar estrategia
-resultados = analizador.backtesting_estrategia(
-    datos=datos_historicos,
-    estrategia=estrategia_cruce_medias,
-    parametros={'corta': 20, 'larga': 50},
+resultados = backtesting_estrategia(
+    df=datos_historicos,
     capital_inicial=10000,
-    comision=0.001
+    estrategia='rsi_macd'
 )
-
-print(f"Rentabilidad: {resultados['rentabilidad']:.2f}%")
-print(f"Sharpe Ratio: {resultados['sharpe_ratio']:.2f}")
 ```
 
-## 📊 API Endpoints
+## 🏗️ Arquitectura
 
-### 🔍 **Endpoints Principales**
+### 📁 Estructura del Proyecto
 
-| Método | Endpoint | Descripción | Status |
-|--------|----------|-------------|---------|
-| `GET` | `/api/analizar/<cripto>` | Análisis completo | ✅ Activo |
-| `POST` | `/api/simular` | Simulación Monte Carlo | ✅ Activo |
-| `GET` | `/api/alertas` | Listar alertas | ✅ Activo |
-| `POST` | `/api/alertas` | Crear alerta | ✅ Activo |
-| `GET` | `/api/exportar/<formato>` | Exportar datos | ✅ Activo |
-| `GET` | `/api/educacion/<categoria>` | Contenido educativo | ✅ Activo |
-
-### 📝 **Ejemplos de Uso API**
-
-#### Análisis de Criptomoneda
-```bash
-curl -X GET "http://localhost:5000/api/analizar/BTC"
 ```
-```json
-{
-  "status": "success",
-  "data": {
-    "criptomoneda": "BTC",
-    "precio_actual": 51234.56,
-    "tendencia": "alcista",
-    "rsi": 65.4,
-    "macd": {"valor": 123.45, "senal": 120.12},
-    "bollinger": {"superior": 52000, "inferior": 49000},
-    "recomendacion": "COMPRAR",
-    "confianza": 78.5,
-    "timestamp": "2024-01-15T10:30:00Z"
-  }
-}
+cripto-analizador-pro/
+│
+├── 📁 datos/              # CSV de criptomonedas
+├── 📁 simulacion/         # Simulaciones generadas
+├── 📁 resultados/         # Exportaciones (PDF, CSV, JSON)
+│
+├── 🐍 main.py             # Backend Flask
+├── 🧮 funciones.py        # Lógica de análisis
+├── ⚙️ global_data.py      # Configuraciones globales
+│
+└── 🌐 web/                # Frontend
+    ├── 📄 index.html      # Landing page
+    ├── 🔴 online.html     # Modo online
+    ├── 🔵 offline.html    # Modo offline
+    ├── 📜 script.js       # JavaScript
+    ├── 🎨 style.css       # Estilos
+    └── 📁 assets/         # Recursos
 ```
 
-#### Crear Alerta Personalizada
-```bash
-curl -X POST "http://localhost:5000/api/alertas" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "cripto": "ETH",
-    "tipo": "precio",
-    "operador": ">=",
-    "valor": 3000,
-    "mensaje": "ETH superó $3000",
-    "activa": true
-  }'
+### 🔧 Componentes Principales
+
+#### Backend (Python)
+- **`main.py`**: Servidor Flask con rutas API
+- **`funciones.py`**: Lógica de análisis técnico y utilidades
+- **`global_data.py`**: Configuraciones y constantes
+
+#### Frontend (JavaScript/HTML/CSS)
+- **Interfaz moderna** con diseño glassmorphism
+- **Gráficos interactivos** con Chart.js
+- **Responsive design** para todos los dispositivos
+
+## 🔌 API
+
+### 📡 Endpoints Principales
+
+#### Modo Online
+```http
+# Iniciar monitoreo
+POST /api/online/iniciar
+
+# Estado actual
+GET /api/online/estado
+
+# Actualización manual
+POST /api/online/actualizar-manual
+
+# Análisis de sentimiento
+GET /api/online/sentimiento-detallado?cripto=BTC
+
+# Detección de anomalías
+GET /api/online/anomalias
+
+# IA explicativa
+POST /api/online/ia-explicacion
+
+# Backtesting online
+POST /api/online/backtesting
 ```
 
-## 🎓 Sandbox Educativo
+#### Modo Offline
+```http
+# Análisis completo
+POST /api/offline/analisis
 
-### 📚 **Categorías Disponibles**
+# Cargar CSV
+POST /api/offline/subir-csv
 
-#### 📊 **Análisis Técnico** ![Technical](https://img.shields.io/badge/5-Temas-blue?logo=chart-line)
-- **RSI (Relative Strength Index)**: Indicador de sobrecompra/sobreventa (30-70)
-- **Bandas de Bollinger**: Volatilidad y niveles clave (±2 desviaciones)
-- **MACD**: Convergencia/divergencia de medias móviles
-- **Soporte/Resistencia**: Identificación de niveles psicológicos
-- **Volumen**: Confirmación de tendencias con interés del mercado
+# Simulación Monte Carlo
+POST /api/offline/simulacion
 
-#### 🛡️ **Gestión de Riesgo** ![Risk](https://img.shields.io/badge/5-Temas-red?logo=shield-alt)
-- **Stop Loss**: Protección automática (1-2% del capital)
-- **Take Profit**: Objetivos realistas (riesgo:beneficio 1:3)
-- **Riesgo por Trade**: Control de exposición máximo
-- **Drawdown**: Medición de pérdidas (máximo 20% recomendado)
-- **Apalancamiento**: Uso responsable (máximo 5x para principiantes)
+# Correlación
+POST /api/offline/correlacion
 
-#### 🧠 **Psicología del Trading** ![Psychology](https://img.shields.io/badge/5-Temas-purple?logo=brain)
-- **FOMO (Fear Of Missing Out)**: Evitar compras impulsivas
-- **FUD (Fear, Uncertainty, Doubt)**: Manejo de noticias negativas
-- **Overtrading**: Control de frecuencia de operaciones
-- **Sesgo de Confirmación**: Búsqueda objetiva de información
-- **Disciplina**: Seguimiento estricto del plan de trading
+# Backtesting offline
+POST /api/offline/backtesting
 
-#### 📈 **Términos del Mercado** ![Market](https://img.shields.io/badge/5-Temas-green?logo=globe)
-- **Volatilidad**: Medición con desviación estándar
-- **Liquidez**: Capacidad de ejecución rápida
-- **Pump and Dump**: Esquemas fraudulentos identificables
-- **Correlación**: Relación entre activos (coeficiente -1 a +1)
-- **Tendencia**: Dirección del mercado (alcista/bajista/lateral)
-
-## ⚙️ Configuración Avanzada
-
-### 🔧 **Variables de Entorno**
-```bash
-# .env file
-CRYPTO_ANALYZER_MODE="online"
-YAHOO_FINANCE_TIMEOUT=30
-MAX_SIMULATIONS=5000
-DEFAULT_LANGUAGE="es"
-THEME="auto"  # auto, light, dark
-ENABLE_EMAIL_ALERTS=false
+# Comparación múltiple
+POST /api/offline/comparacion
 ```
 
-### 🎛️ **Archivo de Configuración**
-```json
-{
-  "api": {
-    "yahoo_finance": {
-      "timeout": 30,
-      "retries": 3,
-      "cache_duration": 300
-    }
-  },
-  "analisis": {
-    "rsi_periodo": 14,
-    "macd_rapida": 12,
-    "macd_lenta": 26,
-    "bollinger_periodo": 20,
-    "bollinger_desviaciones": 2
-  },
-  "alertas": {
-    "email_notifications": false,
-    "sound_alerts": true,
-    "price_change_threshold": 5.0,
-    "volume_spike_multiplier": 3.0
-  },
-  "exportacion": {
-    "pdf_quality": "high",
-    "csv_delimiter": ",",
-    "html_template": "modern"
-  }
-}
-```
+## 🛠️ Tecnologías
+
+### Backend
+- **Python 3.8+** - Lenguaje principal
+- **Flask** - Framework web
+- **Pandas/NumPy** - Procesamiento de datos
+- **Scikit-learn** - Machine learning
+- **Matplotlib** - Visualizaciones
+- **BeautifulSoup** - Web scraping
+- **ReportLab** - Generación de PDFs
+
+### Frontend
+- **HTML5/CSS3** - Estructura y estilos
+- **JavaScript ES6+** - Lógica del cliente
+- **Chart.js** - Gráficos interactivos
+- **Font Awesome** - Iconos
+- **Inter** - Tipografía moderna
+
+### APIs Externas
+- **Yahoo Finance** - Datos de mercado
+- **CoinMarketCap** - Información de criptomonedas
 
 ## 📄 Licencia
 
-Distribuido bajo la licencia **MIT**. Ver [`LICENSE`](LICENSE) para más información.
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
 
-```
-MIT License
+## 🙏 Agradecimientos
 
-Copyright (c) 2026 Cripto Analizador Pro
-
-Se concede permiso, libre de cargos, a cualquier persona que obtenga una copia
-de este software y de los archivos de documentación asociados...
-```
-
-## ⚠️ Descargo de Responsabilidad
-
-![Warning](https://img.shields.io/badge/⚠️-ADVERTENCIA-important?logo=exclamation-triangle)
-
-**ESTE SOFTWARE ES PARA FINES EDUCATIVOS Y DE ANÁLISIS ÚNICAMENTE**
-
-- ❌ **NO** es asesoramiento financiero
-- ❌ **NO** garantiza ganancias
-- ❌ **NO** se hace responsable de pérdidas
-- ✅ **SÍ** es una herramienta educativa
-- ✅ **SÍ** ayuda a entender el mercado
-- ✅ **SÍ** promueve el trading responsable
-
-**El trading de criptomonedas conlleva riesgos significativos de pérdida de capital. Nunca invierta más de lo que puede permitirse perder.**
+- **Yahoo Finance** por proporcionar datos de mercado
+- **Chart.js** por las visualizaciones increíbles
+- **Comunidad Python** por las excelentes librerías
+- **Todos los contribuyentes** que hacen esto posible
 
 ---
 
 <div align="center">
 
-### ⭐ ¡Dale una estrella al proyecto si te gusta!
+### ⭐ Si este proyecto te fue útil, ¡dale una estrella!
 
-[![Star History Chart](https://api.star-history.com/svg?repos=tu-usuario/cripto-analizador-pro&type=Date)](https://star-history.com/#tu-usuario/cripto-analizador-pro&Date)
+### 🚀 Hecho con ❤️ para la comunidad de cripto-traders
 
+<<<<<<< HEAD
 **Hecho con ❤️ para la comunidad cripto**
 
 </div>#   c r i p t o - a n a l i z a d o r - p r o 
  
  
+=======
+</div>
+>>>>>>> d08f1f99c9b9e3d3c65f21b78921bb91bbf2f763

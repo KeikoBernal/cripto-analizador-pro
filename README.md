@@ -13,6 +13,7 @@
 - [Características](#características)
 - [Instalación](#instalación)
 - [Uso](#uso)
+- [Sandbox Educativo](#sandbox-educativo)
 - [Arquitectura](#arquitectura)
 - [API](#api)
 - [Tecnologías](#tecnologías)
@@ -21,11 +22,11 @@
 
 ## 🎯 Descripción
 
-**Cripto Analizador Pro** es una plataforma profesional para análisis técnico de criptomonedas que combina datos en tiempo real, inteligencia artificial explicativa y herramientas educativas. Ofrece dos modos de operación: **Online** con datos en tiempo real y **Offline** para análisis profundo con datos locales.
+**Cripto Analizador Pro** es una plataforma profesional para análisis técnico de criptomonedas que combina datos en tiempo real, inteligencia artificial explicativa y herramientas educativas. Ofrece dos modos de operación: **Online** con datos en tiempo real y **Offline** para análisis profundo con datos locales, incluyendo un innovador sandbox educativo con minijuegos interactivos.
 
 ### 🎯 Objetivo Principal
 
- Democratizar el análisis técnico de criptomonedas, haciéndolo accesible tanto para traders principiantes como profesionales, con explicaciones detalladas y educativas de cada indicador técnico.
+Democratizar el análisis técnico de criptomonedas, haciéndolo accesible tanto para traders principiantes como profesionales, con explicaciones detalladas y educativas de cada indicador técnico.
 
 ## ✨ Características
 
@@ -44,7 +45,7 @@
 ### 💾 Modo Offline (Análisis Profundo)
 - ✅ **Carga de archivos CSV** personalizados
 - ✅ **Simulación de mercado** con Monte Carlo
-- ✅ **Sandbox educativo** con explicaciones interactivas
+- ✅ **Sandbox educativo** con minijuegos interactivos
 - ✅ **Gestión completa** de datos locales
 - ✅ **Análisis de correlación** offline
 - ✅ **Backtesting** sobre datos históricos
@@ -60,11 +61,9 @@
 - 🎓 **Conceptos clave** del trading
 - ⚠️ **Errores comunes** y cómo evitarlos
 - 💡 **Ejemplos prácticos** con casos reales
-- 🧠 **Psicología del trading** y gestión de riesgo
+- 🎮 **Minijuegos educativos** en el sandbox
 
-## 🚀 Instalación
-
-### 📋 Requisitos Previos
+## 📋 Requisitos Previos
 
 ```bash
 # Python 3.8 o superior
@@ -74,11 +73,13 @@ python --version
 python -m pip install --upgrade pip
 ```
 
+## 🚀 Instalación
+
 ### 📥 Instalación Rápida
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/cripto-analizador-pro.git
+git clone https://github.com/KeikoBernal/cripto-analizador-pro.git
 cd cripto-analizador-pro
 
 # 2. Crear entorno virtual (recomendado)
@@ -182,6 +183,44 @@ resultados = backtesting_estrategia(
 )
 ```
 
+## 🎮 Sandbox Educativo
+
+El **Sandbox Educativo** es un entorno interactivo diseñado para que aprendas trading de forma segura y practica conceptos clave sin dinero real. Accesible desde el **Modo Offline**, incluye lecciones interactivas sobre indicadores técnicos y minijuegos educativos.
+
+### 🎯 Características del Sandbox
+
+- **Temas educativos interactivos** sobre indicadores técnicos clave
+- **Explicaciones detalladas** de conceptos del trading
+- **Minijuegos prácticos** para aplicar lo aprendido
+- **Simulación segura** sin dinero real
+- **Retroalimentación instantánea** en cada decisión
+
+### 🎮 Minijuego Disponible: "¿Comprar o Esperar?"
+
+El minijuego **"¿Comprar o Esperar?"** es una prueba de disciplina emocional donde practicas decisiones de trading reales bajo presión.
+
+**Cómo funciona:**
+- Selecciona una criptomoneda de tus datos cargados
+- Visualiza el gráfico histórico hasta un momento crítico
+- Observa métricas en tiempo real (precio actual, cambio de precio, cuenta regresiva)
+- Toma una decisión: **¿Comprar (FOMO)** o **¿Esperar a una corrección?**
+- El juego te muestra lo que hubiera pasado con cada decisión
+
+**Lo que aprendes:**
+- A reconocer el FOMO (Fear Of Missing Out) en el trading
+- A no actuar impulsivamente cuando los precios suben rápidamente
+- A evaluar riesgos antes de tomar decisiones
+- A mantener disciplina emocional bajo presión del mercado
+
+### 📚 Temas Educativos
+
+El sandbox incluye explicaciones interactivas sobre:
+- **Indicadores técnicos** (RSI, MACD, Bollinger Bands, etc.)
+- **Patrones gráficos** y tendencias
+- **Análisis de volumen** y su significado
+- **Conceptos de riesgo** y gestión de posiciones
+- **Psicología del trading** y control emocional
+
 ## 🏗️ Arquitectura
 
 ### 📁 Estructura del Proyecto
@@ -190,6 +229,7 @@ resultados = backtesting_estrategia(
 cripto-analizador-pro/
 │
 ├── 📁 datos/              # CSV de criptomonedas
+├── 📁 historicos/         # Datos históricos para casos del minijuego
 ├── 📁 simulacion/         # Simulaciones generadas
 ├── 📁 resultados/         # Exportaciones (PDF, CSV, JSON)
 │
@@ -289,6 +329,16 @@ POST /api/offline/comparacion
 - **Yahoo Finance** - Datos de mercado
 - **CoinMarketCap** - Información de criptomonedas
 
+## 🤝 Contribuir
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el proyecto
+2. Crea una rama (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
 ## 📄 Licencia
 
 Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
@@ -306,14 +356,6 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](L
 
 ### ⭐ Si este proyecto te fue útil, ¡dale una estrella!
 
-### 🚀 Hecho con ❤️ para la comunidad de cripto-traders
+### 🚀 Hecho con ❤️ para la comunidad cripto
 
-<<<<<<< HEAD
-**Hecho con ❤️ para la comunidad cripto**
-
-</div>#   c r i p t o - a n a l i z a d o r - p r o 
- 
- 
-=======
 </div>
->>>>>>> d08f1f99c9b9e3d3c65f21b78921bb91bbf2f763

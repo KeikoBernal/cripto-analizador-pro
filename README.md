@@ -229,6 +229,7 @@ El sandbox incluye explicaciones interactivas sobre:
 cripto-analizador-pro/
 │
 ├── 📁 datos/              # CSV de criptomonedas
+├── 📁 historicos/         # Datos históricos para casos del minijuego
 ├── 📁 simulacion/         # Simulaciones generadas
 ├── 📁 resultados/         # Exportaciones (PDF, CSV, JSON)
 │

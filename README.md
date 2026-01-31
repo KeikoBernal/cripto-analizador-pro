@@ -1,293 +1,254 @@
 # 🚀 Cripto Analizador Pro
 
-**Análisis técnico profesional de criptomonedas con IA explicativa**
+**Plataforma moderna de análisis técnico de criptomonedas con React, Next.js y Recharts**
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
-[![Chart.js](https://img.shields.io/badge/Chart.js-3.0+-orange.svg)](https://www.chartjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.0+-black.svg)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2+-blue.svg)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1+-06B6D4.svg)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 📋 Índice
+## 📋 Tabla de Contenidos
 
 - [Descripción](#descripción)
 - [Características](#características)
+- [Requisitos Previos](#requisitos-previos)
 - [Instalación](#instalación)
+- [Estructura del Proyecto](#estructura-del-proyecto)
 - [Uso](#uso)
-- [Arquitectura](#arquitectura)
-- [API](#api)
-- [Tecnologías](#tecnologías)
-- [Contribuir](#contribuir)
+- [Stack Tecnológico](#stack-tecnológico)
+- [Desarrollo](#desarrollo)
 - [Licencia](#licencia)
 
 ## 🎯 Descripción
 
-**Cripto Analizador Pro** es una plataforma profesional para análisis técnico de criptomonedas que combina datos en tiempo real, inteligencia artificial explicativa y herramientas educativas. Ofrece dos modos de operación: **Online** con datos en tiempo real y **Offline** para análisis profundo con datos locales.
+**Cripto Analizador Pro** es una aplicación web moderna construida con Next.js 16 y React 19 que proporciona análisis técnico profesional de criptomonedas. La plataforma combina gráficos interactivos en tiempo real, indicadores técnicos avanzados e interfaces intuitivas para traders de todos los niveles.
 
 ### 🎯 Objetivo Principal
 
- Democratizar el análisis técnico de criptomonedas, haciéndolo accesible tanto para traders principiantes como profesionales, con explicaciones detalladas y educativas de cada indicador técnico.
+Democratizar el análisis técnico de criptomonedas con una interfaz moderna, responsive y fácil de usar que eduque a principiantes y proporcione herramientas profesionales para traders experimentados.
 
 ## ✨ Características
 
-### 🔥 Modo Online (Tiempo Real)
-- ✅ **Datos en vivo** desde Yahoo Finance
-- ✅ **Actualización automática** configurable
-- ✅ **15+ indicadores técnicos** (RSI, MACD, Bollinger, etc.)
-- ✅ **IA Explicativa** con análisis detallado en lenguaje simple
-- ✅ **Alertas inteligentes** (pumps, dumps, volúmenes anormales)
-- ✅ **Análisis de sentimiento** del mercado
-- ✅ **Correlación entre criptomonedas**
-- ✅ **Backtesting** de estrategias
-- ✅ **Comparación múltiple** de métricas
-- ✅ **Exportación** en PDF, CSV y JSON
-
-### 💾 Modo Offline (Análisis Profundo)
-- ✅ **Carga de archivos CSV** personalizados
-- ✅ **Simulación de mercado** con Monte Carlo
-- ✅ **Sandbox educativo** con explicaciones interactivas
-- ✅ **Gestión completa** de datos locales
-- ✅ **Análisis de correlación** offline
-- ✅ **Backtesting** sobre datos históricos
-- ✅ **Exportación avanzada** de informes
+### 📊 Análisis Técnico
+- ✅ **Gráficos interactivos** con Recharts
+- ✅ **15+ indicadores técnicos** (RSI, MACD, Bollinger Bands, etc.)
+- ✅ **Análisis de tendencias** en múltiples timeframes
+- ✅ **Detección de patrones** automática
+- ✅ **Comparación múltiple** de criptomonedas
 
 ### 🎨 Interfaz de Usuario
-- 📱 **Diseño responsive** para móviles y tablets
-- 📊 **Gráficos interactivos** con Chart.js
-- 📈 **Dashboard intuitivo** con métricas clave
+- 📱 **Diseño 100% responsive** para móviles, tablets y desktops
+- 🌓 **Modo oscuro/claro** integrado con next-themes
+- ⚡ **Interfaz moderna** con shadcn/ui y Tailwind CSS
+- 🎯 **UX intuitiva** y fácil de navegar
+- ♿ **Accesible** (WCAG compliant)
 
-### 🧠 Educación
-- 📚 **Explicaciones detalladas** de cada indicador
-- 🎓 **Conceptos clave** del trading
-- ⚠️ **Errores comunes** y cómo evitarlos
-- 💡 **Ejemplos prácticos** con casos reales
-- 🧠 **Psicología del trading** y gestión de riesgo
+### ⚙️ Infraestructura Moderna
+- 🚀 **Next.js 16** con App Router
+- ⚛️ **React 19.2** con características canary
+- 📦 **Turbopack** como bundler por defecto
+- 🔧 **TypeScript** para type safety
+- 📊 **Recharts** para visualizaciones
+
+### 🧠 Funcionalidades Avanzadas
+- 📚 **Explicaciones educativas** de indicadores
+- 💡 **Señales de compra/venta** automáticas
+- 🔔 **Sistema de alertas** configurable
+- 📈 **Backtesting** de estrategias
+- 📋 **Exportación de datos** en múltiples formatos
+
+## 📋 Requisitos Previos
+
+- **Node.js** 18.17.0 o superior
+- **npm** 9.0 o **yarn** 4.0 o **pnpm** 9.0
+- Navegador moderno (Chrome, Firefox, Safari, Edge)
 
 ## 🚀 Instalación
 
-### 📋 Requisitos Previos
+### Opción 1: Con shadcn CLI (Recomendado)
 
 ```bash
-# Python 3.8 o superior
-python --version
+# Instalar globalmente shadcn CLI
+npm install -g shadcn-ui
 
-# pip actualizado
-python -m pip install --upgrade pip
+# Crear nuevo proyecto
+shadcn-ui init
+
+# Cuando solicite, clonar este repositorio
+# o descargar el ZIP y extraerlo
 ```
 
-### 📥 Instalación Rápida
+### Opción 2: Clonación Manual
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/cripto-analizador-pro.git
+# Clonar el repositorio
+git clone https://github.com/KeikoBernal/cripto-analizador-pro.git
 cd cripto-analizador-pro
 
-# 2. Crear entorno virtual (recomendado)
-python -m venv venv
+# Instalar dependencias
+npm install
+# o
+yarn install
+# o
+pnpm install
 
-# Windows
-venv\Scripts\activate
-
-# Linux/Mac
-source venv/bin/activate
-
-# 3. Instalar dependencias
-pip install -r requirements.txt
-
-# 4. Crear carpetas necesarias
-mkdir -p datos simulacion resultados web/assets
-
-# 5. Ejecutar la aplicación
-python main.py
+# Ejecutar servidor de desarrollo
+npm run dev
+# o
+yarn dev
+# o
+pnpm dev
 ```
 
-### 📦 Dependencias Principales
+La aplicación estará disponible en `http://localhost:3000`
 
-```txt
-Flask==2.3.3
-flask-cors==4.0.0
-pandas==2.0.3
-numpy==1.24.3
-matplotlib==3.7.2
-yfinance==0.2.28
-scikit-learn==1.3.0
-requests==2.31.0
-beautifulsoup4==4.12.2
-reportlab==4.0.4
-pywebview==4.2.2
-```
+### Instalación en GitHub
 
-## 🎯 Uso
-
-### 🌐 Iniciar la Aplicación
+También puedes usar este repositorio como template:
 
 ```bash
-python main.py
+# Crear repo desde template
+gh repo create tu-nuevo-repo --template KeikoBernal/cripto-analizador-pro
 ```
 
-La aplicación se abrirá automáticamente en tu navegador predeterminado en:
-```
-http://localhost:5000
-```
-
-### 📊 Seleccionar Modo de Operación
-
-#### 🔥 Modo Online
-1. Selecciona "Modo Online" desde la página principal
-2. Elige las criptomonedas a monitorear
-3. Configura el intervalo de actualización
-4. Activa las alertas deseadas
-5. ¡Listo! Los datos se actualizarán automáticamente
-
-#### 💾 Modo Offline
-1. Selecciona "Modo Offline"
-2. Sube archivos CSV con datos históricos
-3. O genera simulaciones sintéticas
-4. Realiza análisis profundos
-5. Exporta resultados en diferentes formatos
-
-### 📈 Funciones Principales
-
-#### Análisis Técnico
-```python
-# Ejemplo de análisis rápido
-from funciones import analisis_rapido_cripto
-
-resultado = analisis_rapido_cripto('BTC', 'datos')
-print(f"Decisión: {resultado['decision_info']['decision']}")
-print(f"Confianza: {resultado['decision_info']['confianza']}")
-```
-
-#### Simulación de Monte Carlo
-```python
-# Generar datos sintéticos
-from funciones import generar_datos_sinteticos
-
-df = generar_datos_sinteticos(
-    precio_inicial=50000,
-    dias=90,
-    volatilidad=0.03,
-    tendencia=0.001
-)
-```
-
-#### Backtesting
-```python
-# Probar estrategia RSI + MACD
-from funciones import backtesting_estrategia
-
-resultados = backtesting_estrategia(
-    df=datos_historicos,
-    capital_inicial=10000,
-    estrategia='rsi_macd'
-)
-```
-
-## 🏗️ Arquitectura
-
-### 📁 Estructura del Proyecto
+## 📁 Estructura del Proyecto
 
 ```
 cripto-analizador-pro/
 │
-├── 📁 datos/              # CSV de criptomonedas
-├── 📁 simulacion/         # Simulaciones generadas
-├── 📁 resultados/         # Exportaciones (PDF, CSV, JSON)
+├── 📁 app/                    # Next.js App Router
+│   ├── layout.tsx             # Layout raíz
+│   ├── page.tsx               # Página principal
+│   └── ...
 │
-├── 🐍 main.py             # Backend Flask
-├── 🧮 funciones.py        # Lógica de análisis
-├── ⚙️ global_data.py      # Configuraciones globales
+├── 📁 components/             # Componentes React
+│   ├── 📁 ui/                 # Componentes shadcn/ui
+│   ├── dashboard/             # Componentes del dashboard
+│   ├── charts/                # Componentes de gráficos
+│   └── ...
 │
-└── 🌐 web/                # Frontend
-    ├── 📄 index.html      # Landing page
-    ├── 🔴 online.html     # Modo online
-    ├── 🔵 offline.html    # Modo offline
-    ├── 📜 script.js       # JavaScript
-    ├── 🎨 style.css       # Estilos
-    └── 📁 assets/         # Recursos
+├── 📁 hooks/                  # Custom React hooks
+│   ├── use-mobile.ts          # Detectar dispositivo móvil
+│   └── use-toast.ts           # Sistema de notificaciones
+│
+├── 📁 lib/                    # Utilidades y funciones
+│   ├── utils.ts               # Funciones auxiliares
+│   └── ...
+│
+├── 📁 public/                 # Archivos estáticos
+│
+├── 🎨 app/globals.css         # Estilos globales con Tailwind v4
+├── 📝 package.json            # Dependencias del proyecto
+├── ⚙️ next.config.mjs         # Configuración de Next.js
+├── 📘 tsconfig.json           # Configuración de TypeScript
+└── 📖 README.md               # Este archivo
 ```
 
-### 🔧 Componentes Principales
+## 💻 Uso
 
-#### Backend (Python)
-- **`main.py`**: Servidor Flask con rutas API
-- **`funciones.py`**: Lógica de análisis técnico y utilidades
-- **`global_data.py`**: Configuraciones y constantes
+### Modo Desarrollo
 
-#### Frontend (JavaScript/HTML/CSS)
-- **Interfaz moderna** con diseño glassmorphism
-- **Gráficos interactivos** con Chart.js
-- **Responsive design** para todos los dispositivos
-
-## 🔌 API
-
-### 📡 Endpoints Principales
-
-#### Modo Online
-```http
-# Iniciar monitoreo
-POST /api/online/iniciar
-
-# Estado actual
-GET /api/online/estado
-
-# Actualización manual
-POST /api/online/actualizar-manual
-
-# Análisis de sentimiento
-GET /api/online/sentimiento-detallado?cripto=BTC
-
-# Detección de anomalías
-GET /api/online/anomalias
-
-# IA explicativa
-POST /api/online/ia-explicacion
-
-# Backtesting online
-POST /api/online/backtesting
+```bash
+# Iniciar servidor con hot reload
+npm run dev
 ```
 
-#### Modo Offline
-```http
-# Análisis completo
-POST /api/offline/analisis
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-# Cargar CSV
-POST /api/offline/subir-csv
+### Modo Producción
 
-# Simulación Monte Carlo
-POST /api/offline/simulacion
+```bash
+# Compilar aplicación
+npm run build
 
-# Correlación
-POST /api/offline/correlacion
-
-# Backtesting offline
-POST /api/offline/backtesting
-
-# Comparación múltiple
-POST /api/offline/comparacion
+# Iniciar servidor producción
+npm run start
 ```
 
-## 🛠️ Tecnologías
+### Linting
 
-### Backend
-- **Python 3.8+** - Lenguaje principal
-- **Flask** - Framework web
-- **Pandas/NumPy** - Procesamiento de datos
-- **Scikit-learn** - Machine learning
-- **Matplotlib** - Visualizaciones
-- **BeautifulSoup** - Web scraping
-- **ReportLab** - Generación de PDFs
+```bash
+# Revisar código
+npm run lint
+```
+
+## 🛠️ Stack Tecnológico
 
 ### Frontend
-- **HTML5/CSS3** - Estructura y estilos
-- **JavaScript ES6+** - Lógica del cliente
-- **Chart.js** - Gráficos interactivos
-- **Font Awesome** - Iconos
-- **Inter** - Tipografía moderna
+- **Next.js 16** - Framework React con SSR/SSG
+- **React 19.2** - UI library con características canary
+- **TypeScript 5** - Type safety
+- **Tailwind CSS 4** - Utility-first CSS framework
+- **shadcn/ui** - Componentes de UI reutilizables
+- **Recharts 2** - Gráficos y visualizaciones
 
-### APIs Externas
-- **Yahoo Finance** - Datos de mercado
-- **CoinMarketCap** - Información de criptomonedas
+### UI & Estilos
+- **Radix UI** - Primitivos accesibles
+- **Lucide React** - Iconografía
+- **Sonner** - Sistema de notificaciones (toasts)
+- **next-themes** - Soporte de modo oscuro/claro
+- **tailwindcss-animate** - Animaciones
+
+### Validación & Formularios
+- **React Hook Form 7** - Gestión de formularios
+- **Zod 3** - Validación de esquemas TypeScript
+- **@hookform/resolvers** - Integradores de validadores
+
+### Componentes Especializados
+- **Embla Carousel** - Carruseles accesibles
+- **React Day Picker** - Selectores de fecha
+- **React Resizable Panels** - Paneles redimensionables
+- **cmdk** - Menú de comandos
+- **vaul** - Drawers (paneles deslizables)
+
+## 🔨 Desarrollo
+
+### Scripts Disponibles
+
+```bash
+# Desarrollo con hot reload
+npm run dev
+
+# Compilación para producción
+npm run build
+
+# Iniciar servidor producción
+npm run start
+
+# Análisis y linting
+npm run lint
+```
+
+### Agregar Componentes shadcn/ui
+
+```bash
+# Instalar componente específico
+npx shadcn-ui@latest add button
+npx shadcn-ui@latest add card
+npx shadcn-ui@latest add dialog
+# ... y más
+```
+
+### Variables de Entorno
+
+Crear archivo `.env.local`:
+
+```env
+# Agregar variables según sea necesario
+# Ejemplo:
+# NEXT_PUBLIC_API_URL=https://api.ejemplo.com
+```
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el proyecto
+2. Crea una rama (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
 ## 📄 Licencia
 
@@ -295,10 +256,12 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](L
 
 ## 🙏 Agradecimientos
 
-- **Yahoo Finance** por proporcionar datos de mercado
-- **Chart.js** por las visualizaciones increíbles
-- **Comunidad Python** por las excelentes librerías
-- **Todos los contribuyentes** que hacen esto posible
+- **Vercel** por Next.js y Vercel AI
+- **React** por la excelente library
+- **Shadcn** por los componentes increíbles
+- **Recharts** por las visualizaciones
+- **Tailwind Labs** por Tailwind CSS
+- **La comunidad open source** por las herramientas y librerías
 
 ---
 
@@ -306,14 +269,8 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](L
 
 ### ⭐ Si este proyecto te fue útil, ¡dale una estrella!
 
-### 🚀 Hecho con ❤️ para la comunidad de cripto-traders
+### 🚀 Hecho con ❤️ para la comunidad de crypto traders
 
-<<<<<<< HEAD
-**Hecho con ❤️ para la comunidad cripto**
+**Conecta:** [Twitter](https://twitter.com) | [LinkedIn](https://linkedin.com) | [GitHub](https://github.com/KeikoBernal)
 
-</div>#   c r i p t o - a n a l i z a d o r - p r o 
- 
- 
-=======
 </div>
->>>>>>> d08f1f99c9b9e3d3c65f21b78921bb91bbf2f763

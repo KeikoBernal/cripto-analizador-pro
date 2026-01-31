@@ -311,6 +311,22 @@ def get_datos_historicos(cripto):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/historicos/<filename>', methods=['GET'])
+def get_historical_file(filename):
+    """Servir archivos históricos desde la carpeta historicos"""
+    try:
+        # Validar que el archivo sea un CSV válido
+        if not filename.endswith('.csv') or '..' in filename:
+            return jsonify({'error': 'Archivo no válido'}), 400
+        
+        # Crear carpeta historicos si no existe
+        os.makedirs('historicos', exist_ok=True)
+        
+        # Servir el archivo
+        return send_from_directory('historicos', filename)
+    except Exception as e:
+        return jsonify({'error': f'Archivo no encontrado: {str(e)}'}), 404
+
 @app.route('/api/offline/backtesting', methods=['POST'])
 def backtesting_offline():
     """Backtesting de estrategias sobre datos históricos offline"""

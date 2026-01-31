@@ -252,6 +252,11 @@ def limpieza_datos(df_crypto: pd.DataFrame) -> dict:
         IQR = Q3 - Q1
         df = df[(df['Close'] >= Q1 - 1.5*IQR) & (df['Close'] <= Q3 + 1.5*IQR)]
     
+    # Calcular volumen promedio
+    volumen_24h = 0
+    if 'Volume' in df.columns:
+        volumen_24h = df['Volume'].mean()
+    
     return {
         'media': df['Close'].mean(),
         'mediana': df['Close'].median(),
@@ -261,7 +266,8 @@ def limpieza_datos(df_crypto: pd.DataFrame) -> dict:
         'count_original': len(df_crypto),
         'count_limpio': len(df),
         'q1': df['Close'].quantile(0.25),
-        'q3': df['Close'].quantile(0.75)
+        'q3': df['Close'].quantile(0.75),
+        'volumen_24h': volumen_24h
     }
 
 def predecir_precio(df_crypto: pd.DataFrame, dias_futuro: int = 1) -> dict:

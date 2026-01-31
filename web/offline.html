@@ -101,7 +101,7 @@
                 <div class="panel-header">
                     <h3><i class="fas fa-list-check"></i> Selección de Criptomonedas</h3>
                 </div>
-                <div class="cripto-selector" id="cripto-selector">
+                <div class="cripto-selector" id="cripto-selector" style="max-height: 300px; overflow-y: auto; padding: 1.5rem;">
                     <p class="loading">Cargando criptomonedas disponibles...</p>
                 </div>
                 <div class="selector-actions" style="padding: 0 1.5rem 1.5rem; display: flex; gap: 1rem;">
@@ -127,11 +127,9 @@
                                 <th>Precio</th>
                                 <th>Tendencia</th>
                                 <th>RSI</th>
-                                <th>MACD</th>
                                 <th>Decisión</th>
                                 <th>Confianza</th>
-                                <th>Predicción</th>
-                                <th>Acciones</th>
+                                <th>Predicción 24h</th>
                             </tr>
                         </thead>
                         <tbody id="results-tbody"></tbody>
@@ -139,42 +137,42 @@
                 </div>
             </div>
 <!-- 📊 GRÁFICOS PARA SECCIÓN DE ANÁLISIS OFFLINE -->
-            <div class="offline-charts-container">
+            <div class="offline-charts-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 100%; overflow-x: hidden;">
                 <!-- Señales de Trading -->
-                <div class="offline-chart-card">
+                <div class="offline-chart-card" style="min-width: 0; overflow: hidden;">
                     <div class="chart-header">
                         <h4><i class="fas fa-signal"></i> Señales de Trading</h4>
                         <button onclick="actualizarGraficoAnalisis('signals')" class="btn-icon">
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 300px; position: relative;">
                         <canvas id="offline-signals-chart"></canvas>
                     </div>
                 </div>
 
                 <!-- Confianza por Criptomoneda -->
-                <div class="offline-chart-card">
+                <div class="offline-chart-card" style="min-width: 0; overflow: hidden;">
                     <div class="chart-header">
                         <h4><i class="fas fa-chart-bar"></i> Confianza por Criptomoneda</h4>
                         <button onclick="actualizarGraficoAnalisis('confidence')" class="btn-icon">
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 300px; position: relative;">
                         <canvas id="offline-confidence-chart"></canvas>
                     </div>
                 </div>
 
                 <!-- Volumen por Criptomoneda -->
-                <div class="offline-chart-card">
+                <div class="offline-chart-card" style="min-width: 0; overflow: hidden;">
                     <div class="chart-header">
                         <h4><i class="fas fa-coins"></i> Volumen por Criptomoneda</h4>
                         <button onclick="actualizarGraficoAnalisis('volume')" class="btn-icon">
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 300px; position: relative;">
                         <canvas id="offline-volume-chart"></canvas>
                     </div>
                 </div>
@@ -316,119 +314,110 @@
                 <div class="panel-header">
                     <h3><i class="fas fa-flask"></i> Simulador de Mercado Sintético</h3>
                 </div>
-                <div class="simulation-form" style="padding: 1.5rem;">
-                    <div class="form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                <div class="simulation-form" style="padding: 1.5rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
                         <div class="form-group">
-                            <label>Precio Inicial ($)</label>
-                            <input type="number" id="sim-precio" value="50000" step="1000" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">Precio Inicial ($)</label>
+                            <input type="number" id="sim-precio" value="50000" step="1000" style="width: 100%; padding: 0.75rem; background: var(--bg-input); border: 1.5px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 1rem;" min="100">
                         </div>
                         <div class="form-group">
-                            <label>Días a simular</label>
-                            <input type="number" id="sim-dias" value="90" min="30" max="365" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">Días a simular</label>
+                            <input type="number" id="sim-dias" value="90" min="30" max="365" style="width: 100%; padding: 0.75rem; background: var(--bg-input); border: 1.5px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 1rem;">
                         </div>
                         <div class="form-group">
-                            <label>Volatilidad (%)</label>
-                            <input type="number" id="sim-vol" value="3" min="0.1" max="10" step="0.1" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">Volatilidad (%)</label>
+                            <input type="number" id="sim-vol" value="3" min="0.1" max="10" step="0.1" style="width: 100%; padding: 0.75rem; background: var(--bg-input); border: 1.5px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 1rem;">
                         </div>
                         <div class="form-group">
-                            <label>Tendencia diaria (%)</label>
-                            <input type="number" id="sim-trend" value="0.1" min="-1" max="1" step="0.01" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">Tendencia diaria (%)</label>
+                            <input type="number" id="sim-trend" value="0.1" min="-1" max="1" step="0.01" style="width: 100%; padding: 0.75rem; background: var(--bg-input); border: 1.5px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 1rem;">
                         </div>
                     </div>
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <label>Nombre del activo simulado</label>
-                        <input type="text" id="sim-nombre" value="Simulacion_BTC" placeholder="Nombre único" style="width: 100%; padding: 0.625rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); margin-top: 0.5rem;">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">Nombre del activo simulado</label>
+                        <input type="text" id="sim-nombre" value="Simulacion_BTC" placeholder="Nombre único" style="width: 100%; padding: 0.75rem; background: var(--bg-input); border: 1.5px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 1rem;">
                     </div>
-                    <button onclick="runSimulation()" class="btn-primary" id="sim-btn">
+                    <button onclick="runSimulation()" class="btn-primary" id="sim-btn" style="width: 100%; padding: 0.875rem; font-size: 1rem; font-weight: 600;">
                         <i class="fas fa-play"></i> Generar Simulación
                     </button>
                 </div>
 
+                <!-- Barra de progreso -->
+                <div id="simulation-progress" style="display: none; padding: 1.5rem; background: var(--bg-dark); border-radius: 8px; margin-top: 1.5rem;">
+                    <p style="margin-bottom: 1rem; color: var(--text-primary); font-weight: 500;">Generando simulación...</p>
+                    <div style="background: var(--border-color); height: 8px; border-radius: 4px; overflow: hidden;">
+                        <div id="progress-bar" style="background: linear-gradient(90deg, var(--secondary-color), #7c3aed); height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 4px;"></div>
+                    </div>
+                </div>
+
                 <!-- Contenedor de resultados -->
-                <div id="simulation-results" style="display: none; padding: 1.5rem;">
-                    <div class="panel">
-                        <div class="panel-header">
-                            <h3><i class="fas fa-chart-area"></i> Análisis de Simulación Monte Carlo</h3>
-                            <button onclick="exportSimulationReport()" class="btn-secondary">
-                                <i class="fas fa-download"></i> Exportar Reporte
-                            </button>
-                        </div>
+                <div id="simulation-results" style="display: none; padding: 1.5rem; border-top: 2px solid var(--border-color); margin-top: 1.5rem;">
+                    <div class="panel-header" style="border: none; padding: 0 0 1.5rem 0;">
+                        <h3><i class="fas fa-chart-area"></i> Análisis de Simulación Monte Carlo</h3>
+                        <button onclick="exportSimulationReport()" class="btn-secondary">
+                            <i class="fas fa-download"></i> Exportar Reporte
+                        </button>
+                    </div>
 
-                        <!-- 📊 Estadísticas Principales -->
-                        <div class="stats-grid" id="simulation-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;"></div>
+                    <!-- 📊 Estadísticas Principales -->
+                    <div class="stats-grid" id="simulation-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;"></div>
 
-                        <!-- 📈 Gráficos -->
-                        <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                            <div class="chart-card">
-                                <h4><i class="fas fa-chart-line"></i> Trayectoria Simulada</h4>
-                                <div class="chart-container" style="height: 300px;">
-                                    <canvas id="simulation-chart-line"></canvas>
-                                </div>
-                            </div>
-
-                            <div class="chart-card">
-                                <h4><i class="fas fa-chart-bar"></i> Histograma de Retornos</h4>
-                                <div class="chart-container" style="height: 300px;">
-                                    <canvas id="simulation-histogram"></canvas>
-                                </div>
-                            </div>
-
-                            <div class="chart-card">
-                                <h4><i class="fas fa-chart-area"></i> Bandas de Confianza</h4>
-                                <div class="chart-container" style="height: 300px;">
-                                    <canvas id="simulation-bands"></canvas>
-                                </div>
-                            </div>
-
-                            <div class="chart-card">
-                                <h4><i class="fas fa-chart-pie"></i> Drawdown</h4>
-                                <div class="chart-container" style="height: 300px;">
-                                    <canvas id="simulation-drawdown"></canvas>
-                                </div>
+                    <!-- 📈 Gráficos -->
+                    <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                        <div class="chart-card" style="padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px;">
+                            <h4 style="margin-bottom: 1rem; color: var(--text-primary);"><i class="fas fa-chart-line"></i> Trayectoria Simulada</h4>
+                            <div class="chart-container" style="height: 350px; position: relative;">
+                                <canvas id="simulation-chart-line"></canvas>
                             </div>
                         </div>
 
-                        <!-- 📋 Tabla de Métricas -->
-                        <div class="panel">
-                            <div class="panel-header">
-                                <h4><i class="fas fa-table"></i> Métricas Detalladas</h4>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="data-table" id="simulation-metrics-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Métrica</th>
-                                            <th>Valor</th>
-                                            <th>Interpretación</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                        <div class="chart-card" style="padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px;">
+                            <h4 style="margin-bottom: 1rem; color: var(--text-primary);"><i class="fas fa-chart-bar"></i> Histograma de Retornos</h4>
+                            <div class="chart-container" style="height: 350px; position: relative;">
+                                <canvas id="simulation-histogram"></canvas>
                             </div>
                         </div>
 
-                        <!-- 🧠 Interpretación IA -->
-                        <div class="panel" style="margin-top: 1.5rem;">
-                            <div class="panel-header">
-                                <h4><i class="fas fa-brain"></i> Interpretación Inteligente</h4>
+                        <div class="chart-card" style="padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px;">
+                            <h4 style="margin-bottom: 1rem; color: var(--text-primary);"><i class="fas fa-chart-area"></i> Bandas de Confianza</h4>
+                            <div class="chart-container" style="height: 350px; position: relative;">
+                                <canvas id="simulation-bands"></canvas>
                             </div>
-                            <div class="ia-output" id="simulation-ia-interpretation" style="padding: 1.5rem; background: var(--bg-dark); border-radius: 8px;">
-                                <p class="placeholder">Esperando análisis...</p>
+                        </div>
+
+                        <div class="chart-card" style="padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px;">
+                            <h4 style="margin-bottom: 1rem; color: var(--text-primary);"><i class="fas fa-chart-pie"></i> Drawdown</h4>
+                            <div class="chart-container" style="height: 350px; position: relative;">
+                                <canvas id="simulation-drawdown"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
 
-                <!-- Contenedor de resultados -->
-                <div id="simulation-results" style="display: none; padding: 1.5rem;">
-                    <h4 style="margin-bottom: 1rem;">Resultados de la Simulación</h4>
-                    <div class="stats-grid" id="simulation-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;"></div>
-                    <div class="chart-container" style="height: 300px; margin: 1.5rem 0;">
-                        <canvas id="simulation-chart"></canvas>
+                    <!-- 📋 Tabla de Métricas -->
+                    <div style="margin-bottom: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                        <h4 style="margin-bottom: 1rem; color: var(--text-primary);"><i class="fas fa-table"></i> Métricas Detalladas</h4>
+                        <div class="table-responsive">
+                            <table class="data-table" id="simulation-metrics-table">
+                                <thead>
+                                    <tr>
+                                        <th>Métrica</th>
+                                        <th>Valor</th>
+                                        <th>Interpretación</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+
+                    <!-- 🧠 Interpretación IA -->
+                    <div style="margin-top: 1.5rem; padding: 1.5rem; background: var(--bg-dark); border-radius: 8px; border-left: 4px solid var(--secondary-color);">
+                        <h4 style="margin-bottom: 1rem; color: var(--secondary-color);"><i class="fas fa-brain"></i> Interpretación Inteligente</h4>
+                            </div>
+                        <div class="ia-output" id="simulation-ia-interpretation" style="padding: 1.5rem; background: var(--bg-dark); border-radius: 8px;">
+                            <p class="placeholder">Esperando análisis...</p>
+                        </div>
+                    </div>
             </div>
         </section>
 
@@ -525,28 +514,31 @@
                 <div id="sandbox-content" class="indicator-detail" style="display: none;">
                     <!-- Contenido dinámico del tema seleccionado -->
                 </div>
-
-                <!-- Minijuego: ¿Comprar o Esperar? -->
-                <div id="fomo-game-section" style="margin-top: 2rem;">
-                    <div class="panel" style="background: linear-gradient(135deg, rgba(159, 27, 127, 0.15), rgba(255, 197, 0, 0.1)); border: 2px solid rgba(255, 197, 0, 0.3);">
+            </div>
+            <!-- Minijuego: ¿Comprar o Esperar? -->
+                <div id="fomo-game-section" style="margin-top: 2rem; display: flex; justify-content: center;">
+                    <div class="panel" style="background: linear-gradient(135deg, rgba(159, 27, 127, 0.15), rgba(255, 197, 0, 0.1)); border: 2px solid rgba(255, 197, 0, 0.3); width: 100%; max-width: 900px;">
                         <div class="panel-header">
                             <h3><i class="fas fa-gamepad"></i> Minijuego: ¿Comprar o Esperar?</h3>
                             <p style="color: var(--text-secondary); font-size: 0.9rem;">Practica tu disciplina emocional con datos reales de tus criptomonedas</p>
                         </div>
 
-                        <div id="fomo-game-container" style="padding: 2rem;">
-                            <!-- Selector de criptomoneda -->
-                            <div style="margin-bottom: 2rem;">
-                                <label style="display: block; margin-bottom: 0.75rem; color: var(--text-primary); font-weight: 600;">Selecciona una criptomoneda:</label>
-                                <select id="fomo-cripto-select" style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1.5px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-size: 1rem;">
-                                    <option value="">-- Elige una criptomoneda --</option>
-                                </select>
-                            </div>
+                        <div id="fomo-game-container" style="padding: 1.5rem;">
+                            <!-- Sección de inicio (mostrada por defecto) -->
+                            <div id="fomo-setup-section">
+                                <!-- Selector de criptomoneda -->
+                                <div style="margin-bottom: 2rem;">
+                                    <label style="display: block; margin-bottom: 0.75rem; color: var(--text-primary); font-weight: 600;">Selecciona una criptomoneda:</label>
+                                    <select id="fomo-cripto-select" style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1.5px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-size: 1rem;">
+                                        <option value="">-- Elige una criptomoneda --</option>
+                                    </select>
+                                </div>
 
-                            <!-- Botón para iniciar juego -->
-                            <button onclick="startFomoGame()" class="btn-primary" id="start-fomo-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-bottom: 2rem;">
-                                <i class="fas fa-play"></i> Iniciar Minijuego
-                            </button>
+                                <!-- Botón para iniciar juego -->
+                                <button onclick="startFomoGame()" class="btn-primary" id="start-fomo-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-bottom: 2rem;">
+                                    <i class="fas fa-play"></i> Iniciar Minijuego
+                                </button>
+                            </div>
 
                             <!-- Área de juego (oculta inicialmente) -->
                             <div id="fomo-game-play" style="display: none;">
@@ -608,7 +600,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
     </main>
 
@@ -628,6 +619,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadAvailableCriptos();
             setupDragAndDrop();
+            // Inicializar minijuego si el script está disponible
+            if (typeof loadHistoricalDataForGame === 'function') {
+                setTimeout(() => loadHistoricalDataForGame(), 500);
+            }
         });
 
         function loadAvailableCriptos() {
@@ -637,6 +632,9 @@
                     availableCriptos = data.criptos;
                     document.getElementById('offline-cripto-count').textContent = data.count;
                     renderCriptoSelector();
+                    if (typeof initializeFomoSelector === 'function') {
+                        initializeFomoSelector();
+                    }
                     renderCriptosGrid();
                     updateChartSelector();
                     updateCorrelationCheckboxes();
@@ -751,14 +749,13 @@
             window.currentOfflineResults = resultados;
             
             const tbody = document.getElementById('results-tbody');
-            tbody.innerHTML = '';
             
             const signals = { compra: 0, venta: 0, mantener: 0 };
+            let tableHTML = '';
             
             resultados.forEach(r => {
                 if(!r.success) return;
                 
-                const row = tbody.insertRow();
                 const decisionClass = r.decision_info.decision.includes('COMPRAR') ? 'buy' : 
                                     r.decision_info.decision.includes('VENDER') ? 'sell' : 'hold';
                 
@@ -766,22 +763,20 @@
                 else if (r.decision_info.decision.includes('VENDER')) signals.venta++;
                 else signals.mantener++;
                 
-                row.innerHTML = `
-                    <td><strong>${r.cripto}</strong></td>
-                    <td>$${r.precio_actual.toLocaleString()}</td>
-                    <td><span class="trend ${r.tendencia.toLowerCase()}">${r.tendencia}</span></td>
-                    <td>${r.indicadores?.rsi?.toFixed(1) || '--'}</td>
-                    <td>${r.indicadores?.macd?.toFixed(2) || '--'}</td>
-                    <td><span class="signal ${decisionClass}">${r.decision_info.decision}</span></td>
-                    <td>${(r.decision_info.confianza * 100).toFixed(0)}%</td>
-                    <td>$${r.prediccion.prediccion_final.toLocaleString()} (${r.prediccion.cambio_porcentual > 0 ? '+' : ''}${r.prediccion.cambio_porcentual.toFixed(1)}%)</td>
-                    <td>
-                        <button onclick="showDetail('${r.cripto}')" class="btn-icon" title="Ver detalle">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
+                tableHTML += `
+                    <tr>
+                        <td><strong>${r.cripto}</strong></td>
+                        <td>$${r.precio_actual.toLocaleString()}</td>
+                        <td><span class="trend ${r.tendencia.toLowerCase()}">${r.tendencia}</span></td>
+                        <td>${r.indicadores?.rsi?.toFixed(1) || '--'}</td>
+                        <td><span class="signal ${decisionClass}">${r.decision_info.decision}</span></td>
+                        <td>${(r.decision_info.confianza * 100).toFixed(0)}%</td>
+                        <td>$${r.prediccion.prediccion_final.toLocaleString()} (${r.prediccion.cambio_porcentual > 0 ? '+' : ''}${r.prediccion.cambio_porcentual.toFixed(1)}%)</td>
+                    </tr>
                 `;
             });
+            
+            tbody.innerHTML = tableHTML;
             
             // Mostrar resultados en gráficos
             actualizarGraficosOfflineConDatos(resultados);
@@ -1146,25 +1141,25 @@
             };
 
             document.getElementById('simulation-stats').innerHTML = `
-                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
-                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Precio Inicial</span>
-                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${stats.inicial.toLocaleString()}</span>
+                <div class="stat-box" style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.2), rgba(33, 150, 243, 0.05)); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid rgba(33, 150, 243, 0.3); backdrop-filter: blur(10px);">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">💵 Precio Inicial</span>
+                    <span class="value" style="display: block; font-size: 1.75rem; font-weight: 800; color: #2196F3; font-family: 'Courier New', monospace;">$${stats.inicial.toLocaleString('es-ES', {maximumFractionDigits: 2})}</span>
                 </div>
-                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
-                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Precio Final</span>
-                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${stats.final.toLocaleString()}</span>
+                <div class="stat-box" style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.05)); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid rgba(76, 175, 80, 0.3); backdrop-filter: blur(10px);">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">🎯 Precio Final</span>
+                    <span class="value" style="display: block; font-size: 1.75rem; font-weight: 800; color: #4CAF50; font-family: 'Courier New', monospace;">$${stats.final.toLocaleString('es-ES', {maximumFractionDigits: 2})}</span>
                 </div>
-                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
-                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Máximo</span>
-                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${stats.max.toLocaleString()}</span>
+                <div class="stat-box" style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.05)); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid rgba(76, 175, 80, 0.3); backdrop-filter: blur(10px);">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">📈 Máximo</span>
+                    <span class="value" style="display: block; font-size: 1.75rem; font-weight: 800; color: #00C853; font-family: 'Courier New', monospace;">$${stats.max.toLocaleString('es-ES', {maximumFractionDigits: 2})}</span>
                 </div>
-                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
-                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Mínimo</span>
-                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;">$${stats.min.toLocaleString()}</span>
+                <div class="stat-box" style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.2), rgba(244, 67, 54, 0.05)); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid rgba(244, 67, 54, 0.3); backdrop-filter: blur(10px);">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">📉 Mínimo</span>
+                    <span class="value" style="display: block; font-size: 1.75rem; font-weight: 800; color: #F44336; font-family: 'Courier New', monospace;">$${stats.min.toLocaleString('es-ES', {maximumFractionDigits: 2})}</span>
                 </div>
-                <div class="stat-box" style="background: var(--bg-dark); padding: 1rem; border-radius: 8px; text-align: center;">
-                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.875rem;">Cambio Total</span>
-                    <span class="value" style="display: block; font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem; color: ${stats.cambio > 0 ? '#4CAF50' : '#F44336'};">${stats.cambio > 0 ? '+' : ''}${stats.cambio}%</span>
+                <div class="stat-box" style="background: linear-gradient(135deg, ${stats.cambio > 0 ? 'rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.05)' : 'rgba(244, 67, 54, 0.2), rgba(244, 67, 54, 0.05)'}); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid ${stats.cambio > 0 ? 'rgba(76, 175, 80, 0.3)' : 'rgba(244, 67, 54, 0.3)'}; backdrop-filter: blur(10px);">
+                    <span class="label" style="display: block; color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">💹 Cambio Total</span>
+                    <span class="value" style="display: block; font-size: 1.75rem; font-weight: 800; color: ${stats.cambio > 0 ? '#4CAF50' : '#F44336'}; font-family: 'Courier New', monospace;">${stats.cambio > 0 ? '↑ +' : '↓ '}${Math.abs(stats.cambio).toFixed(2)}%</span>
                 </div>
             `;
         }
@@ -1772,34 +1767,95 @@ function mostrarResultadosSimulacion(data) {
         { name: 'Max Drawdown', value: `${maxDrawdown.toFixed(2)}%`, interpretacion: 'Máxima caída desde un pico' }
     ];
 
-    tableBody.innerHTML = metrics.map(m => `
-        <tr>
-            <td><strong>${m.name}</strong></td>
-            <td>${m.value}</td>
-            <td style="color: var(--text-secondary); font-size: 0.875rem;">${m.interpretacion}</td>
-        </tr>
-    `).join('');
+    // Crear visualización sofisticada de métricas
+    const metricsContainer = document.getElementById('simulation-metrics-table').parentElement;
+    const metricsHTML = metrics.map(m => {
+        // Determinar color según tipo de métrica
+        let bgColor = 'rgba(99, 102, 241, 0.1)';
+        let borderColor = 'rgba(99, 102, 241, 0.3)';
+        let accentColor = '#6366F1';
+        let icon = '📊';
+        
+        if (m.name.includes('Retorno') || m.name.includes('Performance')) {
+            bgColor = 'rgba(76, 175, 80, 0.1)';
+            borderColor = 'rgba(76, 175, 80, 0.3)';
+            accentColor = '#4CAF50';
+            icon = '📈';
+        } else if (m.name.includes('Riesgo') || m.name.includes('Volatilidad') || m.name.includes('Drawdown') || m.name.includes('VaR')) {
+            bgColor = 'rgba(244, 67, 54, 0.1)';
+            borderColor = 'rgba(244, 67, 54, 0.3)';
+            accentColor = '#F44336';
+            icon = '⚠️';
+        } else if (m.name.includes('Sharpe') || m.name.includes('Ratio')) {
+            bgColor = 'rgba(255, 193, 7, 0.1)';
+            borderColor = 'rgba(255, 193, 7, 0.3)';
+            accentColor = '#FFC107';
+            icon = '⚡';
+        } else if (m.name.includes('Precio')) {
+            bgColor = 'rgba(33, 150, 243, 0.1)';
+            borderColor = 'rgba(33, 150, 243, 0.3)';
+            accentColor = '#2196F3';
+            icon = '💰';
+        }
+        
+        return `
+            <tr style="background: ${bgColor}; border-left: 4px solid ${accentColor}; transition: all 0.3s ease;">
+                <td style="padding: 1rem; font-weight: 600; color: ${accentColor}; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.2rem;">${icon}</span>
+                    ${m.name}
+                </td>
+                <td style="padding: 1rem; font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">
+                    ${m.value}
+                </td>
+                <td style="padding: 1rem; color: var(--text-secondary); font-size: 0.9rem; max-width: 300px;">
+                    ${m.interpretacion}
+                </td>
+            </tr>
+        `;
+    }).join('');
+    
+    tableBody.innerHTML = metricsHTML;
 
     // 🧠 Interpretación IA
+    const performanceRating = data.cambio_total > 0 && sharpe > 0.5 && maxDrawdown < 30 ? 'Favorable' : 
+                             data.cambio_total > 0 && sharpe > 0 ? 'Moderado' : 'Riesgoso';
+    const riskLevel = volatilidad > 50 ? 'Alto' : volatilidad > 25 ? 'Medio' : 'Bajo';
+    
     iaDiv.innerHTML = `
-        <div style="line-height: 1.7;">
-            <p><strong>📈 Resumen de la Simulación:</strong></p>
-            <p>La simulación muestra un <strong style="color: ${data.cambio_total >= 0 ? 'var(--success-color)' : 'var(--danger-color)'};">
-            ${data.cambio_total >= 0 ? 'crecimiento' : 'descenso'} del ${Math.abs(data.cambio_total).toFixed(2)}%</strong> 
-            sobre el precio inicial de <strong>$${data.precio_inicial.toLocaleString()}</strong>.</p>
+        <div style="line-height: 1.8; font-size: 1rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-dark); border-radius: 8px;">
+                <div style="padding: 0.75rem; border-left: 4px solid ${data.cambio_total >= 0 ? '#4CAF50' : '#F44336'};">
+                    <span style="display: block; color: var(--text-secondary); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">RENDIMIENTO TOTAL</span>
+                    <span style="display: block; font-size: 1.5rem; font-weight: 700; color: ${data.cambio_total >= 0 ? '#4CAF50' : '#F44336'};">
+                        ${data.cambio_total >= 0 ? '↑' : '↓'} ${Math.abs(data.cambio_total).toFixed(2)}%
+                    </span>
+                </div>
+                <div style="padding: 0.75rem; border-left: 4px solid #FFC107;">
+                    <span style="display: block; color: var(--text-secondary); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">RATIO SHARPE</span>
+                    <span style="display: block; font-size: 1.5rem; font-weight: 700; color: #FFC107;">
+                        ${sharpe.toFixed(2)}
+                    </span>
+                </div>
+            </div>
             
-            <p>La volatilidad anualizada es del <strong>${volatilidad.toFixed(2)}%</strong>, 
-            lo que indica un <strong>${volatilidad > 50 ? 'alto' : volatilidad > 25 ? 'medio' : 'bajo'}</strong> nivel de riesgo.</p>
+            <p style="margin-bottom: 1rem; padding: 1rem; background: rgba(33, 150, 243, 0.1); border-radius: 8px; border-left: 4px solid #2196F3;">
+                <strong style="color: #2196F3;">Resumen:</strong> La simulación muestra un <strong>${data.cambio_total >= 0 ? 'crecimiento' : 'descenso'} del ${Math.abs(data.cambio_total).toFixed(2)}%</strong> sobre el precio inicial de <strong>$${data.precio_inicial.toLocaleString('es-ES', {maximumFractionDigits: 2})}</strong>, con un rendimiento <strong>${performanceRating}</strong>.
+            </p>
             
-            <p>El <strong>Sharpe ratio de ${sharpe.toFixed(2)}</strong> sugiere que el rendimiento 
-            ${sharpe > 1 ? 'compensa el riesgo asumido' : sharpe > 0 ? 'es aceptable' : 'no compensa el riesgo'}.</p>
+            <p style="margin-bottom: 1rem; padding: 1rem; background: rgba(76, 175, 80, 0.1); border-radius: 8px; border-left: 4px solid #4CAF50;">
+                <strong style="color: #4CAF50;">Volatilidad:</strong> La volatilidad anualizada es del <strong>${volatilidad.toFixed(2)}%</strong>, lo que indica un nivel de riesgo <strong>${riskLevel}</strong>. El Sharpe ratio de <strong>${sharpe.toFixed(2)}</strong> sugiere que el rendimiento ${sharpe > 1 ? 'compensa bien el riesgo asumido' : sharpe > 0 ? 'es aceptable' : 'no compensa el riesgo'}.
+            </p>
             
-            <p>El <strong>drawdown máximo fue del ${maxDrawdown.toFixed(2)}%</strong>, 
-            lo que representa la mayor caída desde un pico durante la simulación.</p>
+            <p style="margin-bottom: 1rem; padding: 1rem; background: rgba(244, 67, 54, 0.1); border-radius: 8px; border-left: 4px solid #F44336;">
+                <strong style="color: #F44336;">Riesgo de Caída:</strong> El drawdown máximo fue del <strong>${maxDrawdown.toFixed(2)}%</strong>, lo que representa la mayor caída desde un pico durante la simulación. Esto es <strong>${maxDrawdown < 20 ? 'muy bajo' : maxDrawdown < 40 ? 'moderado' : 'significativo'}</strong>.
+            </p>
             
-            <p>💡 <strong>Conclusión:</strong> ${data.cambio_total > 0 && sharpe > 0.5 && maxDrawdown < 30 
-                ? 'La simulación muestra un escenario favorable con buen rendimiento y riesgo controlado.' 
-                : 'La simulación presenta riesgos significativos que deben considerarse antes de invertir.'}
+            <p style="padding: 1rem; background: linear-gradient(135deg, var(--secondary-color), rgba(124, 58, 237, 0.3)); border-radius: 8px; border-left: 4px solid var(--secondary-color);">
+                <strong style="color: var(--secondary-color);">Conclusión:</strong> ${data.cambio_total > 0 && sharpe > 0.5 && maxDrawdown < 30 
+                    ? 'La simulación muestra un escenario favorable con buen rendimiento y riesgo controlado. Los indicadores técnicos son positivos para una inversión.'
+                    : data.cambio_total > 0 && sharpe > 0
+                    ? 'La simulación presenta un desempeño positivo pero con riesgos moderados. Requiere atención a la volatilidad.'
+                    : 'La simulación presenta riesgos significativos. Se recomienda revisar los parámetros o considerar estrategias defensivas.'}
             </p>
         </div>
     `;
@@ -2190,8 +2246,17 @@ function actualizarGraficosOfflineConDatos(resultados) {
     // Actualizar gráfico de volumen
     if (offlineCharts.volume) {
         offlineCharts.volume.data.labels = labels;
-        offlineCharts.volume.data.datasets[0].data = volumeData;
+        // Usar volume_24h o volume_actual si existe, sino usar 0
+        const volumeActualData = resultados.map(r => {
+            if (!r.success) return 0;
+            return r.estadisticas?.volume_24h || 
+                   r.estadisticas?.volume_actual || 
+                   r.estadisticas?.volumen_24h || 
+                   0;
+        });
+        offlineCharts.volume.data.datasets[0].data = volumeActualData;
         offlineCharts.volume.update();
+        console.log("📊 Datos de volumen:", volumeActualData);
     }
 
     // Actualizar estadísticas
@@ -2301,13 +2366,20 @@ let fomoGameState = {
 };
 
 // Inicializar selector de criptomonedas
-document.addEventListener('DOMContentLoaded', () => {
+function initializeFomoSelector() {
     const selector = document.getElementById('fomo-cripto-select');
+    if (!selector) return;
+    
     if (availableCriptos && availableCriptos.length > 0) {
         selector.innerHTML = '<option value="">-- Elige una criptomoneda --</option>' +
             availableCriptos.map(c => `<option value="${c}">${c}</option>`).join('');
+        console.log('[v0] Selector FOMO inicializado con:', availableCriptos.length, 'criptomonedas');
+    } else {
+        console.log('[v0] Sin datos de criptomonedas disponibles');
     }
-});
+}
+
+
 
 // Buscar picos de precio en los datos
 function findPriceSpike(data) {
@@ -2355,6 +2427,63 @@ function findPriceSpike(data) {
     return null;
 }
 
+// Encontrar escenarios diversos en los datos históricos
+function findDiverseScenarios(data) {
+    if (data.length < 40) return [];
+    
+    const scenarios = [];
+    const step = Math.floor(data.length / 8); // Dividir el histórico en 8 secciones
+    
+    for (let section = 1; section < 8; section++) {
+        const sectionStart = section * step;
+        const sectionEnd = Math.min(sectionStart + step, data.length);
+        
+        // Buscar volatilidad en esta sección
+        for (let i = sectionStart + 5; i < sectionEnd - 5; i++) {
+            const windowStart = Math.max(0, i - 5);
+            const windowEnd = Math.min(i + 5, data.length - 1);
+            const window = data.slice(windowStart, windowEnd + 1);
+            
+            const minPrice = Math.min(...window.map(d => d.close));
+            const maxPrice = Math.max(...window.map(d => d.close));
+            const volatility = (maxPrice - minPrice) / minPrice * 100;
+            
+            if (volatility > 1) { // Al menos 1% de volatilidad
+                const basePrice = data[i - 1].close;
+                const currentPrice = data[i].close;
+                const percentChange = ((currentPrice - basePrice) / basePrice) * 100;
+                
+                // Calcular resultado futuro
+                const futureWindow = data.slice(i + 1, Math.min(i + 21, data.length));
+                if (futureWindow.length > 0) {
+                    const futureMax = Math.max(...futureWindow.map(d => d.close));
+                    const futureMin = Math.min(...futureWindow.map(d => d.close));
+                    const futureClose = futureWindow[futureWindow.length - 1].close;
+                    
+                    const bestOutcome = ((futureMax - currentPrice) / currentPrice) * 100;
+                    const worstOutcome = ((futureMin - currentPrice) / currentPrice) * 100;
+                    const realOutcome = ((futureClose - currentPrice) / currentPrice) * 100;
+                    
+                    scenarios.push({
+                        index: i,
+                        basePrice,
+                        currentPrice,
+                        percentChange,
+                        volatility,
+                        futureData: futureWindow,
+                        bestOutcome,
+                        worstOutcome,
+                        realOutcome,
+                        timestamp: data[i].timestamp
+                    });
+                }
+            }
+        }
+    }
+    
+    return scenarios.filter(s => s.realOutcome !== null);
+}
+
 // Iniciar el minijuego
 async function startFomoGame() {
     const cripto = document.getElementById('fomo-cripto-select').value;
@@ -2390,33 +2519,43 @@ async function startFomoGame() {
         fomoGameState.data = result.datos;
         fomoGameState.cripto = cripto;
         
-        // Buscar un pico de precio
-        console.log('[v0] Buscando spike...');
-        const spike = findPriceSpike(fomoGameState.data);
+        // Buscar escenarios diversos
+        console.log('[v0] Buscando escenarios...');
+        const scenarios = findDiverseScenarios(fomoGameState.data);
+        console.log('[v0] Total de datos:', fomoGameState.data.length);
+        console.log('[v0] Escenarios encontrados:', scenarios.length);
+        if (scenarios.length > 0) {
+            console.log('[v0] Primer escenario - Volatilidad:', scenarios[0].volatility.toFixed(2) + '%', 'Cambio:', scenarios[0].percentChange.toFixed(2) + '%');
+        }
         
-        if (!spike) {
-            console.error('[v0] No se encontró spike');
+        if (scenarios.length === 0) {
+            console.error('[v0] No se encontraron escenarios');
             showNotification('No se encontraron momentos de volatilidad en los datos', 'warning');
             return;
         }
         
-        fomoGameState.spikeIndex = spike.index;
-        console.log('[v0] Spike encontrado:', spike);
+        // Seleccionar un escenario aleatorio
+        const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+        fomoGameState.spikeIndex = scenario.index;
+        fomoGameState.scenario = scenario;
+        console.log('[v0] Escenario seleccionado:', scenario);
         
         // Mostrar juego
         console.log('[v0] Mostrando interfaz de juego');
-        document.getElementById('fomo-game-container').style.display = 'none';
+        document.getElementById('fomo-setup-section').style.display = 'none';
         document.getElementById('fomo-game-play').style.display = 'block';
         document.getElementById('fomo-results').style.display = 'none';
         
         // Dibujar gráfico
         console.log('[v0] Dibujando gráfico...');
-        drawFomoChart(spike);
+        drawFomoChartFromScenario(scenario);
         console.log('[v0] Gráfico dibujado');
         
         // Actualizar información
-        document.getElementById('fomo-current-price').textContent = `$${spike.peakPrice.toLocaleString('es-ES', {maximumFractionDigits: 2})}`;
-        document.getElementById('fomo-price-change').textContent = `+${spike.percentageChange.toFixed(2)}%`;
+        document.getElementById('fomo-current-price').textContent = `$${scenario.currentPrice.toLocaleString('es-ES', {maximumFractionDigits: 2})}`;
+        const priceChangeText = scenario.percentChange > 0 ? '+' : '';
+        document.getElementById('fomo-price-change').textContent = `${priceChangeText}${scenario.percentChange.toFixed(2)}%`;
+        document.getElementById('fomo-price-change').style.color = scenario.percentChange > 0 ? '#00ff88' : '#ff6b6b';
         
         // Desactivar botones e iniciar cuenta regresiva
         fomoGameState.gameActive = true;
@@ -2516,6 +2655,87 @@ function drawFomoChart(spike) {
     }
 }
 
+// Dibujar gráfico del minijuego desde un escenario
+function drawFomoChartFromScenario(scenario) {
+    console.log('[v0] drawFomoChartFromScenario iniciado');
+    
+    const ctx = document.getElementById('fomo-game-chart');
+    console.log('[v0] Canvas elemento:', ctx);
+    
+    if (!ctx) {
+        console.error('[v0] ERROR: No se encontró canvas #fomo-game-chart');
+        return;
+    }
+    
+    // Destruir gráfico anterior si existe
+    if (window.fomoChart) {
+        console.log('[v0] Destruyendo gráfico anterior');
+        window.fomoChart.destroy();
+    }
+    
+    // Obtener datos históricos hasta el punto de decisión
+    const startIdx = Math.max(0, scenario.index - 15);
+    const endIdx = scenario.index + 1;
+    const chartData = fomoGameState.data.slice(startIdx, endIdx);
+    
+    console.log('[v0] Datos para gráfico:', chartData.length, 'elementos');
+    
+    const labels = chartData.map((d, i) => i === chartData.length - 1 ? 'AHORA' : '');
+    const prices = chartData.map(d => d.close);
+    
+    console.log('[v0] Precios:', prices);
+    console.log('[v0] Creando Chart...');
+    
+    try {
+        window.fomoChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `${fomoGameState.cripto} - Precio`,
+                data: prices,
+                borderColor: '#ffc500',
+                backgroundColor: 'rgba(255, 197, 0, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: prices.map((_, i) => i === prices.length - 1 ? '#ff6b6b' : '#ffc500'),
+                pointRadius: prices.map((_, i) => i === prices.length - 1 ? 8 : 4),
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: `Histórico de ${fomoGameState.cripto} - Momento de Decisión`,
+                    color: '#f1f5f9'
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        color: '#94a3b8',
+                        callback: value => `$${value.toLocaleString()}`
+                    },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                x: {
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
+        console.log('[v0] Chart creado exitosamente');
+    } catch (error) {
+        console.error('[v0] Error creando Chart:', error);
+    }
+}
+
 // Cuenta regresiva
 function startCountdown() {
     fomoGameState.timeRemaining = 10;
@@ -2554,27 +2774,39 @@ function makeDecision(buy) {
 
 // Analizar resultado
 function analyzeGameResult(userBought) {
-    // Obtener datos del futuro (después del pico, mínimo 2 puntos, máximo 6)
-    const spikeIndex = fomoGameState.spikeIndex;
-    const endIndex = Math.min(spikeIndex + 5, fomoGameState.data.length);
-    const futureData = fomoGameState.data.slice(spikeIndex + 1, endIndex);
+    // Usar datos del escenario si están disponibles
+    let currentPrice, futureData, priceChange, minPrice, maxPrice, minChange;
     
-    console.log('[v0] Analizando resultado. Spike en:', spikeIndex, 'Datos disponibles:', futureData.length, 'Total datos:', fomoGameState.data.length);
+    if (fomoGameState.scenario) {
+        console.log('[v0] Usando datos del escenario');
+        currentPrice = fomoGameState.scenario.currentPrice;
+        futureData = fomoGameState.scenario.futureData;
+        priceChange = fomoGameState.scenario.realOutcome;
+        minPrice = currentPrice + (currentPrice * fomoGameState.scenario.worstOutcome / 100);
+        maxPrice = currentPrice + (currentPrice * fomoGameState.scenario.bestOutcome / 100);
+        minChange = fomoGameState.scenario.worstOutcome;
+    } else {
+        // Fallback a datos históricos
+        const spikeIndex = fomoGameState.spikeIndex;
+        const endIndex = Math.min(spikeIndex + 5, fomoGameState.data.length);
+        futureData = fomoGameState.data.slice(spikeIndex + 1, endIndex);
+        currentPrice = fomoGameState.data[fomoGameState.spikeIndex].close;
+        const futurePrice = futureData[futureData.length - 1].close;
+        priceChange = ((futurePrice - currentPrice) / currentPrice) * 100;
+        minPrice = Math.min(...futureData.map(d => d.close));
+        maxPrice = Math.max(...futureData.map(d => d.close));
+        minChange = ((minPrice - currentPrice) / currentPrice) * 100;
+    }
+    
+    console.log('[v0] Analizando resultado. Datos disponibles:', futureData.length, 'Precio actual: $' + currentPrice.toFixed(2), 'Cambio: ' + priceChange.toFixed(2) + '%');
     
     if (futureData.length === 0) {
         console.log('[v0] Error: Sin datos futuros para analizar');
         showNotification('Error: No hay datos después del pico para este análisis', 'error');
-        document.getElementById('fomo-game-container').style.display = 'block';
+        document.getElementById('fomo-setup-section').style.display = 'block';
         document.getElementById('fomo-game-play').style.display = 'none';
         return;
     }
-    
-    const currentPrice = fomoGameState.data[fomoGameState.spikeIndex].close;
-    const futurePrice = futureData[futureData.length - 1].close;
-    const priceChange = ((futurePrice - currentPrice) / currentPrice) * 100;
-    const minPrice = Math.min(...futureData.map(d => d.close));
-    const maxPrice = Math.max(...futureData.map(d => d.close));
-    const minChange = ((minPrice - currentPrice) / currentPrice) * 100;
     
     // Determinar resultado
     let decision = '';
@@ -2697,7 +2929,7 @@ function getLessonPoints(userBought, realChange) {
 
 // Reiniciar juego
 function resetFomoGame() {
-    document.getElementById('fomo-game-container').style.display = 'block';
+    document.getElementById('fomo-setup-section').style.display = 'block';
     document.getElementById('fomo-game-play').style.display = 'none';
     document.getElementById('fomo-results').style.display = 'none';
     document.getElementById('fomo-cripto-select').value = '';

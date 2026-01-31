@@ -21,6 +21,7 @@
             <a href="#" class="active">Inicio</a>
             <a href="#features">Características</a>
             <a href="#criptos">Criptomonedas</a>
+            <a href="#about">Sobre Nosotros</a>
         </div>
     </nav>
 
@@ -211,6 +212,80 @@
         </div>
     </section>
 
+    <section class="about-section" id="about">
+        <div class="about-header">
+            <div class="about-title-wrapper">
+                <h2>Sobre Nosotros</h2>
+                <p class="about-subtitle">Proyecto Académico de Excelencia en Análisis de Criptomonedas</p>
+            </div>
+        </div>
+        
+        <div class="about-container">
+            <div class="about-main-content">
+                <div class="about-intro">
+                    <p>Cripto Analizador Pro es un proyecto desarrollado como parte de los estudios de <span class="highlight-text">Ingeniería de Sistemas</span>, combinando conocimientos técnicos avanzados con un enfoque educativo integral para el análisis de criptomonedas.</p>
+                </div>
+
+                <div class="about-grid">
+                    <div class="about-card about-card-primary">
+                        <div class="card-icon">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Institución Académica</h3>
+                            <p class="card-value">Ingeniería de Sistemas</p>
+                        </div>
+                    </div>
+
+                    <div class="about-card about-card-secondary">
+                        <div class="card-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Asignatura</h3>
+                            <p class="card-value">Sistemas de Información</p>
+                        </div>
+                    </div>
+
+                    <div class="about-card about-card-tertiary">
+                        <div class="card-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Docente</h3>
+                            <p class="card-value">Ing. José Guzmán</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-section">
+                    <h3>Equipo Desarrollador</h3>
+                    <div class="team-members">
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="member-info">
+                                <h4>Keiko Bernal</h4>
+                                <p>Desarrolladora Principal</p>
+                            </div>
+                        </div>
+                        <div class="team-divider"></div>
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="member-info">
+                                <h4>Zashenka Lárez</h4>
+                                <p>Desarrolladora Principal</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer class="footer">
         <p>&copy; 2026 Cripto Analizador Pro. Todos los derechos reservados.</p>
         <p class="disclaimer">
@@ -290,10 +365,11 @@
         }, observerOptions);
         
         // Observar elementos
-        document.querySelectorAll('.feature-item, .stat-card, .mode-card').forEach(el => {
+        document.querySelectorAll('.feature-item, .stat-card, .mode-card, .team-member, .about-card').forEach((el, index) => {
+            el.style.animation = 'none';
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
             observer.observe(el);
         });
         

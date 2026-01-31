@@ -525,6 +525,89 @@
                 <div id="sandbox-content" class="indicator-detail" style="display: none;">
                     <!-- Contenido dinámico del tema seleccionado -->
                 </div>
+
+                <!-- Minijuego: ¿Comprar o Esperar? -->
+                <div id="fomo-game-section" style="margin-top: 2rem;">
+                    <div class="panel" style="background: linear-gradient(135deg, rgba(159, 27, 127, 0.15), rgba(255, 197, 0, 0.1)); border: 2px solid rgba(255, 197, 0, 0.3);">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-gamepad"></i> Minijuego: ¿Comprar o Esperar?</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Practica tu disciplina emocional con datos reales de tus criptomonedas</p>
+                        </div>
+
+                        <div id="fomo-game-container" style="padding: 2rem;">
+                            <!-- Selector de criptomoneda -->
+                            <div style="margin-bottom: 2rem;">
+                                <label style="display: block; margin-bottom: 0.75rem; color: var(--text-primary); font-weight: 600;">Selecciona una criptomoneda:</label>
+                                <select id="fomo-cripto-select" style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1.5px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-size: 1rem;">
+                                    <option value="">-- Elige una criptomoneda --</option>
+                                </select>
+                            </div>
+
+                            <!-- Botón para iniciar juego -->
+                            <button onclick="startFomoGame()" class="btn-primary" id="start-fomo-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-bottom: 2rem;">
+                                <i class="fas fa-play"></i> Iniciar Minijuego
+                            </button>
+
+                            <!-- Área de juego (oculta inicialmente) -->
+                            <div id="fomo-game-play" style="display: none;">
+                                <!-- Gráfico histórico -->
+                                <div style="margin-bottom: 2rem; background: rgba(26, 31, 58, 0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 197, 0, 0.2);">
+                                    <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Gráfico hasta el momento de decisión:</h4>
+                                    <div style="height: 300px;">
+                                        <canvas id="fomo-game-chart"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Información del momento -->
+                                <div style="background: rgba(255, 197, 0, 0.1); border: 1.5px solid var(--secondary-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                                    <h4 style="color: var(--secondary-color); margin-bottom: 1rem;">
+                                        <i class="fas fa-exclamation-circle"></i> Momento Crítico
+                                    </h4>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                                        <div>
+                                            <p style="color: var(--text-secondary); font-size: 0.85rem;">Precio Actual</p>
+                                            <p style="font-size: 1.5rem; font-weight: 700; color: var(--secondary-color);" id="fomo-current-price">$0</p>
+                                        </div>
+                                        <div>
+                                            <p style="color: var(--text-secondary); font-size: 0.85rem;">Cambio en última hora</p>
+                                            <p style="font-size: 1.5rem; font-weight: 700; color: #00ff88;" id="fomo-price-change">+0%</p>
+                                        </div>
+                                        <div>
+                                            <p style="color: var(--text-secondary); font-size: 0.85rem;">Tiempo para decidir</p>
+                                            <p style="font-size: 1.5rem; font-weight: 700; color: #ff6b6b;" id="fomo-countdown">10s</p>
+                                        </div>
+                                    </div>
+                                    <p style="color: var(--text-primary); line-height: 1.6;">
+                                        <i class="fas fa-chart-line"></i> El precio está subiendo rápidamente. 
+                                        <strong>¿Entras en pánico (FOMO) y compras, o esperas a una corrección?</strong>
+                                    </p>
+                                </div>
+
+                                <!-- Botones de decisión -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                                    <button onclick="makeDecision(true)" class="btn-danger" id="buy-btn" style="padding: 1.5rem; font-size: 1.1rem; min-height: 80px;">
+                                        <i class="fas fa-shopping-cart" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i>
+                                        ¡COMPRAR AHORA!
+                                    </button>
+                                    <button onclick="makeDecision(false)" class="btn-success" id="wait-btn" style="padding: 1.5rem; font-size: 1.1rem; min-height: 80px;">
+                                        <i class="fas fa-pause" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i>
+                                        ESPERAR Y OBSERVAR
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Resultados (oculto inicialmente) -->
+                            <div id="fomo-results" style="display: none;">
+                                <div id="fomo-results-content" style="background: rgba(26, 31, 58, 0.5); padding: 2rem; border-radius: 12px; border-left: 4px solid var(--secondary-color);">
+                                    <!-- Se llenará dinámicamente -->
+                                </div>
+                                <button onclick="resetFomoGame()" class="btn-primary" style="width: 100%; padding: 1rem; margin-top: 2rem;">
+                                    <i class="fas fa-redo"></i> Jugar de Nuevo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -2204,6 +2287,429 @@ function showNotification(message, type = 'info') {
             setTimeout(() => notification.remove(), 300);
         }, 4000);
     }, 100);
+}
+
+// ============= LÓGICA DEL MINIJUEGO "¿COMPRAR O ESPERAR?" =============
+let fomoGameState = {
+    cripto: null,
+    data: [],
+    spikeIndex: 0,
+    userDecision: null,
+    countdownTimer: null,
+    timeRemaining: 10,
+    gameActive: false
+};
+
+// Inicializar selector de criptomonedas
+document.addEventListener('DOMContentLoaded', () => {
+    const selector = document.getElementById('fomo-cripto-select');
+    if (availableCriptos && availableCriptos.length > 0) {
+        selector.innerHTML = '<option value="">-- Elige una criptomoneda --</option>' +
+            availableCriptos.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+});
+
+// Buscar picos de precio en los datos
+function findPriceSpike(data) {
+    if (!data || data.length < 8) {
+        console.log('[v0] Datos insuficientes:', data?.length || 0);
+        return null;
+    }
+    
+    console.log('[v0] Buscando spikes en', data.length, 'puntos de datos');
+    
+    // Buscar momento donde el precio subió +3% o más (más flexible)
+    const searchStart = 2;
+    const searchEnd = data.length - 3;
+    
+    for (let i = searchStart; i < searchEnd; i++) {
+        const basePrice = data[i - 2].close;
+        
+        // Buscar el máximo en ventana después del punto actual
+        const windowEnd = Math.min(i + 4, data.length);
+        const peakPrice = Math.max(...data.slice(i, windowEnd).map(d => d.close));
+        const peakIndex = data.slice(i, windowEnd).findIndex(d => d.close === peakPrice) + i;
+        
+        if (basePrice <= 0 || !peakPrice) continue;
+        
+        const percentageChange = ((peakPrice - basePrice) / basePrice) * 100;
+        
+        console.log(`[v0] Punto ${i}: cambio = ${percentageChange.toFixed(2)}%`);
+        
+        // Buscar cambios significativos (>= 3%)
+        if (percentageChange >= 3) {
+            const spike = {
+                index: i,
+                basePrice: basePrice,
+                peakPrice: peakPrice,
+                percentageChange: percentageChange,
+                timestamp: data[i].timestamp,
+                peakIndex: peakIndex
+            };
+            console.log('[v0] Spike encontrado:', spike);
+            return spike;
+        }
+    }
+    
+    console.log('[v0] No se encontraron spikes de precio');
+    return null;
+}
+
+// Iniciar el minijuego
+async function startFomoGame() {
+    const cripto = document.getElementById('fomo-cripto-select').value;
+    
+    if (!cripto) {
+        showNotification('Por favor selecciona una criptomoneda', 'warning');
+        return;
+    }
+    
+    try {
+        console.log('[v0] Iniciando FOMO Game para:', cripto);
+        
+        // Obtener datos de la criptomoneda
+        const response = await fetch(`/api/offline/obtener-datos/${cripto}`);
+        console.log('[v0] Response status:', response.status);
+        
+        const result = await response.json();
+        console.log('[v0] API Response:', result);
+        
+        if (!response.ok || !result.success) {
+            console.error('[v0] API Error:', result.error);
+            showNotification('Error: ' + (result.error || 'No se pudieron cargar los datos'), 'error');
+            return;
+        }
+        
+        if (!result.datos || result.datos.length === 0) {
+            console.error('[v0] Sin datos en respuesta');
+            showNotification('No hay datos disponibles para esta criptomoneda', 'error');
+            return;
+        }
+        
+        console.log('[v0] Datos recibidos:', result.datos.length, 'registros');
+        fomoGameState.data = result.datos;
+        fomoGameState.cripto = cripto;
+        
+        // Buscar un pico de precio
+        console.log('[v0] Buscando spike...');
+        const spike = findPriceSpike(fomoGameState.data);
+        
+        if (!spike) {
+            console.error('[v0] No se encontró spike');
+            showNotification('No se encontraron momentos de volatilidad en los datos', 'warning');
+            return;
+        }
+        
+        fomoGameState.spikeIndex = spike.index;
+        console.log('[v0] Spike encontrado:', spike);
+        
+        // Mostrar juego
+        console.log('[v0] Mostrando interfaz de juego');
+        document.getElementById('fomo-game-container').style.display = 'none';
+        document.getElementById('fomo-game-play').style.display = 'block';
+        document.getElementById('fomo-results').style.display = 'none';
+        
+        // Dibujar gráfico
+        console.log('[v0] Dibujando gráfico...');
+        drawFomoChart(spike);
+        console.log('[v0] Gráfico dibujado');
+        
+        // Actualizar información
+        document.getElementById('fomo-current-price').textContent = `$${spike.peakPrice.toLocaleString('es-ES', {maximumFractionDigits: 2})}`;
+        document.getElementById('fomo-price-change').textContent = `+${spike.percentageChange.toFixed(2)}%`;
+        
+        // Desactivar botones e iniciar cuenta regresiva
+        fomoGameState.gameActive = true;
+        fomoGameState.timeRemaining = 10;
+        fomoGameState.userDecision = null;
+        
+        document.getElementById('buy-btn').disabled = false;
+        document.getElementById('wait-btn').disabled = false;
+        
+        // Cuenta regresiva
+        startCountdown();
+        
+    } catch (error) {
+        console.error('[v0] Error en FOMO Game:', error);
+        showNotification('Error al cargar datos', 'error');
+    }
+}
+
+// Dibujar gráfico del minijuego
+function drawFomoChart(spike) {
+    console.log('[v0] drawFomoChart iniciado');
+    
+    const ctx = document.getElementById('fomo-game-chart');
+    console.log('[v0] Canvas elemento:', ctx);
+    
+    if (!ctx) {
+        console.error('[v0] ERROR: No se encontró canvas #fomo-game-chart');
+        return;
+    }
+    
+    // Destruir gráfico anterior si existe
+    if (window.fomoChart) {
+        console.log('[v0] Destruyendo gráfico anterior');
+        window.fomoChart.destroy();
+    }
+    
+    // Mostrar datos hasta el pico (10 velas antes + pico)
+    const startIdx = Math.max(0, spike.index - 10);
+    const chartData = fomoGameState.data.slice(startIdx, spike.index + 1);
+    
+    console.log('[v0] Datos para gráfico:', chartData.length, 'elementos');
+    console.log('[v0] Primero:', chartData[0], 'Último:', chartData[chartData.length - 1]);
+    
+    const labels = chartData.map((d, i) => i === chartData.length - 1 ? 'AHORA' : '');
+    const prices = chartData.map(d => d.close);
+    
+    console.log('[v0] Precios:', prices);
+    console.log('[v0] Creando Chart...');
+    
+    try {
+        window.fomoChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `${fomoGameState.cripto} - Precio`,
+                data: prices,
+                borderColor: '#ffc500',
+                backgroundColor: 'rgba(255, 197, 0, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: prices.map((_, i) => i === prices.length - 1 ? '#ff6b6b' : '#ffc500'),
+                pointRadius: prices.map((_, i) => i === prices.length - 1 ? 8 : 4),
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: `Histórico de ${fomoGameState.cripto} - Momento de Decisión`,
+                    color: '#f1f5f9'
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        color: '#94a3b8',
+                        callback: value => `$${value.toLocaleString()}`
+                    },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                x: {
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
+        console.log('[v0] Chart creado exitosamente');
+    } catch (error) {
+        console.error('[v0] Error creando Chart:', error);
+    }
+}
+
+// Cuenta regresiva
+function startCountdown() {
+    fomoGameState.timeRemaining = 10;
+    
+    fomoGameState.countdownTimer = setInterval(() => {
+        fomoGameState.timeRemaining--;
+        document.getElementById('fomo-countdown').textContent = `${fomoGameState.timeRemaining}s`;
+        
+        if (fomoGameState.timeRemaining <= 0) {
+            clearInterval(fomoGameState.countdownTimer);
+            if (!fomoGameState.userDecision) {
+                console.log('[v0] Tiempo agotado, aplicar decisión por defecto (esperar)');
+                makeDecision(false);
+            }
+        }
+    }, 1000);
+}
+
+// Tomar decisión
+function makeDecision(buy) {
+    if (!fomoGameState.gameActive) return;
+    
+    fomoGameState.gameActive = false;
+    fomoGameState.userDecision = buy;
+    clearInterval(fomoGameState.countdownTimer);
+    
+    console.log('[v0] Decisión tomada:', buy ? 'COMPRAR' : 'ESPERAR');
+    
+    // Desactivar botones
+    document.getElementById('buy-btn').disabled = true;
+    document.getElementById('wait-btn').disabled = true;
+    
+    // Analizar resultado
+    analyzeGameResult(buy);
+}
+
+// Analizar resultado
+function analyzeGameResult(userBought) {
+    // Obtener datos del futuro (después del pico, mínimo 2 puntos, máximo 6)
+    const spikeIndex = fomoGameState.spikeIndex;
+    const endIndex = Math.min(spikeIndex + 5, fomoGameState.data.length);
+    const futureData = fomoGameState.data.slice(spikeIndex + 1, endIndex);
+    
+    console.log('[v0] Analizando resultado. Spike en:', spikeIndex, 'Datos disponibles:', futureData.length, 'Total datos:', fomoGameState.data.length);
+    
+    if (futureData.length === 0) {
+        console.log('[v0] Error: Sin datos futuros para analizar');
+        showNotification('Error: No hay datos después del pico para este análisis', 'error');
+        document.getElementById('fomo-game-container').style.display = 'block';
+        document.getElementById('fomo-game-play').style.display = 'none';
+        return;
+    }
+    
+    const currentPrice = fomoGameState.data[fomoGameState.spikeIndex].close;
+    const futurePrice = futureData[futureData.length - 1].close;
+    const priceChange = ((futurePrice - currentPrice) / currentPrice) * 100;
+    const minPrice = Math.min(...futureData.map(d => d.close));
+    const maxPrice = Math.max(...futureData.map(d => d.close));
+    const minChange = ((minPrice - currentPrice) / currentPrice) * 100;
+    
+    // Determinar resultado
+    let decision = '';
+    let outcome = '';
+    let isGoodDecision = false;
+    let profitLoss = 0;
+    
+    if (userBought) {
+        if (priceChange < 0) {
+            decision = '❌ ENTRASTE POR FOMO';
+            outcome = `El precio cayó ${Math.abs(priceChange).toFixed(2)}% en las siguientes horas.\n
+                    <strong style="color: #ff6b6b;">Habrías perdido: ${Math.abs(priceChange).toFixed(2)}%</strong>\n
+                    📊 Mínimo alcanzado: -${Math.abs(minChange).toFixed(2)}%`;
+            isGoodDecision = false;
+            profitLoss = -Math.abs(priceChange);
+        } else {
+            decision = '✅ BUENA ENTRADA';
+            outcome = `El precio subió ${priceChange.toFixed(2)}% después.\n
+                    <strong style="color: #00d084;">Ganancia: +${priceChange.toFixed(2)}%</strong>\n
+                    📈 Máximo alcanzado: +${((maxPrice - currentPrice) / currentPrice * 100).toFixed(2)}%`;
+            isGoodDecision = true;
+            profitLoss = priceChange;
+        }
+    } else {
+        if (priceChange < 0) {
+            decision = '✅ DECISIÓN CORRECTA';
+            outcome = `El precio cayó ${Math.abs(priceChange).toFixed(2)}%.\n
+                    <strong style="color: #00d084;">Evitaste una pérdida de: ${Math.abs(priceChange).toFixed(2)}%</strong>\n
+                    💡 La paciencia te salvó`;
+            isGoodDecision = true;
+            profitLoss = 0;
+        } else {
+            decision = '⚠️ OPORTUNIDAD PERDIDA';
+            outcome = `El precio subió ${priceChange.toFixed(2)}% después.\n
+                    <strong style="color: #ff9800;">No ganaste pero tampoco perdiste</strong>\n
+                    📈 Máximo alcanzado: +${((maxPrice - currentPrice) / currentPrice * 100).toFixed(2)}%`;
+            isGoodDecision = false;
+            profitLoss = 0;
+        }
+    }
+    
+    // Mostrar resultados
+    showGameResults(decision, outcome, isGoodDecision, profitLoss, priceChange);
+}
+
+// Mostrar resultados
+function showGameResults(decision, outcome, isGood, profitLoss, realChange) {
+    document.getElementById('fomo-game-play').style.display = 'none';
+    document.getElementById('fomo-results').style.display = 'block';
+    
+    const resultsContent = document.getElementById('fomo-results-content');
+    resultsContent.className = isGood ? 'fomo-feedback-positive' : 'fomo-feedback-negative';
+    
+    resultsContent.innerHTML = `
+        <div style="margin-bottom: 1.5rem;">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: ${isGood ? '#00d084' : '#ff6b6b'};">
+                ${decision}
+            </h3>
+            <p style="color: var(--text-primary); line-height: 1.8; font-size: 1.05rem;">
+                ${outcome}
+            </p>
+        </div>
+        
+        <div style="background: rgba(26, 31, 58, 0.3); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <h4 style="color: var(--secondary-color); margin-bottom: 1rem;">
+                <i class="fas fa-graduation-cap"></i> Lección Educativa
+            </h4>
+            <ul style="list-style: none; padding: 0; color: var(--text-primary); line-height: 1.8;">
+                ${getLessonPoints(fomoGameState.userDecision, realChange).map(point => 
+                    `<li style="margin-bottom: 0.75rem;"><i class="fas fa-check" style="color: var(--secondary-color); margin-right: 0.5rem;"></i>${point}</li>`
+                ).join('')}
+            </ul>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="background: rgba(255, 197, 0, 0.1); padding: 1rem; border-radius: 8px; text-align: center;">
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Tu Decisión</p>
+                <p style="font-size: 1.3rem; font-weight: 700; color: var(--secondary-color);">
+                    ${fomoGameState.userDecision ? 'COMPRAR' : 'ESPERAR'}
+                </p>
+            </div>
+            <div style="background: rgba(0, 208, 132, 0.1); padding: 1rem; border-radius: 8px; text-align: center;">
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Lo Que Pasó Realmente</p>
+                <p style="font-size: 1.3rem; font-weight: 700; color: ${realChange >= 0 ? '#00d084' : '#ff6b6b'};">
+                    ${realChange >= 0 ? '+' : ''}${realChange.toFixed(2)}%
+                </p>
+            </div>
+        </div>
+    `;
+}
+
+// Obtener puntos de lección
+function getLessonPoints(userBought, realChange) {
+    const points = [];
+    
+    if (userBought && realChange < 0) {
+        points.push('El FOMO (Fear Of Missing Out) es uno de los peores enemigos del trader.');
+        points.push('Las subidas rápidas sin confirmación técnica suelen corregir fuerte.');
+        points.push('Disciplina > Emoción. Un no-trade es mejor que una mala operación.');
+        points.push('Espera confirmación en volumen o indicadores antes de entrar.');
+    } else if (userBought && realChange >= 0) {
+        points.push('Esta vez tuviste suerte, pero el FOMO no es una estrategia.');
+        points.push('No confundas ganar dinero por azar con ganar por estrategia.');
+        points.push('Usa reglas de entrada claras, no impulsos emocionales.');
+        points.push('A largo plazo, la disciplina vence al azar.');
+    } else if (!userBought && realChange < 0) {
+        points.push('Excelente: esperaste y evitaste una pérdida.');
+        points.push('A veces el mejor trade es el que no haces.');
+        points.push('Preserver capital es más importante que ganar en cada oportunidad.');
+        points.push('La paciencia es una de las mejores cualidades de un trader exitoso.');
+    } else {
+        points.push('Evitaste el FOMO, pero se te escapó una ganancia esta vez.');
+        points.push('No perder dinero NO es lo mismo que ganar dinero.');
+        points.push('En trading, es mejor ser conservador que arruinarse.');
+        points.push('Recuerda: siempre habrá otra oportunidad.');
+    }
+    
+    return points;
+}
+
+// Reiniciar juego
+function resetFomoGame() {
+    document.getElementById('fomo-game-container').style.display = 'block';
+    document.getElementById('fomo-game-play').style.display = 'none';
+    document.getElementById('fomo-results').style.display = 'none';
+    document.getElementById('fomo-cripto-select').value = '';
+    fomoGameState = {
+        cripto: null,
+        data: [],
+        spikeIndex: 0,
+        userDecision: null,
+        countdownTimer: null,
+        timeRemaining: 10,
+        gameActive: false
+    };
 }
 
 </script>

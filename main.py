@@ -392,6 +392,74 @@ def eliminar_cripto(nombre):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/offline/obtener-datos/<cripto>', methods=['GET'])
+def obtener_datos_cripto(cripto):
+    """Obtener datos históricos de una criptomoneda para el minijuego FOMO"""
+    try:
+        # Intentar con sufijo _online primero, luego sin sufijo
+        archivo = os.path.join('datos', f"{cripto}_online.csv")
+        if not os.path.exists(archivo):
+            archivo = os.path.join('datos', f"{cripto}.csv")
+        
+        if not os.path.exists(archivo):
+            print(f"[v0] Archivo no encontrado: {cripto} - intenté: {cripto}_online.csv y {cripto}.csv")
+            return jsonify({'success': False, 'error': f'Criptomoneda no encontrada: {cripto}'}), 404
+        
+        # Cargar datos
+        print(f"[v0] Cargando archivo: {archivo}")
+        df = pd.read_csv(archivo)
+        print(f"[v0] Datos cargados: {len(df)} filas, columnas: {list(df.columns)}")
+        
+        # Normalizar columnas (convertir a minúsculas y limpiar espacios)
+        df.columns = [col.strip().lower() for col in df.columns]
+        
+        # Detectar estructura del CSV y adaptarse
+        if 'date' in df.columns:
+            fecha_col = 'date'
+        elif 'timestamp' in df.columns:
+            fecha_col = 'timestamp'
+        elif 'time' in df.columns:
+            fecha_col = 'time'
+        else:
+            fecha_col = df.columns[0]
+        
+        # Detectar columnas de precio
+        open_col = next((c for c in df.columns if 'open' in c), df.columns[1] if len(df.columns) > 1 else None)
+        close_col = next((c for c in df.columns if 'close' in c), df.columns[-1] if len(df.columns) > 1 else None)
+        high_col = next((c for c in df.columns if 'high' in c), None)
+        low_col = next((c for c in df.columns if 'low' in c), None)
+        volume_col = next((c for c in df.columns if 'volume' in c), None)
+        
+        # Crear datos estructurados para el juego
+        datos_formateados = []
+        for idx, row in df.iterrows():
+            try:
+                datos_formateados.append({
+                    'timestamp': str(row[fecha_col]),
+                    'open': float(row[open_col]) if open_col and pd.notna(row[open_col]) else 0,
+                    'close': float(row[close_col]) if close_col and pd.notna(row[close_col]) else 0,
+                    'high': float(row[high_col]) if high_col and pd.notna(row[high_col]) else 0,
+                    'low': float(row[low_col]) if low_col and pd.notna(row[low_col]) else 0,
+                    'volume': float(row[volume_col]) if volume_col and pd.notna(row[volume_col]) else 0
+                })
+            except Exception as e:
+                print(f"[v0] Error procesando fila {idx}: {e}")
+                continue
+        
+        if not datos_formateados:
+            return jsonify({'success': False, 'error': 'No hay datos válidos en el archivo'}), 400
+        
+        return jsonify({
+            'success': True,
+            'cripto': cripto,
+            'datos': datos_formateados,
+            'count': len(datos_formateados)
+        })
+        
+    except Exception as e:
+        print(f"[v0] Error en obtener_datos_cripto: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 # ==================== API - MODO ONLINE ====================
 
 @app.route('/api/online/iniciar', methods=['POST'])

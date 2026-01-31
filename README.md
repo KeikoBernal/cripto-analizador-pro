@@ -185,42 +185,41 @@ resultados = backtesting_estrategia(
 
 ## 🎮 Sandbox Educativo
 
-El **Sandbox Educativo** es un entorno interactivo e inmersivo diseñado para que aprendas trading de forma divertida y segura. Incluye minijuegos educativos que hacen que el aprendizaje sea más efectivo.
+El **Sandbox Educativo** es un entorno interactivo diseñado para que aprendas trading de forma segura y practica conceptos clave sin dinero real. Accesible desde el **Modo Offline**, incluye lecciones interactivas sobre indicadores técnicos y minijuegos educativos.
 
 ### 🎯 Características del Sandbox
 
-- **Minijuegos interactivos** que enseñan conceptos de trading
+- **Temas educativos interactivos** sobre indicadores técnicos clave
+- **Explicaciones detalladas** de conceptos del trading
+- **Minijuegos prácticos** para aplicar lo aprendido
 - **Simulación segura** sin dinero real
 - **Retroalimentación instantánea** en cada decisión
-- **Progresión educativa** desde principiante hasta avanzado
-- **Desafíos personalizados** según tu nivel
 
-### 🎲 Minijuegos Disponibles
+### 🎮 Minijuego Disponible: "¿Comprar o Esperar?"
 
-#### 1. **Trading Mania**
-Debes predecir si el precio subirá o bajará en el siguiente candle. Gana puntos por predicciones correctas consecutivas. Aprenderás a leer patrones simples y mejorar tu intuición del mercado.
+El minijuego **"¿Comprar o Esperar?"** es una prueba de disciplina emocional donde practicas decisiones de trading reales bajo presión.
 
-#### 2. **Indicator Master**
-Identifica correctamente qué indicador técnico está mostrando cada gráfico. Domina RSI, MACD, Bollinger Bands y más. Este minijuego acelera tu aprendizaje de indicadores técnicos.
+**Cómo funciona:**
+- Selecciona una criptomoneda de tus datos cargados
+- Visualiza el gráfico histórico hasta un momento crítico
+- Observa métricas en tiempo real (precio actual, cambio de precio, cuenta regresiva)
+- Toma una decisión: **¿Comprar (FOMO)** o **¿Esperar a una corrección?**
+- El juego te muestra lo que hubiera pasado con cada decisión
 
-#### 3. **Risk Management Challenge**
-Toma decisiones sobre posición tamaño, stop loss y take profit. Aprende a gestionar riesgos de forma segura y efectiva. El objetivo es maximizar ganancias minimizando pérdidas.
+**Lo que aprendes:**
+- A reconocer el FOMO (Fear Of Missing Out) en el trading
+- A no actuar impulsivamente cuando los precios suben rápidamente
+- A evaluar riesgos antes de tomar decisiones
+- A mantener disciplina emocional bajo presión del mercado
 
-#### 4. **Pattern Recognition**
-Reconoce patrones gráficos como cabeza-hombros, dobles pisos/techos y triángulos. Mejora tu capacidad de detectar oportunidades reales en el mercado.
+### 📚 Temas Educativos
 
-#### 5. **Sentiment Analyzer**
-Analiza noticias y redes sociales para determinar el sentimiento del mercado. Aprende a interpretar la psicología del mercado y su influencia en los precios.
-
-#### 6. **Crypto Portfolio Manager**
-Gestiona un portafolio diversificado en tiempo real simulado. Toma decisiones de asignación de activos y rebalanceo. Entiende la importancia de la diversificación y la estrategia a largo plazo.
-
-### 🏆 Sistema de Puntos y Recompensas
-
-- **Gana insignias** al completar desafíos
-- **Sube de nivel** conforme mejoras tu desempeño
-- **Compite** en las tablas de clasificación globales
-- **Desbloquea contenido** educativo premium
+El sandbox incluye explicaciones interactivas sobre:
+- **Indicadores técnicos** (RSI, MACD, Bollinger Bands, etc.)
+- **Patrones gráficos** y tendencias
+- **Análisis de volumen** y su significado
+- **Conceptos de riesgo** y gestión de posiciones
+- **Psicología del trading** y control emocional
 
 ## 🏗️ Arquitectura
 

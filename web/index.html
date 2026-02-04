@@ -306,27 +306,16 @@
         
         function applyTheme(theme) {
             const root = document.documentElement;
-            const isDark = theme === 'oscuro';
+            // Siempre aplicar tema oscuro
+            root.style.setProperty('--bg-dark', '#0f172a');
+            root.style.setProperty('--bg-card', '#1e293b');
+            root.style.setProperty('--bg-sidebar', '#1e293b');
+            root.style.setProperty('--text-primary', '#f1f5f9');
+            root.style.setProperty('--text-secondary', '#94a3b8');
+            root.style.setProperty('--border-color', '#334155');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             
-            if (isDark) {
-                root.style.setProperty('--bg-dark', '#0f172a');
-                root.style.setProperty('--bg-card', '#1e293b');
-                root.style.setProperty('--bg-sidebar', '#1e293b');
-                root.style.setProperty('--text-primary', '#f1f5f9');
-                root.style.setProperty('--text-secondary', '#94a3b8');
-                root.style.setProperty('--border-color', '#334155');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                root.style.setProperty('--bg-dark', '#ffffff');
-                root.style.setProperty('--bg-card', '#f8fafc');
-                root.style.setProperty('--bg-sidebar', '#e2e8f0');
-                root.style.setProperty('--text-primary', '#1e293b');
-                root.style.setProperty('--text-secondary', '#64748b');
-                root.style.setProperty('--border-color', '#cbd5e1');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-            
-            localStorage.setItem('theme', theme);
+            localStorage.setItem('theme', 'oscuro');
         }
         
         function applyLang(lang) {
@@ -336,8 +325,8 @@
         }
         
         themeToggle.addEventListener('click', () => {
-            currentTheme = currentTheme === 'oscuro' ? 'claro' : 'oscuro';
-            applyTheme(currentTheme);
+            // Solo tema oscuro disponible
+            applyTheme('oscuro');
         });
         
         langToggle.addEventListener('click', () => {

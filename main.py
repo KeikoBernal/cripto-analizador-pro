@@ -1214,67 +1214,34 @@ def analizar_simulacion_route():
 # ==================== INICIAR APLICACIÓN ====================
 
 if __name__ == '__main__':
-    # Intentar usar Eel primero (mejor para aplicaciones desktop)
+    # Verificar si pywebview está disponible
     try:
-        import eel
-        HAS_EEL = True
+        import webview
+        HAS_WEBVIEW = True
     except ImportError:
-        HAS_EEL = False
-    
-    # Si Eel no está disponible, intentar pywebview
-    if not HAS_EEL:
-        try:
-            import webview
-            HAS_WEBVIEW = True
-        except ImportError:
-            HAS_WEBVIEW = False
-            print("⚠️  Eel y pywebview no instalados. Por favor instala uno de ellos:")
-            print("   pip install Eel")
-            print("   o")
-            print("   pip install pywebview")
-            sys.exit(1)
-    else:
         HAS_WEBVIEW = False
+        print("❌ pywebview no instalado. Por favor instala:")
+        print("   pip install pywebview")
+        sys.exit(1)
     
-    # Usar Eel si está disponible
-    if HAS_EEL:
-        print("Iniciando aplicación desktop con Eel...")
-        
-        # Exponer función para que el frontend pueda verificar la conexión
-        @eel.expose
-        def verificar_conexion():
-            return {"status": "conectado"}
-        
-        # Iniciar Eel
-        eel.init('web')
-        try:
-            eel.start('index.html', size=(1400, 900), position=(100, 100))
-        except Exception as e:
-            print(f"Error al iniciar Eel: {e}")
-            print("Iniciando con Flask en navegador como fallback...")
-            webbrowser.open('http://127.0.0.1:5000')
-            app.run(host='127.0.0.1', port=5000, debug=False, use_reloader=False)
+    print("Iniciando aplicación desktop con pywebview...")
     
-    # Usar pywebview si Eel no está disponible
-    elif HAS_WEBVIEW:
-        print("Iniciando aplicación desktop con pywebview...")
-        
-        # Iniciar Flask en hilo separado
-        def run_flask():
-            app.run(host='127.0.0.1', port=5000, debug=False, use_reloader=False)
-        
-        flask_thread = threading.Thread(target=run_flask, daemon=True)
-        flask_thread.start()
-        
-        print("Servidor Flask iniciado en http://127.0.0.1:5000")
-        
-        # Crear ventana desktop con pywebview
-        time.sleep(2)
-        webview.create_window(
-            'Cripto Analizador Pro',
-            'http://127.0.0.1:5000',
-            width=1400,
-            height=900,
-            min_size=(1000, 700)
-        )
-        webview.start()
+    # Iniciar Flask en hilo separado
+    def run_flask():
+        app.run(host='127.0.0.1', port=5000, debug=False, use_reloader=False)
+    
+    flask_thread = threading.Thread(target=run_flask, daemon=True)
+    flask_thread.start()
+    
+    print("Servidor Flask iniciado en http://127.0.0.1:5000")
+    
+    # Crear ventana desktop con pywebview
+    time.sleep(2)
+    webview.create_window(
+        'Cripto Analizador Pro',
+        'http://127.0.0.1:5000',
+        width=1400,
+        height=900,
+        min_size=(1000, 700)
+    )
+    webview.start()

@@ -52,28 +52,18 @@ function createGradient(ctx, color1, color2) {
     return gradient;
 }
 
-// Sistema de temas dinámico
+// Sistema de temas dinámico - Solo tema oscuro
 function applyTheme(theme) {
     const root = document.documentElement;
-    const isDark = theme === 'oscuro';
+    // Siempre aplicar tema oscuro
+    root.style.setProperty('--bg-dark', '#0f172a');
+    root.style.setProperty('--bg-card', '#1e293b');
+    root.style.setProperty('--bg-sidebar', '#1e293b');
+    root.style.setProperty('--text-primary', '#f1f5f9');
+    root.style.setProperty('--text-secondary', '#94a3b8');
+    root.style.setProperty('--border-color', '#334155');
     
-    if (isDark) {
-        root.style.setProperty('--bg-dark', '#0f172a');
-        root.style.setProperty('--bg-card', '#1e293b');
-        root.style.setProperty('--bg-sidebar', '#1e293b');
-        root.style.setProperty('--text-primary', '#f1f5f9');
-        root.style.setProperty('--text-secondary', '#94a3b8');
-        root.style.setProperty('--border-color', '#334155');
-    } else {
-        root.style.setProperty('--bg-dark', '#ffffff');
-        root.style.setProperty('--bg-card', '#f8fafc');
-        root.style.setProperty('--bg-sidebar', '#e2e8f0');
-        root.style.setProperty('--text-primary', '#1e293b');
-        root.style.setProperty('--text-secondary', '#64748b');
-        root.style.setProperty('--border-color', '#cbd5e1');
-    }
-    
-    localStorage.setItem('theme', theme);
+    localStorage.setItem('theme', 'oscuro');
 }
 
 // Sistema de idiomas
@@ -261,11 +251,10 @@ function applyLanguage(lang) {
     }
 }
 
-// Función para cambiar tema
+// Función para cambiar tema - Deshabilitada, solo tema oscuro
 function toggleTheme() {
-    const currentTheme = localStorage.getItem('theme') || 'oscuro';
-    const newTheme = currentTheme === 'oscuro' ? 'claro' : 'oscuro';
-    applyTheme(newTheme);
+    // Solo tema oscuro disponible
+    applyTheme('oscuro');
 }
 
 // Función para cambiar idioma
@@ -284,11 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
     applyLanguage(savedLang);
 });
 
-// Detectar preferencias del sistema
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    if (!localStorage.getItem('theme')) {
-        applyTheme('claro');
-    }
+// Solo usar tema oscuro
+if (!localStorage.getItem('theme')) {
+    applyTheme('oscuro');
 }
 
 // Detectar idioma del navegador
